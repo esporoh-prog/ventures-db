@@ -317,8 +317,8 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
           <div class="multi-select" id="ms-industry" data-filter="industry"></div>
         </div>
         <div class="filter-row">
-          <div class="filter-label" data-ru="Стадия" data-en="Stage">Стадия</div>
-          <div class="multi-select" id="ms-stage" data-filter="stage"></div>
+          <div class="filter-label" data-ru="Тип раунда" data-en="Funding Type">Тип раунда</div>
+          <div class="multi-select" id="ms-fundingtype" data-filter="fundingtype"></div>
         </div>
         <div class="filter-row">
           <div class="filter-label" data-ru="Операционный статус" data-en="Operating Status">Операционный статус</div>
@@ -334,9 +334,10 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
         <span class="filter-group-arrow">▼</span>
       </div>
       <div class="filter-group-body">
+
         <div class="filter-row">
-          <div class="filter-label" data-ru="Тип раунда" data-en="Round type">Тип раунда</div>
-          <div class="multi-select" id="ms-round" data-filter="round"></div>
+          <div class="filter-label" data-ru="Последняя оценка" data-en="Latest Valuation">Последняя оценка</div>
+          <div class="multi-select" id="ms-valuation" data-filter="valuation"></div>
         </div>
         <div class="filter-row">
           <div class="filter-label" data-ru="Объём раунда, $M (от — до)" data-en="Round size $M (from — to)">Объём раунда, $M (от — до)</div>
@@ -485,6 +486,8 @@ const T = {
     about: 'О компании', metrics: 'Метрики', scoring: 'Скоринг Яндекса',
     investors: 'Инвесторы', industries: 'Индустрии',
     raised: 'Привлечено', round: 'Раунд', team: 'Команда', revenue: 'Выручка',
+    website: 'Сайт', valuation: 'Оценка', products: 'Продуктов',
+    website: 'Website', valuation: 'Valuation', products: 'Products',
     growth: 'Growth Score', heat: 'Heat Score', trend: 'Trend 90d', cb: 'CB Rank', visits: 'Monthly Visits',
     totalScore: 'итоговый балл', market: 'Рынок', edge: 'Edge Яндекса', complexity: 'Сложность входа',
     manualScoring: '✎ Скоринг выставлен вручную в Google Sheets',
@@ -556,7 +559,7 @@ let currentVerdict = 'all', lang = 'ru', currentPage = 1;
 const PAGE_SIZE = 24;
 
 // Multi-select state
-const msState = { industry:[], stage:[], status:[], round:[], revenue:[], employees:[], growth:[], heat:[], investors:[] };
+const msState = { industry:[], fundingtype:[], status:[], revenue:[], employees:[], growth:[], heat:[], investors:[], valuation:[] };
 
 // ---- MULTI SELECT ----
 function buildMultiSelect(containerId, options, filterKey) {
@@ -688,7 +691,7 @@ function calcScore(row) {
 
   const growth=(row['Growth Score Tier']||'').toLowerCase();
   const heat=(row['Heat Score Tier']||'').toLowerCase();
-  const stage=(row['Investment Stage']||'').toLowerCase();
+  const ftype=(row['Last Funding Type']||'').toLowerCase();
   const ind=(row['Industry Groups']||'').toLowerCase();
   const fm=parseFundingM(row['Last Funding Amount']);
 
@@ -700,7 +703,10 @@ function calcScore(row) {
   const yv=['artificial intelligence','data','software','fintech','health','logistics','e-commerce','media','education','cloud','financial'];
   const hits=yv.filter(v=>ind.includes(v)).length;
   const ae=hits>=3?2:hits>=1?1:0;
-  const ac=stage.includes('early')?2:1;
+  // Complexity: seed/angel = easier entry (2), series A/B = medium (1), series C+ = harder (0-1)
+  const earlyTypes=['seed','angel','pre-seed','convertible note'];
+  const lateTypes=['series c','series d','series e','series f','growth equity','private equity'];
+  const ac=earlyTypes.some(t=>ftype.includes(t))?2:lateTypes.some(t=>ftype.includes(t))?1:1;
 
   const market=mm!==null?mm:am;
   const edge=me!==null?me:ae;
@@ -712,16 +718,17 @@ function calcScore(row) {
 
 function processRows(rows) {
   return rows
-    .filter(r=>!r['Operating Status']||r['Operating Status']==='Active'||r['Operating Status']==='Closed')
+    .filter(r=>!r['Operating Status']||r['Operating Status']==='Active')
     .map(r=>{
       const rawInd=r['Industry Groups']||'';
       const industries=rawInd.split(',').map(s=>s.trim()).filter(s=>VALID_INDUSTRIES.has(s));
+      let website=r['Website']||'';
+      if(website&&!website.startsWith('http')) website='https://'+website;
       return {
         name: r['Organization Name']||'',
-        description: r['Description']||'',
+        website,
         full_description: r['Full Description']||'',
         industries,
-        stage: r['Investment Stage']||'',
         status: r['Operating Status']||'',
         last_funding_type: r['Last Funding Type']||'',
         last_funding_amount: r['Last Funding Amount']||'',
@@ -729,6 +736,8 @@ function processRows(rows) {
         last_funding_date: r['Last Funding Date']||'',
         employees: r['Number of Employees']||'',
         revenue_range: r['Estimated Revenue Range']||'',
+        valuation: r['Most Recent Valuation']||'',
+        total_products: r['Total Products Active']||'',
         growth_score: r['Growth Score Tier']||'',
         heat_score: r['Heat Score Tier']||'',
         trend_score: r['Trend Score (90 Days)']||'',
@@ -738,57 +747,22 @@ function processRows(rows) {
         downloads: r['Downloads Last 30 Days']||'',
         lead_investors: r['Lead Investors']||'',
         top_investors: r['Top 5 Investors']||'',
-        all_investors_raw: ((r['Lead Investors']||'') + ',' + (r['Top 5 Investors']||'')),
+        all_investors_raw: ((r['Lead Investors']||'')+','+(r['Top 5 Investors']||'')),
         score: calcScore(r),
       };
     })
     .filter(c=>c.name);
 }
 
-// ---- LOAD ----
-async function loadData(manual=false) {
-  const btn=document.getElementById('refresh-btn');
-  const lbl=document.getElementById('refresh-label');
-  btn.disabled=true; btn.classList.add('loading');
-  lbl.textContent=lang==='ru'?'Загрузка...':'Loading...';
-  if(!manual){
-    document.getElementById('cards-grid').innerHTML=
-      `<div class="loading-state"><div class="spinner"></div><span>${t('loading')}</span></div>`;
-  }
-  try{
-    const res=await fetch('/api/sheet');
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const csv=await res.text();
-    if(!csv.includes(',') || csv.length<100) throw new Error('Empty response');
-    const rows=parseCSV(csv);
-    companies=processRows(rows);
-    const now=new Date();
-    document.getElementById('last-updated').textContent=
-      t('updated')(now.toLocaleTimeString(lang==='ru'?'ru-RU':'en-US',{hour:'2-digit',minute:'2-digit'}));
-    initFilters(); applyFilters();
-  }catch(e){
-    document.getElementById('cards-grid').innerHTML=`
-      <div class="error-state">
-        <h3>${t('errTitle')}</h3>
-        <p>${t('errMsg')}</p>
-        <button class="retry-btn" onclick="loadData(true)">${t('retry')}</button>
-      </div>`;
-  }
-  btn.disabled=false; btn.classList.remove('loading');
-  lbl.textContent=t('updated')('').replace(': ','') || (lang==='ru'?'Обновить':'Refresh');
-  lbl.textContent = lang==='ru'?'Обновить':'Refresh';
-}
-
-// ---- INIT FILTERS ----
 function initFilters() {
   const getUniq=(fn)=>[...new Set(companies.map(fn).filter(Boolean).filter(v=>v!=='nan'))].sort();
 
   const allIndustries=[...new Set(companies.flatMap(c=>c.industries))].sort();
   buildMultiSelect('ms-industry', allIndustries, 'industry');
-  buildMultiSelect('ms-stage', getUniq(c=>c.stage), 'stage');
+  buildMultiSelect('ms-fundingtype', getUniq(c=>c.last_funding_type), 'fundingtype');
   buildMultiSelect('ms-status', getUniq(c=>c.status), 'status');
-  buildMultiSelect('ms-round', getUniq(c=>c.last_funding_type), 'round');
   buildMultiSelect('ms-revenue', getUniq(c=>c.revenue_range), 'revenue');
+  buildMultiSelect('ms-valuation', getUniq(c=>c.valuation), 'valuation');
   buildMultiSelect('ms-employees', getUniq(c=>c.employees), 'employees');
   buildMultiSelect('ms-growth', ['High','Medium','Low'], 'growth');
   buildMultiSelect('ms-heat', ['High','Medium','Low'], 'heat');
@@ -852,9 +826,9 @@ function applyFilters() {
       if(!hay.includes(q)) return false;
     }
     if(msState.industry.length&&!c.industries.some(i=>msState.industry.includes(i))) return false;
-    if(msState.stage.length&&!msState.stage.includes(c.stage)) return false;
+    if(msState.fundingtype.length&&!msState.fundingtype.includes(c.last_funding_type)) return false;
     if(msState.status.length&&!msState.status.includes(c.status)) return false;
-    if(msState.round.length&&!msState.round.includes(c.last_funding_type)) return false;
+    if(msState.valuation.length&&!msState.valuation.includes(c.valuation)) return false;
     if(msState.revenue.length&&!msState.revenue.includes(c.revenue_range)) return false;
     if(msState.employees.length&&!msState.employees.includes(c.employees)) return false;
     if(msState.growth.length&&!msState.growth.includes(c.growth_score)) return false;
@@ -898,7 +872,7 @@ function resetFilters() {
   const finv=document.getElementById('f-investor'); if(finv) finv.value='';
   ['f-fmin','f-fmax','f-tmin','f-cbmin','f-cbmax','f-trafficmax','f-visitsmin'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('sort').value='score';
-  Object.keys(msState).forEach(k=>msState[k]=[]);
+  Object.keys(msState).forEach(k=>{ msState[k]=[]; });
   currentVerdict='all';
   document.querySelectorAll('.verdict-chip').forEach((c,i)=>c.classList.toggle('active',i===0));
   initFilters(); currentPage=1; applyFilters();
@@ -946,13 +920,14 @@ function renderCards(){
         <div class="company-avatar" style="${avatarStyle(c.name)}">${initials(c.name)}</div>
         <div class="card-title-wrap">
           <div class="card-name">${c.name}</div>
-          <div class="card-meta">${round||'—'}${funding?' · '+funding:''}</div>
+          <div class="card-meta">${round||'—'}${c.last_funding_date?' · '+c.last_funding_date.substring(0,7):''}</div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0">
           <span class="verdict-badge ${vc(c.score.verdict)}">${vl(c.score.verdict)}</span>
           ${c.score.isManual?`<span class="manual-badge">${t('manualBadge')}</span>`:''}
         </div>
       </div>
+      ${c.website?`<a href="${c.website}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-size:11px;color:var(--accent);text-decoration:none;display:flex;align-items:center;gap:4px;margin-top:-4px"><svg width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5'><path d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'/><polyline points='15 3 21 3 21 9'/><line x1='10' y1='14' x2='21' y2='3'/></svg>${c.website.replace('https://','').replace('http://','').replace('www.','').split('/')[0]}</a>`:''}
       ${short?`<div class="card-desc">${short}</div>`:''}
       ${tags.length?`<div class="card-tags">${tags.map(tg=>`<span class="tag">${tg}</span>`).join('')}</div>`:''}
       <div class="card-footer">
@@ -1020,15 +995,18 @@ function openModal(idx){
     <div>
       <div class="modal-section-title">${t('metrics')}</div>
       <div class="stats-grid">
+        ${c.website?`<div class="stat-box" style="grid-column:1/-1"><div class="stat-box-label">${t('website')}</div><a href="${c.website}" target="_blank" rel="noopener" style="font-size:14px;font-weight:600;color:var(--accent);text-decoration:none">${c.website.replace('https://','').replace('http://','')}</a></div>`:''}
         <div class="stat-box"><div class="stat-box-label">${t('raised')}</div><div class="stat-box-value accent">${clean(c.last_funding_amount)||'—'}</div></div>
         <div class="stat-box"><div class="stat-box-label">${t('round')}</div><div class="stat-box-value">${clean(c.last_funding_type)||'—'}</div></div>
         <div class="stat-box"><div class="stat-box-label">${t('team')}</div><div class="stat-box-value">${clean(c.employees)||'—'}</div></div>
         <div class="stat-box"><div class="stat-box-label">${t('revenue')}</div><div class="stat-box-value">${clean(c.revenue_range)||'—'}</div></div>
+        ${c.valuation?`<div class="stat-box"><div class="stat-box-label">${t('valuation')}</div><div class="stat-box-value">${c.valuation}</div></div>`:''}
+        ${c.total_products?`<div class="stat-box"><div class="stat-box-label">${t('products')}</div><div class="stat-box-value">${c.total_products}</div></div>`:''}
         <div class="stat-box"><div class="stat-box-label">${t('growth')} ${tip('growth')}</div><div class="stat-box-value ${c.growth_score==='High'?'green':''}">${clean(c.growth_score)||'—'}</div></div>
+        <div class="stat-box"><div class="stat-box-label">${t('heat')} ${tip('heat')}</div><div class="stat-box-value">${clean(c.heat_score)||'—'}</div></div>
         <div class="stat-box"><div class="stat-box-label">${t('trend')}</div><div class="stat-box-value accent">${c.trend_score?parseFloat(c.trend_score).toFixed(1):'—'}</div></div>
         <div class="stat-box"><div class="stat-box-label">${t('cb')} ${tip('cb')}</div><div class="stat-box-value">${c.cb_rank||'—'}</div></div>
         <div class="stat-box"><div class="stat-box-label">${t('visits')}</div><div class="stat-box-value">${c.monthly_visits?c.monthly_visits.toLocaleString():'—'}</div></div>
-        <div class="stat-box"><div class="stat-box-label">${t('heat')} ${tip('heat')}</div><div class="stat-box-value">${clean(c.heat_score)||'—'}</div></div>
       </div>
     </div>
     <div>
