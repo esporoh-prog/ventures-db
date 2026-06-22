@@ -1074,6 +1074,40 @@ function setLang(newLang){
   if(companies.length){ initFilters(); renderCards(); }
 }
 
+async function loadData(manual=false) {
+  const btn=document.getElementById('refresh-btn');
+  const lbl=document.getElementById('refresh-label');
+  btn.disabled=true; btn.classList.add('loading');
+  lbl.textContent=lang==='ru'?'Загрузка...':'Loading...';
+  if(!manual){
+    document.getElementById('cards-grid').innerHTML=
+      `<div class="loading-state"><div class="spinner"></div><span>${t('loading')}</span></div>`;
+  }
+  try{
+    const res=await fetch('/api/sheet');
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const csv=await res.text();
+    if(!csv.includes(',') || csv.length<100) throw new Error('Empty response');
+    const rows=parseCSV(csv);
+    companies=processRows(rows);
+    const now=new Date();
+    document.getElementById('last-updated').textContent=
+      t('updated')(now.toLocaleTimeString(lang==='ru'?'ru-RU':'en-US',{hour:'2-digit',minute:'2-digit'}));
+    initFilters(); applyFilters();
+  }catch(e){
+    document.getElementById('cards-grid').innerHTML=`
+      <div class="error-state">
+        <h3>${t('errTitle')}</h3>
+        <p>${t('errMsg')}</p>
+        <p style="font-size:11px;color:var(--text3);margin-top:4px">${e.message}</p>
+        <button class="retry-btn" onclick="loadData(true)">${t('retry')}</button>
+      </div>`;
+  }
+  btn.disabled=false; btn.classList.remove('loading');
+  lbl.textContent=lang==='ru'?'Обновить':'Refresh';
+}
+
+
 loadData();
 </script>
 </body>
