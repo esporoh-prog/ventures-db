@@ -308,7 +308,7 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
       </div>
       <div class="filter-group-body">
         <div class="filter-row">
-          <div class="filter-label" data-ru="Вертикаль" data-en="Industry">Вертикаль</div>
+          <div class="filter-label" data-ru="Индустрия" data-en="Industry">Индустрия</div>
           <div class="multi-select" id="ms-industry" data-filter="industry"></div>
         </div>
         <div class="filter-row">
@@ -340,10 +340,6 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
             <input class="range-input" id="f-fmax" type="number" placeholder="До" oninput="applyFilters()">
           </div>
         </div>
-        <div class="filter-row">
-          <div class="filter-label" data-ru="Выручка" data-en="Revenue">Выручка</div>
-          <div class="multi-select" id="ms-revenue" data-filter="revenue"></div>
-        </div>
       </div>
     </div>
 
@@ -357,6 +353,10 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
         <div class="filter-row">
           <div class="filter-label" data-ru="Размер команды" data-en="Team size">Размер команды</div>
           <div class="multi-select" id="ms-employees" data-filter="employees"></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-label" data-ru="Выручка" data-en="Revenue">Выручка</div>
+          <div class="multi-select" id="ms-revenue" data-filter="revenue"></div>
         </div>
         <div class="filter-row">
           <div class="filter-label" data-ru="CB Rank — от (меньше = лучше)" data-en="CB Rank — from (lower = better)">CB Rank — от (меньше = лучше)</div>
@@ -394,6 +394,27 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
         <div class="filter-row">
           <div class="filter-label" data-ru="Monthly Visits (мин.)" data-en="Monthly Visits (min)">Monthly Visits (мин.)</div>
           <input class="range-input" id="f-visitsmin" type="number" placeholder="Напр: 10000" oninput="applyFilters()" style="width:100%">
+        </div>
+      </div>
+    </div>
+
+    <!-- ИНВЕСТОРЫ -->
+    <div class="filter-group" id="grp-investors">
+      <div class="filter-group-header" onclick="toggleGroup('grp-investors')">
+        <span class="filter-group-title" data-ru="Инвесторы" data-en="Investors">Инвесторы</span>
+        <span class="filter-group-arrow">▼</span>
+      </div>
+      <div class="filter-group-body">
+        <div class="filter-row">
+          <div class="filter-label" data-ru="Поиск по инвестору" data-en="Search by investor">Поиск по инвестору</div>
+          <div class="search-wrap" style="margin:0">
+            <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input class="search-input" id="f-investor" placeholder="Напр: Sequoia, a16z..." oninput="applyFilters()" style="padding-left:34px">
+          </div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-label" data-ru="Топ инвесторы" data-en="Top investors">Топ инвесторы</div>
+          <div class="multi-select" id="ms-investors" data-filter="investors"></div>
         </div>
       </div>
     </div>
@@ -450,7 +471,7 @@ const T = {
     updated: t => `Обновлено: ${t}`,
     all: 'Все', pipeline: 'В pipeline', study: 'Изучить', later: 'Отложить',
     about: 'О компании', metrics: 'Метрики', scoring: 'Скоринг Яндекса',
-    investors: 'Инвесторы', industries: 'Вертикали',
+    investors: 'Инвесторы', industries: 'Индустрии',
     raised: 'Привлечено', round: 'Раунд', team: 'Команда', revenue: 'Выручка',
     growth: 'Growth Score', trend: 'Trend 90d', cb: 'CB Rank', visits: 'Monthly Visits',
     totalScore: 'итоговый балл', market: 'Рынок', edge: 'Edge Яндекса', complexity: 'Сложность входа',
@@ -515,7 +536,7 @@ let currentVerdict = 'all', lang = 'ru', currentPage = 1;
 const PAGE_SIZE = 24;
 
 // Multi-select state
-const msState = { industry:[], stage:[], status:[], round:[], revenue:[], employees:[], growth:[], heat:[] };
+const msState = { industry:[], stage:[], status:[], round:[], revenue:[], employees:[], growth:[], heat:[], investors:[] };
 
 // ---- MULTI SELECT ----
 function buildMultiSelect(containerId, options, filterKey) {
@@ -611,7 +632,11 @@ function parseFundingM(val) {
   try{return parseFloat(val)/1e6;}catch{return 0;}
 }
 function parseNum(v) { const n=parseFloat((v||'').replace(/,/g,'')); return isNaN(n)?0:n; }
-function parseManualScore(v) { const n=parseInt(v); return(!isNaN(n)&&n>=0&&n<=2)?n:null; }
+function parseManualScore(v) {
+  if(!v || v.trim() === '') return null;
+  const n=parseInt(v.trim());
+  return(!isNaN(n)&&n>=0&&n<=2)?n:null;
+}
 
 // ---- CSV ----
 function parseCSV(text) {
@@ -693,6 +718,7 @@ function processRows(rows) {
         downloads: r['Downloads Last 30 Days']||'',
         lead_investors: r['Lead Investors']||'',
         top_investors: r['Top 5 Investors']||'',
+        all_investors_raw: ((r['Lead Investors']||'') + ',' + (r['Top 5 Investors']||'')),
         score: calcScore(r),
       };
     })
@@ -747,6 +773,21 @@ function initFilters() {
   buildMultiSelect('ms-growth', ['High','Medium','Low'], 'growth');
   buildMultiSelect('ms-heat', ['High','Medium','Low'], 'heat');
 
+  // Топ инвесторы — берём тех кто встречается >= 3 раз
+  const invCount = {};
+  companies.forEach(c => {
+    const raw = c.all_investors_raw || '';
+    raw.split(',').map(s=>s.trim()).filter(s=>s&&s!=='nan'&&s.length>2).forEach(inv => {
+      invCount[inv] = (invCount[inv]||0) + 1;
+    });
+  });
+  const topInvestors = Object.entries(invCount)
+    .filter(([,cnt])=>cnt>=3)
+    .sort((a,b)=>b[1]-a[1])
+    .slice(0,100)
+    .map(([name])=>name);
+  buildMultiSelect('ms-investors', topInvestors, 'investors');
+
   updateCounts();
 }
 
@@ -772,6 +813,7 @@ function setVerdict(v,el) {
 
 function applyFilters() {
   const q=document.getElementById('search').value.toLowerCase().trim();
+  const investorQ=(document.getElementById('f-investor')||{}).value?.toLowerCase().trim()||'';
   const manual=document.getElementById('f-manual').value;
   const minscore=parseInt(document.getElementById('f-minscore').value)||0;
   const fmin=parseFloat(document.getElementById('f-fmin').value)||0;
@@ -797,6 +839,14 @@ function applyFilters() {
     if(msState.employees.length&&!msState.employees.includes(c.employees)) return false;
     if(msState.growth.length&&!msState.growth.includes(c.growth_score)) return false;
     if(msState.heat.length&&!msState.heat.includes(c.heat_score)) return false;
+    if(investorQ){
+      const invHay=(c.lead_investors+' '+c.top_investors).toLowerCase();
+      if(!invHay.includes(investorQ)) return false;
+    }
+    if(msState.investors.length){
+      const invHay=(c.lead_investors+' '+c.top_investors);
+      if(!msState.investors.some(inv=>invHay.includes(inv))) return false;
+    }
     if(minscore&&c.score.total<minscore) return false;
     if(manual==='manual'&&!c.score.isManual) return false;
     if(manual==='auto'&&c.score.isManual) return false;
@@ -825,6 +875,7 @@ function applyFilters() {
 function resetFilters() {
   document.getElementById('search').value='';
   ['f-manual','f-minscore'].forEach(id=>document.getElementById(id).value='');
+  const finv=document.getElementById('f-investor'); if(finv) finv.value='';
   ['f-fmin','f-fmax','f-tmin','f-cbmin','f-cbmax','f-trafficmax','f-visitsmin'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('sort').value='score';
   Object.keys(msState).forEach(k=>msState[k]=[]);
