@@ -165,9 +165,11 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
 /* TOOLTIP */
 .tooltip-wrap{position:relative;display:inline-flex;align-items:center;}
 .info-icon{width:14px;height:14px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);color:var(--text3);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:help;margin-left:5px;flex-shrink:0;}
-.tooltip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--text);color:white;font-size:11px;line-height:1.5;padding:8px 10px;border-radius:6px;width:220px;pointer-events:none;opacity:0;transition:opacity 0.15s;z-index:9999;white-space:normal;}
-.tooltip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--text);}
+.tooltip{position:absolute;bottom:calc(100% + 8px);left:0;transform:none;background:var(--text);color:white;font-size:11px;line-height:1.5;padding:8px 10px;border-radius:6px;width:240px;pointer-events:none;opacity:0;transition:opacity 0.15s;z-index:9999;white-space:normal;}
+.tooltip::after{content:'';position:absolute;top:100%;left:16px;transform:none;border:5px solid transparent;border-top-color:var(--text);}
 .tooltip-wrap:hover .tooltip{opacity:1;}
+.tooltip-right{left:auto;right:0;}
+.tooltip-right::after{left:auto;right:16px;}
 
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(15,20,35,0.45);backdrop-filter:blur(3px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.2s;}
@@ -280,7 +282,10 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
           </div>
         </div>
         <div class="filter-row">
-          <div class="filter-label" data-ru="Источник скоринга" data-en="Scoring source">Источник скоринга</div>
+          <div class="filter-label" data-ru="Источник скоринга" data-en="Scoring source">
+            Источник скоринга
+            <span class="tooltip-wrap"><span class="info-icon">i</span><span class="tooltip tooltip-right" id="tip-manual-src">Ручной скоринг позволяет переопределить автоматические баллы прямо в Google Sheets. Заполни колонки Yandex Score Market / Edge / Complexity значениями 0, 1 или 2.</span></span>
+          </div>
           <select class="filter-select" id="f-manual" onchange="applyFilters()">
             <option value="" data-ru="Все" data-en="All">Все</option>
             <option value="manual" data-ru="Только ручной" data-en="Manual only">Только ручной</option>
@@ -359,7 +364,10 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
           <div class="multi-select" id="ms-revenue" data-filter="revenue"></div>
         </div>
         <div class="filter-row">
-          <div class="filter-label" data-ru="CB Rank — от (меньше = лучше)" data-en="CB Rank — from (lower = better)">CB Rank — от (меньше = лучше)</div>
+          <div class="filter-label" data-ru="CB Rank" data-en="CB Rank">CB Rank
+            <span class="tooltip-wrap"><span class="info-icon">i</span><span class="tooltip" id="tip-cb-filter">Crunchbase Rank — глобальный рейтинг компании по активности. Чем меньше число, тем выше позиция. Топ-1000 — наиболее активные компании на рынке.</span></span>
+          </div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px" data-ru="(меньше = лучше, от — до)" data-en="(lower = better, from — to)">(меньше = лучше, от — до)</div>
           <div class="range-row">
             <input class="range-input" id="f-cbmin" type="number" placeholder="От" oninput="applyFilters()">
             <input class="range-input" id="f-cbmax" type="number" placeholder="До" oninput="applyFilters()">
@@ -376,11 +384,15 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
       </div>
       <div class="filter-group-body">
         <div class="filter-row">
-          <div class="filter-label">Growth Score</div>
+          <div class="filter-label">Growth Score
+            <span class="tooltip-wrap"><span class="info-icon">i</span><span class="tooltip" id="tip-growth-filter">Оценка потенциала роста компании на основе сигналов: раунды, найм, трафик, упоминания. High = высокий потенциал роста.</span></span>
+          </div>
           <div class="multi-select" id="ms-growth" data-filter="growth"></div>
         </div>
         <div class="filter-row">
-          <div class="filter-label">Heat Score</div>
+          <div class="filter-label">Heat Score
+            <span class="tooltip-wrap"><span class="info-icon">i</span><span class="tooltip" id="tip-heat-filter">Уровень текущего интереса рынка к компании: активность инвесторов, медиа-упоминания, поисковый спрос прямо сейчас. High = компания на радаре.</span></span>
+          </div>
           <div class="multi-select" id="ms-heat" data-filter="heat"></div>
         </div>
         <div class="filter-row">
@@ -473,11 +485,12 @@ const T = {
     about: 'О компании', metrics: 'Метрики', scoring: 'Скоринг Яндекса',
     investors: 'Инвесторы', industries: 'Индустрии',
     raised: 'Привлечено', round: 'Раунд', team: 'Команда', revenue: 'Выручка',
-    growth: 'Growth Score', trend: 'Trend 90d', cb: 'CB Rank', visits: 'Monthly Visits',
+    growth: 'Growth Score', heat: 'Heat Score', trend: 'Trend 90d', cb: 'CB Rank', visits: 'Monthly Visits',
     totalScore: 'итоговый балл', market: 'Рынок', edge: 'Edge Яндекса', complexity: 'Сложность входа',
     manualScoring: '✎ Скоринг выставлен вручную в Google Sheets',
     autoScoring: 'Скоринг рассчитан автоматически по данным Crunchbase. Для ручной оценки заполните колонки Yandex Score Market / Edge / Complexity в таблице.',
     manualBadge: '✎ ручной', selectAll: 'Все выбрано', nSelected: n => `Выбрано: ${n}`,
+    tipCb: 'Crunchbase Rank — глобальный рейтинг компании по активности и данным. Чем меньше число, тем выше позиция. Топ-1000 — наиболее активные компании на рынке.', tipGrowth: 'Growth Score (Crunchbase) — оценка потенциала роста компании на основе сигналов: раунды, найм, трафик, упоминания. High = высокий потенциал роста.', tipHeat: 'Heat Score (Crunchbase) — уровень текущего интереса рынка к компании: активность инвесторов, медиа-упоминания, поисковый спрос прямо сейчас. High = компания на радаре.', tipManual: 'Ручной скоринг позволяет переопределить автоматические баллы по трём критериям прямо в Google Sheets. Заполни колонки Yandex Score Market / Edge / Complexity значениями 0, 1 или 2.',
     searchIn: 'Поиск...',
   },
   en: {
@@ -494,11 +507,12 @@ const T = {
     about: 'About', metrics: 'Metrics', scoring: 'Yandex Scoring',
     investors: 'Investors', industries: 'Industries',
     raised: 'Raised', round: 'Round', team: 'Team', revenue: 'Revenue',
-    growth: 'Growth Score', trend: 'Trend 90d', cb: 'CB Rank', visits: 'Monthly Visits',
+    growth: 'Growth Score', heat: 'Heat Score', trend: 'Trend 90d', cb: 'CB Rank', visits: 'Monthly Visits',
     totalScore: 'total score', market: 'Market', edge: 'Yandex Edge', complexity: 'Entry Complexity',
     manualScoring: '✎ Score set manually in Google Sheets',
     autoScoring: 'Score calculated automatically from Crunchbase data. Fill in Yandex Score Market / Edge / Complexity columns for manual scoring.',
     manualBadge: '✎ manual', selectAll: 'All selected', nSelected: n => `Selected: ${n}`,
+    tipCb: 'Crunchbase Rank — global company ranking based on activity and data signals. Lower number = higher position. Top-1000 are the most active companies in the market.', tipGrowth: 'Growth Score (Crunchbase) — company growth potential based on signals: funding rounds, hiring, web traffic, mentions. High = strong growth potential.', tipHeat: 'Heat Score (Crunchbase) — current market interest level: investor activity, media mentions, search demand right now. High = company is on the radar.', tipManual: 'Manual scoring lets you override automatic scores for three criteria directly in Google Sheets. Fill in Yandex Score Market / Edge / Complexity columns with values 0, 1, or 2.',
     searchIn: 'Search...',
   }
 };
@@ -507,12 +521,18 @@ const SCORE_TIPS = {
   ru: {
     market: 'Размер и динамика рынка. Источник: Growth Score Tier и Heat Score Tier из Crunchbase, объём последнего раунда. High Growth + High Heat = 2 балла.',
     edge: 'Потенциал использования активов Яндекса. Считается по совпадению тегов индустрии с вертикалями Яндекса (AI, Data, Fintech, Health и др.).',
-    complexity: 'Сложность входа для Яндекса. Early Stage = 2 балла (проще войти), Late Stage = 1 балл (рынок устоявшийся).'
+    complexity: 'Сложность входа для Яндекса. Early Stage = 2 балла (проще войти), Late Stage = 1 балл (рынок устоявшийся).',
+    cb: 'Crunchbase Rank — глобальный рейтинг компании по активности и данным. Чем меньше число, тем выше позиция. Топ-1000 — наиболее активные компании на рынке.',
+    growth: 'Growth Score (Crunchbase) — оценка потенциала роста компании на основе сигналов: раунды, найм, трафик, упоминания. High = высокий потенциал роста.',
+    heat: 'Heat Score (Crunchbase) — уровень текущего интереса рынка к компании: активность инвесторов, медиа-упоминания, поисковый спрос прямо сейчас. High = компания на радаре.'
   },
   en: {
     market: 'Market size and dynamics. Source: Growth Score Tier and Heat Score Tier from Crunchbase, last funding amount. High Growth + High Heat = 2 pts.',
     edge: 'Potential to leverage Yandex assets. Based on industry tag overlap with Yandex verticals (AI, Data, Fintech, Health, etc.).',
-    complexity: 'Entry complexity for Yandex. Early Stage = 2 pts (easier entry), Late Stage = 1 pt (established market).'
+    complexity: 'Entry complexity for Yandex. Early Stage = 2 pts (easier entry), Late Stage = 1 pt (established market).',
+    cb: 'Crunchbase Rank — global company ranking based on activity and data signals. Lower number = higher position. Top-1000 are the most active companies in the market.',
+    growth: 'Growth Score (Crunchbase) — company growth potential based on signals: funding rounds, hiring, web traffic, mentions. High = strong growth potential.',
+    heat: 'Heat Score (Crunchbase) — current market interest level: investor activity, media mentions, search demand right now. High = company is on the radar.'
   }
 };
 
@@ -926,7 +946,7 @@ function renderCards(){
         <div class="company-avatar" style="${avatarStyle(c.name)}">${initials(c.name)}</div>
         <div class="card-title-wrap">
           <div class="card-name">${c.name}</div>
-          <div class="card-meta">${round||'—'}${c.employees?' · '+c.employees:''}</div>
+          <div class="card-meta">${round||'—'}${funding?' · '+funding:''}</div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0">
           <span class="verdict-badge ${vc(c.score.verdict)}">${vl(c.score.verdict)}</span>
@@ -937,8 +957,8 @@ function renderCards(){
       ${tags.length?`<div class="card-tags">${tags.map(tg=>`<span class="tag">${tg}</span>`).join('')}</div>`:''}
       <div class="card-footer">
         <div>
-          <div class="card-stat-label">${t('round')}</div>
-          <div class="card-stat-value" style="font-size:11px">${funding||'—'}</div>
+          <div class="card-stat-label">${t('raised')}</div>
+          <div class="card-stat-value" style="font-size:11px;color:var(--accent)">${funding||'—'}</div>
         </div>
         <div>
           <div class="card-stat-label">${t('growth')}</div>
@@ -1004,10 +1024,11 @@ function openModal(idx){
         <div class="stat-box"><div class="stat-box-label">${t('round')}</div><div class="stat-box-value">${clean(c.last_funding_type)||'—'}</div></div>
         <div class="stat-box"><div class="stat-box-label">${t('team')}</div><div class="stat-box-value">${clean(c.employees)||'—'}</div></div>
         <div class="stat-box"><div class="stat-box-label">${t('revenue')}</div><div class="stat-box-value">${clean(c.revenue_range)||'—'}</div></div>
-        <div class="stat-box"><div class="stat-box-label">${t('growth')}</div><div class="stat-box-value ${c.growth_score==='High'?'green':''}">${clean(c.growth_score)||'—'}</div></div>
+        <div class="stat-box"><div class="stat-box-label">${t('growth')} ${tip('growth')}</div><div class="stat-box-value ${c.growth_score==='High'?'green':''}">${clean(c.growth_score)||'—'}</div></div>
         <div class="stat-box"><div class="stat-box-label">${t('trend')}</div><div class="stat-box-value accent">${c.trend_score?parseFloat(c.trend_score).toFixed(1):'—'}</div></div>
-        <div class="stat-box"><div class="stat-box-label">${t('cb')}</div><div class="stat-box-value">${c.cb_rank||'—'}</div></div>
+        <div class="stat-box"><div class="stat-box-label">${t('cb')} ${tip('cb')}</div><div class="stat-box-value">${c.cb_rank||'—'}</div></div>
         <div class="stat-box"><div class="stat-box-label">${t('visits')}</div><div class="stat-box-value">${c.monthly_visits?c.monthly_visits.toLocaleString():'—'}</div></div>
+        <div class="stat-box"><div class="stat-box-label">${t('heat')} ${tip('heat')}</div><div class="stat-box-value">${clean(c.heat_score)||'—'}</div></div>
       </div>
     </div>
     <div>
