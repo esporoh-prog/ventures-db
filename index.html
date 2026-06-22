@@ -488,7 +488,7 @@ const T = {
     raised: 'Привлечено', round: 'Раунд', team: 'Команда', revenue: 'Выручка',
     website: 'Сайт', valuation: 'Оценка', products: 'Продуктов',
     website: 'Website', valuation: 'Valuation', products: 'Products',
-    growth: 'Growth Score', heat: 'Heat Score', trend: 'Trend 90d', cb: 'CB Rank', visits: 'Monthly Visits',
+    growth: 'Growth Score', heat: 'Heat Score', trend: 'Trend 90d', cb: 'CB Rank', visits: 'Monthly Visits', valuation: 'Valuation', products: 'Products', fundingDate: 'Funding Date', valuation: 'Оценка', products: 'Продуктов', fundingDate: 'Дата раунда',
     totalScore: 'итоговый балл', market: 'Рынок', edge: 'Edge Яндекса', complexity: 'Сложность входа',
     manualScoring: '✎ Скоринг выставлен вручную в Google Sheets',
     autoScoring: 'Скоринг рассчитан автоматически по данным Crunchbase. Для ручной оценки заполните колонки Yandex Score Market / Edge / Complexity в таблице.',
@@ -510,7 +510,7 @@ const T = {
     about: 'About', metrics: 'Metrics', scoring: 'Yandex Scoring',
     investors: 'Investors', industries: 'Industries',
     raised: 'Raised', round: 'Round', team: 'Team', revenue: 'Revenue',
-    growth: 'Growth Score', heat: 'Heat Score', trend: 'Trend 90d', cb: 'CB Rank', visits: 'Monthly Visits',
+    growth: 'Growth Score', heat: 'Heat Score', trend: 'Trend 90d', cb: 'CB Rank', visits: 'Monthly Visits', valuation: 'Valuation', products: 'Products', fundingDate: 'Funding Date', valuation: 'Оценка', products: 'Продуктов', fundingDate: 'Дата раунда',
     totalScore: 'total score', market: 'Market', edge: 'Yandex Edge', complexity: 'Entry Complexity',
     manualScoring: '✎ Score set manually in Google Sheets',
     autoScoring: 'Score calculated automatically from Crunchbase data. Fill in Yandex Score Market / Edge / Complexity columns for manual scoring.',
@@ -907,7 +907,7 @@ function renderCards(){
   }
 
   grid.innerHTML=page.map((c,i)=>{
-    const desc=clean(c.description)||clean(c.full_description);
+    const desc=clean(c.full_description);
     const short=desc?desc.substring(0,160):'';
     const tags=c.industries.slice(0,3);
     const funding=clean(c.last_funding_amount);
@@ -978,7 +978,8 @@ function openModal(idx){
   const c=filtered[idx]; if(!c) return;
   document.getElementById('m-avatar').style=avatarStyle(c.name);
   document.getElementById('m-avatar').textContent=initials(c.name);
-  document.getElementById('m-name').textContent=c.name;
+  document.getElementById('m-name').innerHTML=
+    c.name + (c.website?` <a href="${c.website}" target="_blank" style="font-size:13px;font-weight:400;color:var(--accent);text-decoration:none;margin-left:8px" title="${c.website}">↗ ${c.website.replace('https://','').replace('http://','').split('/')[0]}</a>`:'');
 
   const round=clean(c.last_funding_type), amount=clean(c.last_funding_amount);
   document.getElementById('m-subtitle').innerHTML=
