@@ -693,52 +693,27 @@ async function loadData(manual=false) {
       </div>`;
   }
 
-  // Пробуем три метода по очереди
-  const methods = [
-    // Метод 1: прямой CSV экспорт (работает на Vercel)
-    () => fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`),
-    // Метод 2: через corsproxy.io
-    () => fetch(`https://corsproxy.io/?${encodeURIComponent(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`)}`),
-    // Метод 3: через allorigins
-    () => fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`)}&t=${Date.now()}`),
-  ];
-
-  let csv = null;
-  let lastError = null;
-
-  for(const method of methods) {
-    try {
-      const res = await method();
-      if(res.ok) {
-        const text = await res.text();
-        if(text.includes(',') && text.length > 100) {
-          csv = text; break;
-        }
-      }
-    } catch(e) { lastError = e; }
-  }
-
-  if(csv) {
-    try {
-      const rows = parseCSV(csv);
-      companies = processRows(rows);
-      const now = new Date();
-      document.getElementById('last-updated').textContent=
-        `Обновлено: ${now.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})}`;
-      initFilters();
-      applyFilters();
-    } catch(e) {
-      showError('Ошибка парсинга данных', e.message);
-    }
-  } else {
+  try {
+    const res = await fetch('/api/sheet');
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const csv = await res.text();
+    if(!csv.includes(',') || csv.length < 100) throw new Error('Пустой ответ от таблицы');
+    const rows = parseCSV(csv);
+    companies = processRows(rows);
+    const now = new Date();
+    document.getElementById('last-updated').textContent =
+      `Обновлено: ${now.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})}`;
+    initFilters();
+    applyFilters();
+  } catch(e) {
     showError(
       'Не удалось загрузить данные',
       'Убедитесь что таблица открыта для всех по ссылке (Общий доступ → Все, у кого есть ссылка).',
-      lastError?.message
+      e.message
     );
   }
 
-  btn.disabled=false; btn.classList.remove('loading');
+    btn.disabled=false; btn.classList.remove('loading');
   label.textContent='Обновить';
 }
 
