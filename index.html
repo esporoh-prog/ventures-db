@@ -25,7 +25,6 @@
   --gray-bg: #F1F3F7;
   --radius: 10px;
   --radius-sm: 6px;
-  --shadow: 0 1px 4px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.04);
   --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
 }
 
@@ -40,193 +39,113 @@ body {
   min-height: 100vh;
 }
 
-/* HEADER */
 .header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  position: sticky; top: 0; z-index: 100;
   background: #fff;
   border-bottom: 1px solid var(--border);
-  box-shadow: 0 1px 0 var(--border);
 }
 
 .header-top {
-  padding: 0 24px;
-  height: 54px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  padding: 0 24px; height: 54px;
+  display: flex; align-items: center; justify-content: space-between;
   border-bottom: 3px solid var(--accent);
 }
 
 .logo {
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: -0.4px;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  font-size: 17px; font-weight: 700;
+  letter-spacing: -0.4px; color: var(--text);
+  display: flex; align-items: center; gap: 8px;
 }
 
 .logo-dot { color: var(--accent); }
+.logo-sub { font-weight: 400; color: var(--text3); font-size: 13px; }
 
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+.header-right { display: flex; align-items: center; gap: 10px; }
 
 .refresh-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  display: flex; align-items: center; gap: 6px;
   padding: 7px 14px;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-size: 13px;
-  font-weight: 500;
+  background: var(--accent); color: white;
+  border: none; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 500;
   font-family: 'Inter', sans-serif;
-  cursor: pointer;
-  transition: background 0.15s;
+  cursor: pointer; transition: background 0.15s;
 }
-
 .refresh-btn:hover { background: var(--accent-dark); }
 .refresh-btn:disabled { background: var(--text3); cursor: not-allowed; }
-
-.refresh-btn svg { transition: transform 0.5s; }
 .refresh-btn.loading svg { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .lang-toggle {
-  display: flex;
-  background: var(--bg3);
+  display: flex; background: var(--bg3);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
+  border-radius: var(--radius-sm); overflow: hidden;
 }
-
 .lang-btn {
-  padding: 5px 11px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  background: none;
-  color: var(--text3);
-  font-family: 'Inter', sans-serif;
-  transition: all 0.15s;
+  padding: 5px 11px; font-size: 12px; font-weight: 600;
+  cursor: pointer; border: none; background: none;
+  color: var(--text3); font-family: 'Inter', sans-serif; transition: all 0.15s;
 }
-
 .lang-btn.active { background: var(--accent); color: white; }
 
-.last-updated {
-  font-size: 11px;
-  color: var(--text3);
-  white-space: nowrap;
-}
+.last-updated { font-size: 11px; color: var(--text3); white-space: nowrap; }
 
-/* LAYOUT */
 .layout {
-  display: grid;
-  grid-template-columns: 260px 1fr;
+  display: grid; grid-template-columns: 260px 1fr;
   min-height: calc(100vh - 54px);
-  max-width: 1440px;
-  margin: 0 auto;
+  max-width: 1440px; margin: 0 auto;
 }
 
-/* SIDEBAR */
 .sidebar {
-  background: #fff;
-  border-right: 1px solid var(--border);
+  background: #fff; border-right: 1px solid var(--border);
   padding: 18px 16px;
-  position: sticky;
-  top: 54px;
-  height: calc(100vh - 54px);
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+  position: sticky; top: 54px;
+  height: calc(100vh - 54px); overflow-y: auto;
+  display: flex; flex-direction: column; gap: 18px;
 }
-
 .sidebar::-webkit-scrollbar { width: 3px; }
 .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
 .search-wrap { position: relative; }
-
 .search-input {
-  width: 100%;
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  width: 100%; background: var(--bg2);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
   padding: 9px 12px 9px 34px;
-  color: var(--text);
-  font-size: 13px;
-  font-family: 'Inter', sans-serif;
-  outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  color: var(--text); font-size: 13px; font-family: 'Inter', sans-serif;
+  outline: none; transition: border-color 0.15s, box-shadow 0.15s;
 }
-
 .search-input::placeholder { color: var(--text3); }
 .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(240,83,28,0.08); }
-
 .search-icon {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text3);
-  pointer-events: none;
+  position: absolute; left: 10px; top: 50%;
+  transform: translateY(-50%); color: var(--text3); pointer-events: none;
 }
 
 .filter-section { display: flex; flex-direction: column; gap: 7px; }
-
 .filter-label {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--text3);
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.8px; color: var(--text3);
 }
-
 .filter-select {
-  width: 100%;
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 8px 30px 8px 11px;
-  color: var(--text);
-  font-size: 13px;
-  font-family: 'Inter', sans-serif;
-  outline: none;
-  cursor: pointer;
-  appearance: none;
+  width: 100%; background: var(--bg2);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 8px 30px 8px 11px; color: var(--text);
+  font-size: 13px; font-family: 'Inter', sans-serif;
+  outline: none; cursor: pointer; appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238A929E' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
+  background-repeat: no-repeat; background-position: right 10px center;
   transition: border-color 0.15s;
 }
-
-.filter-select:focus { border-color: var(--accent); outline: none; }
+.filter-select:focus { border-color: var(--accent); }
 
 .verdict-filters { display: flex; flex-direction: column; gap: 5px; }
-
 .verdict-chip {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 11px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  cursor: pointer;
-  transition: all 0.15s;
-  background: var(--bg2);
-  font-size: 13px;
-  color: var(--text2);
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 11px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); cursor: pointer;
+  transition: all 0.15s; background: var(--bg2);
+  font-size: 13px; color: var(--text2);
 }
-
 .verdict-chip:hover { border-color: var(--accent); color: var(--text); background: var(--accent-light); }
 .verdict-chip.active { border-color: var(--accent); background: var(--accent-light); color: var(--text); }
 
@@ -237,61 +156,37 @@ body {
 .verdict-dot.all { background: var(--accent); }
 
 .verdict-count {
-  margin-left: auto;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text3);
-  background: var(--bg3);
-  padding: 1px 7px;
-  border-radius: 10px;
+  margin-left: auto; font-size: 11px; font-weight: 600;
+  color: var(--text3); background: var(--bg3);
+  padding: 1px 7px; border-radius: 10px;
 }
 
 .reset-btn {
-  width: 100%;
-  padding: 8px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: none;
-  color: var(--text2);
-  font-size: 13px;
-  font-family: 'Inter', sans-serif;
-  cursor: pointer;
-  transition: all 0.15s;
+  width: 100%; padding: 8px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: none;
+  color: var(--text2); font-size: 13px;
+  font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.15s;
 }
-
 .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-/* MAIN */
 .main { padding: 20px 22px; }
 
 .toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-  gap: 12px;
+  display: flex; align-items: center;
+  justify-content: space-between; margin-bottom: 14px; gap: 12px;
 }
-
 .results-info { font-size: 13px; color: var(--text2); }
 .results-info strong { color: var(--text); font-weight: 600; }
 
 .sort-select {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 7px 26px 7px 11px;
-  color: var(--text);
-  font-size: 12px;
-  font-family: 'Inter', sans-serif;
-  outline: none;
-  cursor: pointer;
-  appearance: none;
+  background: #fff; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 7px 26px 7px 11px;
+  color: var(--text); font-size: 12px; font-family: 'Inter', sans-serif;
+  outline: none; cursor: pointer; appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238A929E' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 9px center;
+  background-repeat: no-repeat; background-position: right 9px center;
 }
 
-/* CARDS */
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -299,346 +194,210 @@ body {
 }
 
 .card {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
-  cursor: pointer;
-  transition: all 0.15s;
-  display: flex;
-  flex-direction: column;
-  gap: 11px;
-  position: relative;
-  overflow: hidden;
+  background: #fff; border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px;
+  cursor: pointer; transition: all 0.15s;
+  display: flex; flex-direction: column; gap: 11px;
+  position: relative; overflow: hidden;
 }
-
 .card::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: transparent;
-  transition: background 0.15s;
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: transparent; transition: background 0.15s;
 }
-
-.card:hover {
-  border-color: rgba(240,83,28,0.3);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
-}
-
+.card:hover { border-color: rgba(240,83,28,0.3); box-shadow: var(--shadow-md); transform: translateY(-1px); }
 .card:hover::after { background: var(--accent); }
 
 .card-header { display: flex; align-items: flex-start; gap: 11px; }
-
 .company-avatar {
-  width: 40px; height: 40px;
-  border-radius: 9px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 15px;
-  color: white;
-  flex-shrink: 0;
-  letter-spacing: -0.5px;
+  width: 40px; height: 40px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 15px; color: white;
+  flex-shrink: 0; letter-spacing: -0.5px;
 }
-
 .card-title-wrap { flex: 1; min-width: 0; }
-
 .card-name {
-  font-weight: 600;
-  font-size: 14px;
-  letter-spacing: -0.2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: var(--text);
+  font-weight: 600; font-size: 14px; letter-spacing: -0.2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text);
 }
-
-.card-meta {
-  font-size: 12px;
-  color: var(--text3);
-  margin-top: 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+.card-meta { font-size: 12px; color: var(--text3); margin-top: 2px; }
 
 .verdict-badge {
-  padding: 3px 8px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  flex-shrink: 0;
-  letter-spacing: 0.1px;
+  padding: 3px 8px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; flex-shrink: 0;
 }
-
 .verdict-badge.pipeline { background: var(--green-bg); color: var(--green); }
 .verdict-badge.study { background: var(--yellow-bg); color: var(--yellow); }
 .verdict-badge.later { background: var(--gray-bg); color: var(--text3); }
 
 .card-desc {
-  font-size: 12px;
-  color: var(--text2);
-  line-height: 1.55;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  font-size: 12px; color: var(--text2); line-height: 1.55;
+  display: -webkit-box; -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden;
 }
 
 .card-tags { display: flex; flex-wrap: wrap; gap: 5px; }
-
 .tag {
-  padding: 2px 8px;
-  background: var(--bg3);
-  border-radius: 20px;
-  font-size: 11px;
-  color: var(--text2);
-  border: 1px solid var(--border);
+  padding: 2px 8px; background: var(--bg3);
+  border-radius: 20px; font-size: 11px;
+  color: var(--text2); border: 1px solid var(--border);
 }
 
 .card-footer {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 8px;
-  padding-top: 11px;
-  border-top: 1px solid var(--border);
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px; padding-top: 11px; border-top: 1px solid var(--border);
 }
-
 .card-stat-label {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--text3);
-  font-weight: 600;
-  margin-bottom: 3px;
+  font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.5px; color: var(--text3);
+  font-weight: 600; margin-bottom: 3px;
 }
-
-.card-stat-value {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text);
-}
+.card-stat-value { font-size: 12px; font-weight: 600; color: var(--text); }
 
 .score-wrap { display: flex; align-items: center; gap: 6px; }
-
-.score-bar {
-  flex: 1; height: 4px;
-  background: var(--border);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.score-bar-fill {
-  height: 100%;
-  background: var(--accent);
-  border-radius: 2px;
-  transition: width 0.3s;
-}
-
+.score-bar { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.score-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; }
 .score-num { font-size: 12px; font-weight: 700; color: var(--accent); min-width: 16px; }
 
-/* PAGINATION */
 .pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 22px 0;
-  flex-wrap: wrap;
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px; padding: 22px 0; flex-wrap: wrap;
 }
-
 .page-btn {
-  padding: 6px 13px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: #fff;
-  color: var(--text2);
-  font-size: 13px;
-  font-family: 'Inter', sans-serif;
-  cursor: pointer;
-  transition: all 0.15s;
+  padding: 6px 13px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: #fff;
+  color: var(--text2); font-size: 13px;
+  font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.15s;
 }
-
 .page-btn:hover { border-color: var(--accent); color: var(--accent); }
 .page-btn.active { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
 .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-/* LOADING */
 .loading-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  padding: 80px 20px;
-  color: var(--text3);
-  grid-column: 1/-1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 14px; padding: 80px 20px;
+  color: var(--text3); grid-column: 1/-1;
 }
-
 .spinner {
   width: 32px; height: 32px;
   border: 3px solid var(--border);
   border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  border-radius: 50%; animation: spin 0.8s linear infinite;
 }
 
 .empty-state {
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   gap: 10px; padding: 80px 20px;
-  color: var(--text3); text-align: center;
-  grid-column: 1/-1;
+  color: var(--text3); text-align: center; grid-column: 1/-1;
 }
-
 .empty-state h3 { font-size: 15px; color: var(--text2); font-weight: 500; }
 
-/* MODAL */
+.error-state {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 12px; padding: 60px 20px;
+  text-align: center; grid-column: 1/-1;
+}
+.error-state h3 { font-size: 15px; color: var(--text); font-weight: 600; }
+.error-state p { font-size: 13px; color: var(--text2); max-width: 400px; line-height: 1.6; }
+.error-state code { font-size: 11px; color: var(--text3); background: var(--bg3); padding: 2px 6px; border-radius: 4px; }
+.retry-btn {
+  padding: 9px 20px; background: var(--accent); color: white;
+  border: none; border-radius: var(--radius-sm);
+  font-size: 13px; font-family: 'Inter', sans-serif;
+  cursor: pointer; font-weight: 500;
+}
+.retry-btn:hover { background: var(--accent-dark); }
+
 .modal-overlay {
   position: fixed; inset: 0;
-  background: rgba(15,20,35,0.45);
-  backdrop-filter: blur(3px);
-  z-index: 200;
-  display: flex; align-items: center; justify-content: center;
-  padding: 20px;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.2s;
+  background: rgba(15,20,35,0.45); backdrop-filter: blur(3px);
+  z-index: 200; display: flex; align-items: center; justify-content: center;
+  padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.2s;
 }
-
 .modal-overlay.open { opacity: 1; pointer-events: all; }
 
 .modal {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  width: 100%; max-width: 620px;
-  max-height: 88vh;
-  overflow-y: auto;
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 14px; width: 100%; max-width: 620px;
+  max-height: 88vh; overflow-y: auto;
   box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-  transform: translateY(12px);
-  transition: transform 0.2s;
+  transform: translateY(12px); transition: transform 0.2s;
 }
-
 .modal-overlay.open .modal { transform: translateY(0); }
 .modal::-webkit-scrollbar { width: 3px; }
 .modal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-.modal-stripe {
-  height: 4px;
-  background: var(--accent);
-  border-radius: 14px 14px 0 0;
-}
+.modal-stripe { height: 4px; background: var(--accent); border-radius: 14px 14px 0 0; }
 
 .modal-header {
-  padding: 18px 20px 16px;
-  border-bottom: 1px solid var(--border);
+  padding: 18px 20px 16px; border-bottom: 1px solid var(--border);
   display: flex; align-items: flex-start; gap: 13px;
-  position: sticky; top: 0;
-  background: #fff; z-index: 1;
+  position: sticky; top: 0; background: #fff; z-index: 1;
 }
-
 .modal-avatar {
-  width: 48px; height: 48px;
-  border-radius: 10px;
+  width: 48px; height: 48px; border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 18px;
-  color: white; flex-shrink: 0;
+  font-weight: 700; font-size: 18px; color: white; flex-shrink: 0;
 }
-
-.modal-name {
-  font-size: 18px; font-weight: 700;
-  letter-spacing: -0.4px; line-height: 1.2;
-  color: var(--text);
-}
-
+.modal-name { font-size: 18px; font-weight: 700; letter-spacing: -0.4px; color: var(--text); }
 .modal-subtitle {
-  font-size: 12px; color: var(--text3);
-  margin-top: 4px;
+  font-size: 12px; color: var(--text3); margin-top: 4px;
   display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
 }
-
 .modal-close {
-  width: 30px; height: 30px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: none; color: var(--text3);
-  cursor: pointer; font-size: 16px;
+  width: 30px; height: 30px; border-radius: 6px;
+  border: 1px solid var(--border); background: none;
+  color: var(--text3); cursor: pointer; font-size: 16px;
   display: flex; align-items: center; justify-content: center;
   transition: all 0.15s; flex-shrink: 0; margin-left: auto;
 }
-
 .modal-close:hover { border-color: var(--text); color: var(--text); }
 
 .modal-body { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
-
 .modal-section-title {
-  font-size: 10px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.8px;
-  color: var(--text3); margin-bottom: 10px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.8px; color: var(--text3); margin-bottom: 10px;
 }
-
 .modal-desc { font-size: 13px; color: var(--text2); line-height: 1.65; }
 
 .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-
 .stat-box {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 11px 13px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 11px 13px;
 }
-
 .stat-box-label {
-  font-size: 10px; text-transform: uppercase;
-  letter-spacing: 0.5px; color: var(--text3);
-  font-weight: 600; margin-bottom: 3px;
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--text3); font-weight: 600; margin-bottom: 3px;
 }
-
 .stat-box-value { font-size: 15px; font-weight: 700; color: var(--text); }
 .stat-box-value.accent { color: var(--accent); }
 .stat-box-value.green { color: var(--green); }
 
-/* SCORING */
 .scoring-wrap {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  border-radius: var(--radius);
-  padding: 16px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent); border-radius: var(--radius); padding: 16px;
 }
-
 .scoring-header {
   display: flex; align-items: center;
   justify-content: space-between; margin-bottom: 16px;
 }
-
 .scoring-total-num {
   font-size: 32px; font-weight: 700;
-  letter-spacing: -1px; color: var(--accent);
-  line-height: 1;
+  letter-spacing: -1px; color: var(--accent); line-height: 1;
 }
-
 .scoring-total-sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
-
 .scoring-row { margin-bottom: 12px; }
 .scoring-row:last-child { margin-bottom: 0; }
-
 .scoring-row-header {
   display: flex; align-items: center;
   justify-content: space-between; margin-bottom: 5px;
 }
-
 .scoring-row-name { font-size: 13px; color: var(--text2); }
 .scoring-row-val { font-size: 13px; font-weight: 700; color: var(--accent); }
-
-.scoring-bar {
-  height: 5px; background: var(--border);
-  border-radius: 3px; overflow: hidden;
-}
-
+.scoring-bar { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
 .scoring-bar-fill { height: 100%; border-radius: 3px; transition: width 0.4s; }
 .bar-market { background: var(--accent); }
 .bar-edge { background: var(--green); }
@@ -646,7 +405,6 @@ body {
 
 .investors-text { font-size: 13px; color: var(--text2); line-height: 1.7; }
 
-/* MOBILE */
 @media (max-width: 768px) {
   .layout { grid-template-columns: 1fr; }
   .sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
@@ -661,7 +419,10 @@ body {
 
 <header class="header">
   <div class="header-top">
-    <div class="logo">Ventures<span class="logo-dot">.</span> <span style="font-weight:400;color:var(--text3);font-size:13px">база стартапов</span></div>
+    <div class="logo">
+      Ventures<span class="logo-dot">.</span>
+      <span class="logo-sub">база стартапов</span>
+    </div>
     <div class="header-right">
       <span class="last-updated" id="last-updated"></span>
       <div class="lang-toggle">
@@ -671,7 +432,8 @@ body {
       <button class="refresh-btn" id="refresh-btn" onclick="loadData(true)">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
-          <path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+          <path d="M21 3v5h-5"/>
+          <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
           <path d="M8 16H3v5"/>
         </svg>
         <span id="refresh-label">Обновить</span>
@@ -716,14 +478,14 @@ body {
     </div>
 
     <div class="filter-section">
-      <div class="filter-label" data-ru="Вертикаль" data-en="Industry">Вертикаль</div>
+      <div class="filter-label">Вертикаль</div>
       <select class="filter-select" id="f-industry" onchange="applyFilters()">
         <option value="">Все вертикали</option>
       </select>
     </div>
 
     <div class="filter-section">
-      <div class="filter-label" data-ru="Стадия" data-en="Stage">Стадия</div>
+      <div class="filter-label">Стадия</div>
       <select class="filter-select" id="f-stage" onchange="applyFilters()">
         <option value="">Все стадии</option>
         <option value="Early Stage Venture">Early Stage</option>
@@ -733,14 +495,14 @@ body {
     </div>
 
     <div class="filter-section">
-      <div class="filter-label" data-ru="Раунд" data-en="Round">Раунд</div>
+      <div class="filter-label">Раунд</div>
       <select class="filter-select" id="f-round" onchange="applyFilters()">
         <option value="">Все раунды</option>
       </select>
     </div>
 
     <div class="filter-section">
-      <div class="filter-label" data-ru="Команда" data-en="Team">Команда</div>
+      <div class="filter-label">Команда</div>
       <select class="filter-select" id="f-employees" onchange="applyFilters()">
         <option value="">Любой размер</option>
         <option value="1-10">1–10</option>
@@ -764,9 +526,7 @@ body {
       </select>
     </div>
 
-    <button class="reset-btn" onclick="resetFilters()">
-      <span data-ru="Сбросить фильтры" data-en="Reset filters">Сбросить фильтры</span>
-    </button>
+    <button class="reset-btn" onclick="resetFilters()">Сбросить фильтры</button>
   </aside>
 
   <main class="main">
@@ -806,7 +566,6 @@ body {
 
 <script>
 const SHEET_ID = '1FPiPD7Kxd27IwM9OpdDr5dY2xk0B4qezh_2UhhWXCjM';
-const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`;
 
 const VALID_INDUSTRIES = new Set([
   'Administrative Services','Advertising','Agriculture and Farming','Apps',
@@ -827,7 +586,7 @@ let companies = [], filtered = [];
 let currentVerdict = 'all', currentLang = 'ru', currentPage = 1;
 const PAGE_SIZE = 24;
 
-// ---- PARSE CSV ----
+// ---- CSV PARSER ----
 function parseCSV(text) {
   const lines = text.split('\n');
   const headers = parseCSVLine(lines[0]);
@@ -857,10 +616,10 @@ function parseCSVLine(line) {
   return result;
 }
 
-// ---- SCORE ----
+// ---- SCORING ----
 function parseFundingM(val) {
   if(!val || val === 'nan') return 0;
-  val = val.replace(/,/g,'').replace(/\$/,'').trim();
+  val = val.replace(/,/g,'').replace(/\$/g,'').trim();
   if(val.includes('B')) return parseFloat(val)*1000;
   if(val.includes('M')) return parseFloat(val);
   if(val.includes('K')) return parseFloat(val)/1000;
@@ -875,25 +634,24 @@ function calcScore(row) {
   const fm     = parseFundingM(row['Last Funding Amount']);
 
   let market = 0;
-  if(growth==='high') market+=2; else if(growth==='medium') market+=1;
+  if(growth==='high') market=2; else if(growth==='medium') market=1;
   if(heat==='high' && market<2) market=Math.min(market+1,2);
   if(fm>100) market=Math.min(market+1,2);
-  market = Math.min(market,2);
+  market=Math.min(market,2);
 
-  const yv = ['artificial intelligence','data','software','fintech','health','logistics','e-commerce','media','education','cloud','financial'];
-  const hits = yv.filter(v=>ind.includes(v)).length;
-  const edge = hits>=3?2:hits>=1?1:0;
-
-  const complexity = stage.includes('early')?2:stage.includes('late')?1:1;
-
-  const total = market+edge+complexity;
-  const verdict = total>=5?'В pipeline':total>=3?'Изучить':'Отложить';
+  const yv=['artificial intelligence','data','software','fintech','health',
+            'logistics','e-commerce','media','education','cloud','financial'];
+  const hits=yv.filter(v=>ind.includes(v)).length;
+  const edge=hits>=3?2:hits>=1?1:0;
+  const complexity=stage.includes('early')?2:1;
+  const total=market+edge+complexity;
+  const verdict=total>=5?'В pipeline':total>=3?'Изучить':'Отложить';
   return {market,edge,complexity,total,verdict};
 }
 
 function processRows(rows) {
   return rows
-    .filter(r => r['Operating Status']==='Active' || !r['Operating Status'])
+    .filter(r => !r['Operating Status'] || r['Operating Status']==='Active')
     .map(r => {
       const rawInd = r['Industry Groups']||'';
       const industries = rawInd.split(',').map(s=>s.trim()).filter(s=>VALID_INDUSTRIES.has(s));
@@ -912,8 +670,6 @@ function processRows(rows) {
         growth_score: r['Growth Score Tier']||'',
         heat_score: r['Heat Score Tier']||'',
         trend_score: r['Trend Score (90 Days)']||'',
-        cb_rank: r['CB Rank (Company)']||'',
-        monthly_visits: r['Monthly Visits']||'',
         lead_investors: r['Lead Investors']||'',
         top_investors: r['Top 5 Investors']||'',
         score: calcScore(r),
@@ -926,63 +682,95 @@ function processRows(rows) {
 async function loadData(manual=false) {
   const btn = document.getElementById('refresh-btn');
   const label = document.getElementById('refresh-label');
-  btn.disabled = true; btn.classList.add('loading');
-  label.textContent = currentLang==='ru'?'Загрузка...':'Loading...';
+  btn.disabled=true; btn.classList.add('loading');
+  label.textContent='Загрузка...';
 
   if(!manual) {
-    document.getElementById('cards-grid').innerHTML = `
+    document.getElementById('cards-grid').innerHTML=`
       <div class="loading-state">
         <div class="spinner"></div>
-        <span>${currentLang==='ru'?'Загружаем данные из Google Sheets...':'Loading from Google Sheets...'}</span>
+        <span>Загружаем данные из Google Sheets...</span>
       </div>`;
   }
 
-  try {
-    const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(SHEET_URL)}&t=${Date.now()}`;
-    const res = await fetch(proxy);
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const csv = await res.text();
-    const rows = parseCSV(csv);
-    companies = processRows(rows);
+  // Пробуем три метода по очереди
+  const methods = [
+    // Метод 1: прямой CSV экспорт (работает на Vercel)
+    () => fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`),
+    // Метод 2: через corsproxy.io
+    () => fetch(`https://corsproxy.io/?${encodeURIComponent(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`)}`),
+    // Метод 3: через allorigins
+    () => fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`)}&t=${Date.now()}`),
+  ];
 
-    const now = new Date();
-    document.getElementById('last-updated').textContent =
-      `Обновлено: ${now.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})}`;
+  let csv = null;
+  let lastError = null;
 
-    initFilters();
-    applyFilters();
-  } catch(e) {
-    document.getElementById('cards-grid').innerHTML = `
-      <div class="empty-state">
-        <h3>Не удалось загрузить данные</h3>
-        <p style="margin-top:6px;font-size:12px">Проверьте что таблица открыта для всех по ссылке</p>
-        <p style="margin-top:4px;font-size:11px;color:var(--text3)">${e.message}</p>
-      </div>`;
+  for(const method of methods) {
+    try {
+      const res = await method();
+      if(res.ok) {
+        const text = await res.text();
+        if(text.includes(',') && text.length > 100) {
+          csv = text; break;
+        }
+      }
+    } catch(e) { lastError = e; }
+  }
+
+  if(csv) {
+    try {
+      const rows = parseCSV(csv);
+      companies = processRows(rows);
+      const now = new Date();
+      document.getElementById('last-updated').textContent=
+        `Обновлено: ${now.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})}`;
+      initFilters();
+      applyFilters();
+    } catch(e) {
+      showError('Ошибка парсинга данных', e.message);
+    }
+  } else {
+    showError(
+      'Не удалось загрузить данные',
+      'Убедитесь что таблица открыта для всех по ссылке (Общий доступ → Все, у кого есть ссылка).',
+      lastError?.message
+    );
   }
 
   btn.disabled=false; btn.classList.remove('loading');
-  label.textContent = currentLang==='ru'?'Обновить':'Refresh';
+  label.textContent='Обновить';
 }
 
-// ---- FILTERS INIT ----
+function showError(title, message, detail='') {
+  document.getElementById('cards-grid').innerHTML=`
+    <div class="error-state">
+      <h3>${title}</h3>
+      <p>${message}</p>
+      ${detail?`<code>${detail}</code>`:''}
+      <button class="retry-btn" onclick="loadData(true)">Попробовать снова</button>
+    </div>`;
+}
+
+// ---- FILTERS ----
 function initFilters() {
   const industries = new Set();
   companies.forEach(c=>c.industries.forEach(i=>{if(i)industries.add(i);}));
-  const sel = document.getElementById('f-industry');
-  const cur = sel.value;
-  sel.innerHTML = `<option value="">Все вертикали</option>`;
+  const isel = document.getElementById('f-industry');
+  const icur = isel.value;
+  isel.innerHTML='<option value="">Все вертикали</option>';
   [...industries].sort().forEach(i=>{
     const o=document.createElement('option');
     o.value=i; o.textContent=i;
-    if(i===cur) o.selected=true;
-    sel.appendChild(o);
+    if(i===icur) o.selected=true;
+    isel.appendChild(o);
   });
 
   const rounds = new Set();
   companies.forEach(c=>{if(c.last_funding_type&&c.last_funding_type!=='nan')rounds.add(c.last_funding_type);});
   const rsel = document.getElementById('f-round');
   const rcur = rsel.value;
-  rsel.innerHTML = `<option value="">Все раунды</option>`;
+  rsel.innerHTML='<option value="">Все раунды</option>';
   [...rounds].sort().forEach(r=>{
     const o=document.createElement('option');
     o.value=r; o.textContent=r;
@@ -990,12 +778,8 @@ function initFilters() {
     rsel.appendChild(o);
   });
 
-  updateCounts(companies);
-}
-
-function updateCounts(all) {
-  const c={all:all.length,pipeline:0,study:0,later:0};
-  all.forEach(x=>{
+  const c={all:companies.length,pipeline:0,study:0,later:0};
+  companies.forEach(x=>{
     if(x.score.verdict==='В pipeline') c.pipeline++;
     else if(x.score.verdict==='Изучить') c.study++;
     else c.later++;
@@ -1006,7 +790,6 @@ function updateCounts(all) {
   document.getElementById('cnt-later').textContent=c.later;
 }
 
-// ---- APPLY FILTERS ----
 function setVerdict(v,el) {
   currentVerdict=v;
   document.querySelectorAll('.verdict-chip').forEach(c=>c.classList.remove('active'));
@@ -1015,13 +798,13 @@ function setVerdict(v,el) {
 }
 
 function applyFilters() {
-  const q  = document.getElementById('search').value.toLowerCase().trim();
-  const ind= document.getElementById('f-industry').value;
-  const st = document.getElementById('f-stage').value;
-  const rn = document.getElementById('f-round').value;
-  const em = document.getElementById('f-employees').value;
-  const gr = document.getElementById('f-growth').value;
-  const so = document.getElementById('sort').value;
+  const q   = document.getElementById('search').value.toLowerCase().trim();
+  const ind = document.getElementById('f-industry').value;
+  const st  = document.getElementById('f-stage').value;
+  const rn  = document.getElementById('f-round').value;
+  const em  = document.getElementById('f-employees').value;
+  const gr  = document.getElementById('f-growth').value;
+  const so  = document.getElementById('sort').value;
 
   filtered = companies.filter(c=>{
     if(currentVerdict!=='all' && c.score.verdict!==currentVerdict) return false;
@@ -1060,7 +843,7 @@ function resetFilters() {
 }
 
 // ---- RENDER ----
-const AVATAR_COLORS=[
+const COLORS=[
   ['#F0531C','#C93D10'],['#2563EB','#1D4ED8'],['#059669','#047857'],
   ['#7C3AED','#6D28D9'],['#D97706','#B45309'],['#0891B2','#0E7490'],
   ['#DB2777','#BE185D'],['#4F46E5','#4338CA']
@@ -1068,7 +851,7 @@ const AVATAR_COLORS=[
 
 function avatarStyle(name){
   let h=0; for(let i=0;i<name.length;i++) h=name.charCodeAt(i)+((h<<5)-h);
-  const [c1,c2]=AVATAR_COLORS[Math.abs(h)%AVATAR_COLORS.length];
+  const [c1,c2]=COLORS[Math.abs(h)%COLORS.length];
   return `background:linear-gradient(135deg,${c1},${c2})`;
 }
 
@@ -1076,21 +859,13 @@ function initials(name){
   return name.split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';
 }
 
-function vc(verdict){
-  if(verdict==='В pipeline') return 'pipeline';
-  if(verdict==='Изучить') return 'study';
-  return 'later';
-}
-
-function vl(verdict){
+function vc(v){ return v==='В pipeline'?'pipeline':v==='Изучить'?'study':'later'; }
+function vl(v){
   if(currentLang==='en'){
-    if(verdict==='В pipeline') return 'Pipeline';
-    if(verdict==='Изучить') return 'Study';
-    return 'Later';
+    return v==='В pipeline'?'Pipeline':v==='Изучить'?'Study':'Later';
   }
-  return verdict;
+  return v;
 }
-
 function clean(val){ return (!val||val==='nan')?'':val; }
 
 function renderCards(){
@@ -1100,15 +875,12 @@ function renderCards(){
   const start=(currentPage-1)*PAGE_SIZE;
   const page=filtered.slice(start,start+PAGE_SIZE);
 
-  const shown=Math.min(start+PAGE_SIZE,total);
-  info.innerHTML=currentLang==='ru'
-    ?`Показано <strong>${shown}</strong> из <strong>${total}</strong>`
-    :`Showing <strong>${shown}</strong> of <strong>${total}</strong>`;
+  info.innerHTML=`Показано <strong>${Math.min(start+PAGE_SIZE,total)}</strong> из <strong>${total}</strong>`;
 
   if(!page.length){
     grid.innerHTML=`<div class="empty-state">
-      <h3>${currentLang==='ru'?'Ничего не найдено':'Nothing found'}</h3>
-      <p>${currentLang==='ru'?'Попробуйте изменить фильтры':'Try changing the filters'}</p>
+      <h3>Ничего не найдено</h3>
+      <p>Попробуйте изменить фильтры</p>
     </div>`;
     document.getElementById('pagination').innerHTML='';
     return;
@@ -1116,32 +888,32 @@ function renderCards(){
 
   grid.innerHTML=page.map((c,i)=>{
     const desc=clean(c.description)||clean(c.full_description);
-    const shortDesc=desc?desc.substring(0,160):'';
+    const short=desc?desc.substring(0,160):'';
     const tags=c.industries.slice(0,3);
     const funding=clean(c.last_funding_amount);
     const round=clean(c.last_funding_type);
     const growth=clean(c.growth_score);
-    const growthColor=growth==='High'?'var(--green)':growth==='Medium'?'#D97706':'var(--text3)';
+    const gc=growth==='High'?'var(--green)':growth==='Medium'?'#D97706':'var(--text3)';
 
     return `<div class="card" onclick="openModal(${start+i})">
       <div class="card-header">
         <div class="company-avatar" style="${avatarStyle(c.name)}">${initials(c.name)}</div>
         <div class="card-title-wrap">
           <div class="card-name">${c.name}</div>
-          <div class="card-meta">${round||'—'}${c.employees?` · ${c.employees}`:''}</div>
+          <div class="card-meta">${round||'—'}${c.employees?' · '+c.employees:''}</div>
         </div>
         <span class="verdict-badge ${vc(c.score.verdict)}">${vl(c.score.verdict)}</span>
       </div>
-      ${shortDesc?`<div class="card-desc">${shortDesc}</div>`:''}
+      ${short?`<div class="card-desc">${short}</div>`:''}
       ${tags.length?`<div class="card-tags">${tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>`:''}
       <div class="card-footer">
         <div>
-          <div class="card-stat-label">${currentLang==='ru'?'Раунд':'Raised'}</div>
+          <div class="card-stat-label">Раунд</div>
           <div class="card-stat-value" style="font-size:11px">${funding||'—'}</div>
         </div>
         <div>
           <div class="card-stat-label">Growth</div>
-          <div class="card-stat-value" style="color:${growthColor}">${growth||'—'}</div>
+          <div class="card-stat-value" style="color:${gc}">${growth||'—'}</div>
         </div>
         <div>
           <div class="card-stat-label">Score</div>
@@ -1195,32 +967,30 @@ function openModal(idx){
 
   const desc=clean(c.full_description)||clean(c.description);
   const investors=clean(c.top_investors)||clean(c.lead_investors);
-  const scoreColor=c.score.total>=5?'var(--green)':c.score.total>=3?'#D97706':'var(--text3)';
-  const ru=currentLang==='ru';
+  const sc=c.score.total>=5?'var(--green)':c.score.total>=3?'#D97706':'var(--text3)';
 
   document.getElementById('m-body').innerHTML=`
     ${desc?`<div>
-      <div class="modal-section-title">${ru?'О компании':'About'}</div>
+      <div class="modal-section-title">О компании</div>
       <div class="modal-desc">${desc}</div>
     </div>`:''}
-
     <div>
-      <div class="modal-section-title">${ru?'Метрики':'Metrics'}</div>
+      <div class="modal-section-title">Метрики</div>
       <div class="stats-grid">
         <div class="stat-box">
-          <div class="stat-box-label">${ru?'Привлечено':'Raised'}</div>
+          <div class="stat-box-label">Привлечено</div>
           <div class="stat-box-value accent">${clean(c.last_funding_amount)||'—'}</div>
         </div>
         <div class="stat-box">
-          <div class="stat-box-label">${ru?'Раунд':'Round'}</div>
+          <div class="stat-box-label">Раунд</div>
           <div class="stat-box-value">${clean(c.last_funding_type)||'—'}</div>
         </div>
         <div class="stat-box">
-          <div class="stat-box-label">${ru?'Команда':'Team'}</div>
+          <div class="stat-box-label">Команда</div>
           <div class="stat-box-value">${clean(c.employees)||'—'}</div>
         </div>
         <div class="stat-box">
-          <div class="stat-box-label">${ru?'Выручка':'Revenue'}</div>
+          <div class="stat-box-label">Выручка</div>
           <div class="stat-box-value">${clean(c.revenue_range)||'—'}</div>
         </div>
         <div class="stat-box">
@@ -1233,48 +1003,45 @@ function openModal(idx){
         </div>
       </div>
     </div>
-
     <div>
-      <div class="modal-section-title">${ru?'Скоринг Яндекса':'Yandex Scoring'}</div>
+      <div class="modal-section-title">Скоринг Яндекса</div>
       <div class="scoring-wrap">
         <div class="scoring-header">
           <div>
-            <div class="scoring-total-num" style="color:${scoreColor}">${c.score.total}<span style="font-size:16px;color:var(--text3);font-weight:400">/6</span></div>
-            <div class="scoring-total-sub">${ru?'итоговый балл':'total score'}</div>
+            <div class="scoring-total-num" style="color:${sc}">${c.score.total}<span style="font-size:16px;color:var(--text3);font-weight:400">/6</span></div>
+            <div class="scoring-total-sub">итоговый балл</div>
           </div>
           <span class="verdict-badge ${vc(c.score.verdict)}" style="font-size:13px;padding:5px 12px">${vl(c.score.verdict)}</span>
         </div>
         <div class="scoring-row">
           <div class="scoring-row-header">
-            <span class="scoring-row-name">${ru?'Рынок':'Market'}</span>
+            <span class="scoring-row-name">Рынок</span>
             <span class="scoring-row-val">${c.score.market}/2</span>
           </div>
           <div class="scoring-bar"><div class="scoring-bar-fill bar-market" style="width:${c.score.market/2*100}%"></div></div>
         </div>
         <div class="scoring-row">
           <div class="scoring-row-header">
-            <span class="scoring-row-name">${ru?'Edge Яндекса':'Yandex Edge'}</span>
+            <span class="scoring-row-name">Edge Яндекса</span>
             <span class="scoring-row-val" style="color:var(--green)">${c.score.edge}/2</span>
           </div>
           <div class="scoring-bar"><div class="scoring-bar-fill bar-edge" style="width:${c.score.edge/2*100}%"></div></div>
         </div>
         <div class="scoring-row">
           <div class="scoring-row-header">
-            <span class="scoring-row-name">${ru?'Сложность входа':'Entry Complexity'}</span>
+            <span class="scoring-row-name">Сложность входа</span>
             <span class="scoring-row-val" style="color:#D97706">${c.score.complexity}/2</span>
           </div>
           <div class="scoring-bar"><div class="scoring-bar-fill bar-complexity" style="width:${c.score.complexity/2*100}%"></div></div>
         </div>
       </div>
     </div>
-
     ${investors?`<div>
-      <div class="modal-section-title">${ru?'Инвесторы':'Investors'}</div>
+      <div class="modal-section-title">Инвесторы</div>
       <div class="investors-text">${investors}</div>
     </div>`:''}
-
     ${c.industries.length?`<div>
-      <div class="modal-section-title">${ru?'Вертикали':'Industries'}</div>
+      <div class="modal-section-title">Вертикали</div>
       <div class="card-tags">${c.industries.map(i=>`<span class="tag">${i}</span>`).join('')}</div>
     </div>`:''}
   `;
@@ -1286,7 +1053,6 @@ function openModal(idx){
 function closeModal(e){
   if(e.target===document.getElementById('modal-overlay')) closeModalDirect();
 }
-
 function closeModalDirect(){
   document.getElementById('modal-overlay').classList.remove('open');
   document.body.style.overflow='';
@@ -1296,12 +1062,9 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModalDirect();}
 
 function setLang(lang){
   currentLang=lang;
-  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.trim().toLowerCase().includes(lang==='ru'?'ру':'en')));
-  document.querySelectorAll('[data-ru]').forEach(el=>{
-    if(el.tagName!=='SELECT'&&el.tagName!=='OPTION') el.textContent=lang==='ru'?el.dataset.ru:el.dataset.en;
+  document.querySelectorAll('.lang-btn').forEach(b=>{
+    b.classList.toggle('active', b.textContent.trim().toLowerCase().includes(lang==='ru'?'ру':'en'));
   });
-  document.getElementById('search').placeholder=lang==='ru'?'Поиск компании...':'Search company...';
-  document.getElementById('refresh-label').textContent=lang==='ru'?'Обновить':'Refresh';
   if(companies.length) renderCards();
 }
 
