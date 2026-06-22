@@ -6,209 +6,224 @@
 <title>Яндекс Ventures — База стартапов</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
 :root {
-  --bg: #FFFFFF;
-  --bg2: #F8F9FB;
-  --bg3: #F1F3F7;
-  --border: #E2E8F0;
-  --accent: #F0531C;
-  --accent-light: #FEF0EB;
-  --accent-dark: #C93D10;
-  --text: #1E293B;
-  --text2: #5A6478;
-  --text3: #8A929E;
-  --green: #16A34A;
-  --green-bg: #F0FDF4;
-  --yellow: #B45309;
-  --yellow-bg: #FFFBEB;
-  --gray-bg: #F1F3F7;
-  --radius: 10px;
-  --radius-sm: 6px;
-  --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+  --bg:#FFFFFF; --bg2:#F8F9FB; --bg3:#F1F3F7; --border:#E2E8F0;
+  --accent:#F0531C; --accent-light:#FEF0EB; --accent-dark:#C93D10;
+  --text:#1E293B; --text2:#5A6478; --text3:#8A929E;
+  --green:#16A34A; --green-bg:#F0FDF4;
+  --yellow:#B45309; --yellow-bg:#FFFBEB;
+  --radius:10px; --radius-sm:6px;
+  --shadow-md:0 4px 16px rgba(0,0,0,0.10);
 }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.5;min-height:100vh;}
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg2); color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.5; min-height: 100vh; }
+/* HEADER */
+.header{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid var(--border);}
+.header-top{padding:0 24px;height:54px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--accent);}
+.logo{font-size:17px;font-weight:700;letter-spacing:-0.4px;color:var(--text);display:flex;align-items:center;gap:8px;}
+.logo-dot{color:var(--accent);}
+.logo-sub{font-weight:400;color:var(--text3);font-size:13px;}
+.header-right{display:flex;align-items:center;gap:10px;}
+.refresh-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;background:var(--accent);color:white;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer;transition:background 0.15s;}
+.refresh-btn:hover{background:var(--accent-dark);}
+.refresh-btn:disabled{background:var(--text3);cursor:not-allowed;}
+.refresh-btn.loading svg{animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.lang-toggle{display:flex;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;}
+.lang-btn{padding:5px 11px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:none;color:var(--text3);font-family:'Inter',sans-serif;transition:all 0.15s;}
+.lang-btn.active{background:var(--accent);color:white;}
+.last-updated{font-size:11px;color:var(--text3);white-space:nowrap;}
 
-.header { position: sticky; top: 0; z-index: 100; background: #fff; border-bottom: 1px solid var(--border); }
-.header-top { padding: 0 24px; height: 54px; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid var(--accent); }
-.logo { font-size: 17px; font-weight: 700; letter-spacing: -0.4px; color: var(--text); display: flex; align-items: center; gap: 8px; }
-.logo-dot { color: var(--accent); }
-.logo-sub { font-weight: 400; color: var(--text3); font-size: 13px; }
-.header-right { display: flex; align-items: center; gap: 10px; }
-.refresh-btn { display: flex; align-items: center; gap: 6px; padding: 7px 14px; background: var(--accent); color: white; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; font-family: 'Inter', sans-serif; cursor: pointer; transition: background 0.15s; }
-.refresh-btn:hover { background: var(--accent-dark); }
-.refresh-btn:disabled { background: var(--text3); cursor: not-allowed; }
-.refresh-btn.loading svg { animation: spin 1s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.lang-toggle { display: flex; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
-.lang-btn { padding: 5px 11px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; background: none; color: var(--text3); font-family: 'Inter', sans-serif; transition: all 0.15s; }
-.lang-btn.active { background: var(--accent); color: white; }
-.last-updated { font-size: 11px; color: var(--text3); white-space: nowrap; }
-
-.layout { display: grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 54px); max-width: 1600px; margin: 0 auto; }
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:290px 1fr;min-height:calc(100vh - 54px);max-width:1600px;margin:0 auto;}
 
 /* SIDEBAR */
-.sidebar { background: #fff; border-right: 1px solid var(--border); padding: 16px; position: sticky; top: 54px; height: calc(100vh - 54px); overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
-.sidebar::-webkit-scrollbar { width: 3px; }
-.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.sidebar{background:#fff;border-right:1px solid var(--border);padding:14px;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto;display:flex;flex-direction:column;gap:8px;}
+.sidebar::-webkit-scrollbar{width:3px;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
 
-.search-wrap { position: relative; margin-bottom: 6px; }
-.search-input { width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 9px 12px 9px 34px; color: var(--text); font-size: 13px; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
-.search-input::placeholder { color: var(--text3); }
-.search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(240,83,28,0.08); }
-.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text3); pointer-events: none; }
+.search-wrap{position:relative;}
+.search-input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px 9px 34px;color:var(--text);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color 0.15s,box-shadow 0.15s;}
+.search-input::placeholder{color:var(--text3);}
+.search-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(240,83,28,0.08);}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;}
 
 /* FILTER GROUPS */
-.filter-group { border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
-.filter-group-header { display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; cursor: pointer; background: var(--bg2); user-select: none; transition: background 0.15s; }
-.filter-group-header:hover { background: var(--bg3); }
-.filter-group-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text2); }
-.filter-group-arrow { color: var(--text3); transition: transform 0.2s; font-size: 10px; }
-.filter-group.open .filter-group-arrow { transform: rotate(180deg); }
-.filter-group-body { padding: 10px 12px; display: none; flex-direction: column; gap: 8px; border-top: 1px solid var(--border); background: #fff; }
-.filter-group.open .filter-group-body { display: flex; }
+.filter-group{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:visible;position:relative;}
+.filter-group-header{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;cursor:pointer;background:var(--bg2);user-select:none;transition:background 0.15s;border-radius:var(--radius-sm);}
+.filter-group-header:hover{background:var(--bg3);}
+.filter-group.open .filter-group-header{border-radius:var(--radius-sm) var(--radius-sm) 0 0;}
+.filter-group-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:var(--text2);}
+.filter-group-arrow{color:var(--text3);transition:transform 0.2s;font-size:10px;flex-shrink:0;}
+.filter-group.open .filter-group-arrow{transform:rotate(180deg);}
+.filter-group-body{padding:10px 12px;display:none;flex-direction:column;gap:10px;border-top:1px solid var(--border);background:#fff;border-radius:0 0 var(--radius-sm) var(--radius-sm);}
+.filter-group.open .filter-group-body{display:flex;}
 
-.filter-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text3); margin-bottom: 2px; }
-.filter-select { width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 7px 28px 7px 10px; color: var(--text); font-size: 12px; font-family: 'Inter', sans-serif; outline: none; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238A929E' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 9px center; transition: border-color 0.15s; }
-.filter-select:focus { border-color: var(--accent); }
+.filter-row{display:flex;flex-direction:column;gap:4px;}
+.filter-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text3);display:flex;align-items:center;gap:4px;}
 
-.range-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-.range-input { width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 7px 10px; color: var(--text); font-size: 12px; font-family: 'Inter', sans-serif; outline: none; }
-.range-input:focus { border-color: var(--accent); }
-.range-input::placeholder { color: var(--text3); }
+/* MULTI SELECT */
+.multi-select{position:relative;}
+.multi-select-trigger{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 28px 7px 10px;color:var(--text);font-size:12px;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:border-color 0.15s;user-select:none;}
+.multi-select-trigger:hover{border-color:var(--accent);}
+.multi-select-trigger.active{border-color:var(--accent);background:var(--accent-light);}
+.multi-select-trigger-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+.multi-select-arrow{color:var(--text3);font-size:10px;flex-shrink:0;margin-left:6px;transition:transform 0.15s;}
+.multi-select.open .multi-select-arrow{transform:rotate(180deg);}
+.multi-select-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);box-shadow:var(--shadow-md);z-index:500;max-height:200px;overflow-y:auto;display:none;}
+.multi-select.open .multi-select-dropdown{display:block;}
+.multi-select-dropdown::-webkit-scrollbar{width:3px;}
+.multi-select-dropdown::-webkit-scrollbar-thumb{background:var(--border);}
+.multi-select-search{padding:8px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff;}
+.multi-select-search input{width:100%;border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-size:12px;font-family:'Inter',sans-serif;outline:none;background:var(--bg2);}
+.multi-select-search input:focus{border-color:var(--accent);}
+.multi-select-option{display:flex;align-items:center;gap:8px;padding:7px 12px;cursor:pointer;font-size:12px;color:var(--text2);transition:background 0.1s;}
+.multi-select-option:hover{background:var(--bg2);}
+.multi-select-option.selected{background:var(--accent-light);color:var(--text);}
+.multi-select-checkbox{width:14px;height:14px;border:1.5px solid var(--border);border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.multi-select-option.selected .multi-select-checkbox{background:var(--accent);border-color:var(--accent);}
+.multi-select-checkmark{color:white;font-size:9px;display:none;}
+.multi-select-option.selected .multi-select-checkmark{display:block;}
+.multi-select-count{margin-left:auto;font-size:10px;color:var(--accent);font-weight:600;}
+
+/* REGULAR SELECT */
+.filter-select{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 28px 7px 10px;color:var(--text);font-size:12px;font-family:'Inter',sans-serif;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238A929E' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;transition:border-color 0.15s;}
+.filter-select:focus{border-color:var(--accent);}
+
+/* RANGE */
+.range-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.range-input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 10px;color:var(--text);font-size:12px;font-family:'Inter',sans-serif;outline:none;}
+.range-input:focus{border-color:var(--accent);}
+.range-input::placeholder{color:var(--text3);}
 
 /* VERDICT CHIPS */
-.verdict-filters { display: flex; flex-direction: column; gap: 5px; margin-bottom: 4px; }
-.verdict-chip { display: flex; align-items: center; gap: 8px; padding: 7px 11px; border-radius: var(--radius-sm); border: 1px solid var(--border); cursor: pointer; transition: all 0.15s; background: var(--bg2); font-size: 13px; color: var(--text2); }
-.verdict-chip:hover { border-color: var(--accent); color: var(--text); background: var(--accent-light); }
-.verdict-chip.active { border-color: var(--accent); background: var(--accent-light); color: var(--text); }
-.verdict-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-.verdict-dot.pipeline { background: var(--green); }
-.verdict-dot.study { background: #D97706; }
-.verdict-dot.later { background: var(--text3); }
-.verdict-dot.all { background: var(--accent); }
-.verdict-count { margin-left: auto; font-size: 11px; font-weight: 600; color: var(--text3); background: var(--bg3); padding: 1px 7px; border-radius: 10px; }
+.verdict-filters{display:flex;flex-direction:column;gap:5px;}
+.verdict-chip{display:flex;align-items:center;gap:8px;padding:7px 11px;border-radius:var(--radius-sm);border:1px solid var(--border);cursor:pointer;transition:all 0.15s;background:var(--bg2);font-size:13px;color:var(--text2);}
+.verdict-chip:hover{border-color:var(--accent);color:var(--text);background:var(--accent-light);}
+.verdict-chip.active{border-color:var(--accent);background:var(--accent-light);color:var(--text);}
+.verdict-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.verdict-dot.pipeline{background:var(--green);}
+.verdict-dot.study{background:#D97706;}
+.verdict-dot.later{background:var(--text3);}
+.verdict-dot.all{background:var(--accent);}
+.verdict-count{margin-left:auto;font-size:11px;font-weight:600;color:var(--text3);background:var(--bg3);padding:1px 7px;border-radius:10px;}
 
-.reset-btn { width: 100%; padding: 8px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: none; color: var(--text2); font-size: 12px; font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.15s; margin-top: 4px; }
-.reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+.reset-btn{width:100%;padding:8px;border-radius:var(--radius-sm);border:1px solid var(--border);background:none;color:var(--text2);font-size:12px;font-family:'Inter',sans-serif;cursor:pointer;transition:all 0.15s;margin-top:2px;}
+.reset-btn:hover{border-color:var(--accent);color:var(--accent);}
 
 /* MAIN */
-.main { padding: 20px 22px; }
-.toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; gap: 12px; }
-.results-info { font-size: 13px; color: var(--text2); }
-.results-info strong { color: var(--text); font-weight: 600; }
-.sort-select { background: #fff; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 7px 26px 7px 11px; color: var(--text); font-size: 12px; font-family: 'Inter', sans-serif; outline: none; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238A929E' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 9px center; }
+.main{padding:20px 22px;}
+.toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:12px;}
+.results-info{font-size:13px;color:var(--text2);}
+.results-info strong{color:var(--text);font-weight:600;}
+.sort-select{background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 26px 7px 11px;color:var(--text);font-size:12px;font-family:'Inter',sans-serif;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238A929E' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;}
 
 /* CARDS */
-.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
-.card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; cursor: pointer; transition: all 0.15s; display: flex; flex-direction: column; gap: 11px; position: relative; overflow: hidden; }
-.card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: transparent; transition: background 0.15s; }
-.card:hover { border-color: rgba(240,83,28,0.3); box-shadow: var(--shadow-md); transform: translateY(-1px); }
-.card:hover::after { background: var(--accent); }
-.card-header { display: flex; align-items: flex-start; gap: 11px; }
-.company-avatar { width: 40px; height: 40px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; color: white; flex-shrink: 0; }
-.card-title-wrap { flex: 1; min-width: 0; }
-.card-name { font-weight: 600; font-size: 14px; letter-spacing: -0.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
-.card-meta { font-size: 12px; color: var(--text3); margin-top: 2px; }
-.verdict-badge { padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; flex-shrink: 0; }
-.verdict-badge.pipeline { background: var(--green-bg); color: var(--green); }
-.verdict-badge.study { background: var(--yellow-bg); color: var(--yellow); }
-.verdict-badge.later { background: var(--gray-bg); color: var(--text3); }
-.manual-badge { font-size: 10px; padding: 2px 6px; border-radius: 10px; background: rgba(240,83,28,0.1); color: var(--accent); border: 1px solid rgba(240,83,28,0.2); margin-left: 4px; }
-.card-desc { font-size: 12px; color: var(--text2); line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.card-tags { display: flex; flex-wrap: wrap; gap: 5px; }
-.tag { padding: 2px 8px; background: var(--bg3); border-radius: 20px; font-size: 11px; color: var(--text2); border: 1px solid var(--border); }
-.card-footer { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding-top: 11px; border-top: 1px solid var(--border); }
-.card-stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text3); font-weight: 600; margin-bottom: 3px; }
-.card-stat-value { font-size: 12px; font-weight: 600; color: var(--text); }
-.score-wrap { display: flex; align-items: center; gap: 6px; }
-.score-bar { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
-.score-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; }
-.score-num { font-size: 12px; font-weight: 700; color: var(--accent); min-width: 16px; }
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;}
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:column;gap:11px;position:relative;overflow:hidden;}
+.card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:transparent;transition:background 0.15s;}
+.card:hover{border-color:rgba(240,83,28,0.3);box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.card:hover::after{background:var(--accent);}
+.card-header{display:flex;align-items:flex-start;gap:11px;}
+.company-avatar{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:white;flex-shrink:0;}
+.card-title-wrap{flex:1;min-width:0;}
+.card-name{font-weight:600;font-size:14px;letter-spacing:-0.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);}
+.card-meta{font-size:12px;color:var(--text3);margin-top:2px;}
+.verdict-badge{padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;flex-shrink:0;}
+.verdict-badge.pipeline{background:var(--green-bg);color:var(--green);}
+.verdict-badge.study{background:var(--yellow-bg);color:var(--yellow);}
+.verdict-badge.later{background:var(--bg3);color:var(--text3);}
+.manual-badge{font-size:10px;padding:2px 6px;border-radius:10px;background:rgba(240,83,28,0.1);color:var(--accent);border:1px solid rgba(240,83,28,0.2);}
+.card-desc{font-size:12px;color:var(--text2);line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.card-tags{display:flex;flex-wrap:wrap;gap:5px;}
+.tag{padding:2px 8px;background:var(--bg3);border-radius:20px;font-size:11px;color:var(--text2);border:1px solid var(--border);}
+.card-footer{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding-top:11px;border-top:1px solid var(--border);}
+.card-stat-label{font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);font-weight:600;margin-bottom:3px;}
+.card-stat-value{font-size:12px;font-weight:600;color:var(--text);}
+.score-wrap{display:flex;align-items:center;gap:6px;}
+.score-bar{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.score-bar-fill{height:100%;background:var(--accent);border-radius:2px;}
+.score-num{font-size:12px;font-weight:700;color:var(--accent);min-width:16px;}
 
 /* PAGINATION */
-.pagination { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 22px 0; flex-wrap: wrap; }
-.page-btn { padding: 6px 13px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: #fff; color: var(--text2); font-size: 13px; font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.15s; }
-.page-btn:hover { border-color: var(--accent); color: var(--accent); }
-.page-btn.active { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
-.page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.pagination{display:flex;align-items:center;justify-content:center;gap:6px;padding:22px 0;flex-wrap:wrap;}
+.page-btn{padding:6px 13px;border-radius:var(--radius-sm);border:1px solid var(--border);background:#fff;color:var(--text2);font-size:13px;font-family:'Inter',sans-serif;cursor:pointer;transition:all 0.15s;}
+.page-btn:hover{border-color:var(--accent);color:var(--accent);}
+.page-btn.active{background:var(--accent);border-color:var(--accent);color:white;font-weight:600;}
+.page-btn:disabled{opacity:0.3;cursor:not-allowed;}
 
-.loading-state { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 80px 20px; color: var(--text3); grid-column: 1/-1; }
-.spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
-.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 80px 20px; color: var(--text3); text-align: center; grid-column: 1/-1; }
-.empty-state h3 { font-size: 15px; color: var(--text2); font-weight: 500; }
-.error-state { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 60px 20px; text-align: center; grid-column: 1/-1; }
-.error-state h3 { font-size: 15px; color: var(--text); font-weight: 600; }
-.error-state p { font-size: 13px; color: var(--text2); max-width: 400px; line-height: 1.6; }
-.retry-btn { padding: 9px 20px; background: var(--accent); color: white; border: none; border-radius: var(--radius-sm); font-size: 13px; font-family: 'Inter', sans-serif; cursor: pointer; font-weight: 500; }
+.loading-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:80px 20px;color:var(--text3);grid-column:1/-1;}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:80px 20px;color:var(--text3);text-align:center;grid-column:1/-1;}
+.empty-state h3{font-size:15px;color:var(--text2);font-weight:500;}
+.error-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:60px 20px;text-align:center;grid-column:1/-1;}
+.error-state h3{font-size:15px;color:var(--text);font-weight:600;}
+.error-state p{font-size:13px;color:var(--text2);max-width:400px;line-height:1.6;}
+.retry-btn{padding:9px 20px;background:var(--accent);color:white;border:none;border-radius:var(--radius-sm);font-size:13px;font-family:'Inter',sans-serif;cursor:pointer;font-weight:500;}
 
 /* TOOLTIP */
-.tooltip-wrap { position: relative; display: inline-flex; align-items: center; }
-.info-icon { width: 14px; height: 14px; border-radius: 50%; background: var(--bg3); border: 1px solid var(--border); color: var(--text3); font-size: 9px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; cursor: help; margin-left: 5px; flex-shrink: 0; }
-.tooltip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: var(--text); color: white; font-size: 11px; line-height: 1.5; padding: 8px 10px; border-radius: 6px; width: 220px; pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 50; white-space: normal; }
-.tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--text); }
-.tooltip-wrap:hover .tooltip { opacity: 1; }
+.tooltip-wrap{position:relative;display:inline-flex;align-items:center;}
+.info-icon{width:14px;height:14px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);color:var(--text3);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:help;margin-left:5px;flex-shrink:0;}
+.tooltip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--text);color:white;font-size:11px;line-height:1.5;padding:8px 10px;border-radius:6px;width:220px;pointer-events:none;opacity:0;transition:opacity 0.15s;z-index:9999;white-space:normal;}
+.tooltip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--text);}
+.tooltip-wrap:hover .tooltip{opacity:1;}
 
 /* MODAL */
-.modal-overlay { position: fixed; inset: 0; background: rgba(15,20,35,0.45); backdrop-filter: blur(3px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
-.modal-overlay.open { opacity: 1; pointer-events: all; }
-.modal { background: #fff; border: 1px solid var(--border); border-radius: 14px; width: 100%; max-width: 640px; max-height: 88vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.15); transform: translateY(12px); transition: transform 0.2s; }
-.modal-overlay.open .modal { transform: translateY(0); }
-.modal::-webkit-scrollbar { width: 3px; }
-.modal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-.modal-stripe { height: 4px; background: var(--accent); border-radius: 14px 14px 0 0; }
-.modal-header { padding: 18px 20px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 13px; position: sticky; top: 0; background: #fff; z-index: 1; }
-.modal-avatar { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: white; flex-shrink: 0; }
-.modal-name { font-size: 18px; font-weight: 700; letter-spacing: -0.4px; color: var(--text); }
-.modal-subtitle { font-size: 12px; color: var(--text3); margin-top: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.modal-close { width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--border); background: none; color: var(--text3); cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; margin-left: auto; }
-.modal-close:hover { border-color: var(--text); color: var(--text); }
-.modal-body { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
-.modal-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text3); margin-bottom: 10px; display: flex; align-items: center; }
-.modal-desc { font-size: 13px; color: var(--text2); line-height: 1.65; }
-.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.stat-box { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 11px 13px; }
-.stat-box-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text3); font-weight: 600; margin-bottom: 3px; }
-.stat-box-value { font-size: 15px; font-weight: 700; color: var(--text); }
-.stat-box-value.accent { color: var(--accent); }
-.stat-box-value.green { color: var(--green); }
+.modal-overlay{position:fixed;inset:0;background:rgba(15,20,35,0.45);backdrop-filter:blur(3px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:#fff;border:1px solid var(--border);border-radius:14px;width:100%;max-width:640px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.15);transform:translateY(12px);transition:transform 0.2s;}
+.modal-overlay.open .modal{transform:translateY(0);}
+.modal::-webkit-scrollbar{width:3px;}
+.modal::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.modal-stripe{height:4px;background:var(--accent);border-radius:14px 14px 0 0;}
+.modal-header{padding:18px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:13px;position:sticky;top:0;background:#fff;z-index:1;}
+.modal-avatar{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:white;flex-shrink:0;}
+.modal-name{font-size:18px;font-weight:700;letter-spacing:-0.4px;color:var(--text);}
+.modal-subtitle{font-size:12px;color:var(--text3);margin-top:4px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.modal-close{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text3);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;margin-left:auto;}
+.modal-close:hover{border-color:var(--text);color:var(--text);}
+.modal-body{padding:20px;display:flex;flex-direction:column;gap:20px;}
+.modal-section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;}
+.modal-desc{font-size:13px;color:var(--text2);line-height:1.65;}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 13px;}
+.stat-box-label{font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);font-weight:600;margin-bottom:3px;}
+.stat-box-value{font-size:15px;font-weight:700;color:var(--text);}
+.stat-box-value.accent{color:var(--accent);}
+.stat-box-value.green{color:var(--green);}
+.scoring-wrap{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--radius);padding:16px;}
+.scoring-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.scoring-total-num{font-size:32px;font-weight:700;letter-spacing:-1px;color:var(--accent);line-height:1;}
+.scoring-total-sub{font-size:12px;color:var(--text3);margin-top:2px;}
+.scoring-row{margin-bottom:12px;}
+.scoring-row:last-child{margin-bottom:0;}
+.scoring-row-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;}
+.scoring-row-name{font-size:13px;color:var(--text2);display:flex;align-items:center;}
+.scoring-row-val{font-size:13px;font-weight:700;color:var(--accent);}
+.scoring-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.scoring-bar-fill{height:100%;border-radius:3px;}
+.bar-market{background:var(--accent);}
+.bar-edge{background:var(--green);}
+.bar-complexity{background:#D97706;}
+.manual-note{font-size:11px;color:var(--accent);background:var(--accent-light);padding:6px 10px;border-radius:var(--radius-sm);margin-top:10px;}
+.auto-note{font-size:11px;color:var(--text3);background:var(--bg3);padding:6px 10px;border-radius:var(--radius-sm);margin-top:10px;}
+.investors-text{font-size:13px;color:var(--text2);line-height:1.7;}
 
-/* SCORING */
-.scoring-wrap { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius); padding: 16px; }
-.scoring-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-.scoring-total-num { font-size: 32px; font-weight: 700; letter-spacing: -1px; color: var(--accent); line-height: 1; }
-.scoring-total-sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
-.scoring-row { margin-bottom: 12px; }
-.scoring-row:last-child { margin-bottom: 0; }
-.scoring-row-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
-.scoring-row-name { font-size: 13px; color: var(--text2); display: flex; align-items: center; }
-.scoring-row-val { font-size: 13px; font-weight: 700; color: var(--accent); }
-.scoring-bar { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
-.scoring-bar-fill { height: 100%; border-radius: 3px; }
-.bar-market { background: var(--accent); }
-.bar-edge { background: var(--green); }
-.bar-complexity { background: #D97706; }
-.manual-note { font-size: 11px; color: var(--accent); background: var(--accent-light); padding: 6px 10px; border-radius: var(--radius-sm); margin-top: 10px; }
-.auto-note { font-size: 11px; color: var(--text3); background: var(--bg3); padding: 6px 10px; border-radius: var(--radius-sm); margin-top: 10px; }
-.investors-text { font-size: 13px; color: var(--text2); line-height: 1.7; }
-
-@media (max-width: 900px) {
-  .layout { grid-template-columns: 1fr; }
-  .sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
-  .cards-grid { grid-template-columns: 1fr; }
-  .main { padding: 14px; }
-  .header-top { padding: 0 16px; }
-  .last-updated { display: none; }
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr;}
+  .sidebar{position:static;height:auto;border-right:none;border-bottom:1px solid var(--border);}
+  .cards-grid{grid-template-columns:1fr;}
+  .main{padding:14px;}
+  .header-top{padding:0 16px;}
+  .last-updated{display:none;}
 }
 </style>
 </head>
 <body>
-
 <header class="header">
   <div class="header-top">
-    <div class="logo">Ventures<span class="logo-dot">.</span><span class="logo-sub">база стартапов</span></div>
+    <div class="logo">Ventures<span class="logo-dot">.</span><span class="logo-sub" data-ru="база стартапов" data-en="startup database">база стартапов</span></div>
     <div class="header-right">
       <span class="last-updated" id="last-updated"></span>
       <div class="lang-toggle">
@@ -222,59 +237,61 @@ body { background: var(--bg2); color: var(--text); font-family: 'Inter', sans-se
           <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
           <path d="M8 16H3v5"/>
         </svg>
-        <span id="refresh-label">Обновить</span>
+        <span id="refresh-label" data-ru="Обновить" data-en="Refresh">Обновить</span>
       </button>
     </div>
   </div>
 </header>
 
 <div class="layout">
-  <aside class="sidebar">
+  <aside class="sidebar" id="sidebar">
     <div class="search-wrap">
-      <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-      </svg>
+      <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <input class="search-input" id="search" placeholder="Поиск компании..." oninput="applyFilters()">
     </div>
 
     <!-- СКОРИНГ -->
-    <div class="filter-group open" id="group-scoring">
-      <div class="filter-group-header" onclick="toggleGroup('group-scoring')">
-        <span class="filter-group-title">Скоринг Яндекса</span>
+    <div class="filter-group open" id="grp-scoring">
+      <div class="filter-group-header" onclick="toggleGroup('grp-scoring')">
+        <span class="filter-group-title" data-ru="Скоринг Яндекса" data-en="Yandex Scoring">Скоринг Яндекса</span>
         <span class="filter-group-arrow">▼</span>
       </div>
       <div class="filter-group-body">
         <div class="verdict-filters">
           <div class="verdict-chip active" data-verdict="all" onclick="setVerdict('all',this)">
-            <span class="verdict-dot all"></span>Все
+            <span class="verdict-dot all"></span>
+            <span data-ru="Все" data-en="All">Все</span>
             <span class="verdict-count" id="cnt-all">—</span>
           </div>
           <div class="verdict-chip" data-verdict="В pipeline" onclick="setVerdict('В pipeline',this)">
-            <span class="verdict-dot pipeline"></span>В pipeline
+            <span class="verdict-dot pipeline"></span>
+            <span data-ru="В pipeline" data-en="Pipeline">В pipeline</span>
             <span class="verdict-count" id="cnt-pipeline">—</span>
           </div>
           <div class="verdict-chip" data-verdict="Изучить" onclick="setVerdict('Изучить',this)">
-            <span class="verdict-dot study"></span>Изучить
+            <span class="verdict-dot study"></span>
+            <span data-ru="Изучить" data-en="Study">Изучить</span>
             <span class="verdict-count" id="cnt-study">—</span>
           </div>
           <div class="verdict-chip" data-verdict="Отложить" onclick="setVerdict('Отложить',this)">
-            <span class="verdict-dot later"></span>Отложить
+            <span class="verdict-dot later"></span>
+            <span data-ru="Отложить" data-en="Later">Отложить</span>
             <span class="verdict-count" id="cnt-later">—</span>
           </div>
         </div>
-        <div>
-          <div class="filter-label">Только ручной скоринг</div>
+        <div class="filter-row">
+          <div class="filter-label" data-ru="Источник скоринга" data-en="Scoring source">Источник скоринга</div>
           <select class="filter-select" id="f-manual" onchange="applyFilters()">
-            <option value="">Все</option>
-            <option value="manual">Только ручной</option>
-            <option value="auto">Только автоматический</option>
+            <option value="" data-ru="Все" data-en="All">Все</option>
+            <option value="manual" data-ru="Только ручной" data-en="Manual only">Только ручной</option>
+            <option value="auto" data-ru="Только автоматический" data-en="Auto only">Только автоматический</option>
           </select>
         </div>
-        <div>
-          <div class="filter-label">Минимальный балл</div>
+        <div class="filter-row">
+          <div class="filter-label" data-ru="Минимальный балл" data-en="Min score">Минимальный балл</div>
           <select class="filter-select" id="f-minscore" onchange="applyFilters()">
-            <option value="">Любой</option>
-            <option value="6">6 из 6</option>
+            <option value="" data-ru="Любой" data-en="Any">Любой</option>
+            <option value="6">6 / 6</option>
             <option value="5">5+</option>
             <option value="4">4+</option>
             <option value="3">3+</option>
@@ -284,139 +301,124 @@ body { background: var(--bg2); color: var(--text); font-family: 'Inter', sans-se
     </div>
 
     <!-- РЫНОК -->
-    <div class="filter-group open" id="group-market">
-      <div class="filter-group-header" onclick="toggleGroup('group-market')">
-        <span class="filter-group-title">Рынок и индустрия</span>
+    <div class="filter-group open" id="grp-market">
+      <div class="filter-group-header" onclick="toggleGroup('grp-market')">
+        <span class="filter-group-title" data-ru="Рынок и индустрия" data-en="Market & Industry">Рынок и индустрия</span>
         <span class="filter-group-arrow">▼</span>
       </div>
       <div class="filter-group-body">
-        <div>
-          <div class="filter-label">Вертикаль</div>
-          <select class="filter-select" id="f-industry" onchange="applyFilters()">
-            <option value="">Все вертикали</option>
-          </select>
+        <div class="filter-row">
+          <div class="filter-label" data-ru="Вертикаль" data-en="Industry">Вертикаль</div>
+          <div class="multi-select" id="ms-industry" data-filter="industry"></div>
         </div>
-        <div>
-          <div class="filter-label">Стадия</div>
-          <select class="filter-select" id="f-stage" onchange="applyFilters()">
-            <option value="">Все стадии</option>
-            <option value="Early Stage Venture">Early Stage</option>
-            <option value="Late Stage Venture">Late Stage</option>
-            <option value="Angel">Angel</option>
-          </select>
+        <div class="filter-row">
+          <div class="filter-label" data-ru="Стадия" data-en="Stage">Стадия</div>
+          <div class="multi-select" id="ms-stage" data-filter="stage"></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-label" data-ru="Операционный статус" data-en="Operating Status">Операционный статус</div>
+          <div class="multi-select" id="ms-status" data-filter="status"></div>
         </div>
       </div>
     </div>
 
     <!-- ФИНАНСЫ -->
-    <div class="filter-group" id="group-finance">
-      <div class="filter-group-header" onclick="toggleGroup('group-finance')">
-        <span class="filter-group-title">Финансирование</span>
+    <div class="filter-group" id="grp-finance">
+      <div class="filter-group-header" onclick="toggleGroup('grp-finance')">
+        <span class="filter-group-title" data-ru="Финансирование" data-en="Funding">Финансирование</span>
         <span class="filter-group-arrow">▼</span>
       </div>
       <div class="filter-group-body">
-        <div>
-          <div class="filter-label">Тип раунда</div>
-          <select class="filter-select" id="f-round" onchange="applyFilters()">
-            <option value="">Все раунды</option>
-          </select>
+        <div class="filter-row">
+          <div class="filter-label" data-ru="Тип раунда" data-en="Round type">Тип раунда</div>
+          <div class="multi-select" id="ms-round" data-filter="round"></div>
         </div>
-        <div>
-          <div class="filter-label">Мин. объём раунда ($M)</div>
+        <div class="filter-row">
+          <div class="filter-label" data-ru="Объём раунда, $M (от — до)" data-en="Round size $M (from — to)">Объём раунда, $M (от — до)</div>
           <div class="range-row">
-            <input class="range-input" id="f-funding-min" type="number" placeholder="От" oninput="applyFilters()">
-            <input class="range-input" id="f-funding-max" type="number" placeholder="До" oninput="applyFilters()">
+            <input class="range-input" id="f-fmin" type="number" placeholder="От" oninput="applyFilters()">
+            <input class="range-input" id="f-fmax" type="number" placeholder="До" oninput="applyFilters()">
           </div>
         </div>
-        <div>
-          <div class="filter-label">Выручка</div>
-          <select class="filter-select" id="f-revenue" onchange="applyFilters()">
-            <option value="">Любая</option>
-          </select>
+        <div class="filter-row">
+          <div class="filter-label" data-ru="Выручка" data-en="Revenue">Выручка</div>
+          <div class="multi-select" id="ms-revenue" data-filter="revenue"></div>
         </div>
       </div>
     </div>
 
     <!-- КОМПАНИЯ -->
-    <div class="filter-group" id="group-company">
-      <div class="filter-group-header" onclick="toggleGroup('group-company')">
-        <span class="filter-group-title">Компания</span>
+    <div class="filter-group" id="grp-company">
+      <div class="filter-group-header" onclick="toggleGroup('grp-company')">
+        <span class="filter-group-title" data-ru="Компания" data-en="Company">Компания</span>
         <span class="filter-group-arrow">▼</span>
       </div>
       <div class="filter-group-body">
-        <div>
-          <div class="filter-label">Размер команды</div>
-          <select class="filter-select" id="f-employees" onchange="applyFilters()">
-            <option value="">Любой</option>
-            <option value="1-10">1–10</option>
-            <option value="11-50">11–50</option>
-            <option value="51-100">51–100</option>
-            <option value="101-250">101–250</option>
-            <option value="251-500">251–500</option>
-            <option value="501-1000">501–1000</option>
-            <option value="1001-5000">1001–5000</option>
-            <option value="5001-10000">5000+</option>
-          </select>
+        <div class="filter-row">
+          <div class="filter-label" data-ru="Размер команды" data-en="Team size">Размер команды</div>
+          <div class="multi-select" id="ms-employees" data-filter="employees"></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-label" data-ru="CB Rank — от (меньше = лучше)" data-en="CB Rank — from (lower = better)">CB Rank — от (меньше = лучше)</div>
+          <div class="range-row">
+            <input class="range-input" id="f-cbmin" type="number" placeholder="От" oninput="applyFilters()">
+            <input class="range-input" id="f-cbmax" type="number" placeholder="До" oninput="applyFilters()">
+          </div>
         </div>
       </div>
     </div>
 
     <!-- СИГНАЛЫ -->
-    <div class="filter-group" id="group-signals">
-      <div class="filter-group-header" onclick="toggleGroup('group-signals')">
-        <span class="filter-group-title">Сигналы роста</span>
+    <div class="filter-group" id="grp-signals">
+      <div class="filter-group-header" onclick="toggleGroup('grp-signals')">
+        <span class="filter-group-title" data-ru="Сигналы роста" data-en="Growth Signals">Сигналы роста</span>
         <span class="filter-group-arrow">▼</span>
       </div>
       <div class="filter-group-body">
-        <div>
+        <div class="filter-row">
           <div class="filter-label">Growth Score</div>
-          <select class="filter-select" id="f-growth" onchange="applyFilters()">
-            <option value="">Любой</option>
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
-            <option value="Low">Low</option>
-          </select>
+          <div class="multi-select" id="ms-growth" data-filter="growth"></div>
         </div>
-        <div>
+        <div class="filter-row">
           <div class="filter-label">Heat Score</div>
-          <select class="filter-select" id="f-heat" onchange="applyFilters()">
-            <option value="">Любой</option>
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
-            <option value="Low">Low</option>
-          </select>
+          <div class="multi-select" id="ms-heat" data-filter="heat"></div>
         </div>
-        <div>
-          <div class="filter-label">Мин. Trend Score (90d)</div>
-          <input class="range-input" id="f-trend-min" type="number" placeholder="Например: 7" step="0.1" oninput="applyFilters()" style="width:100%">
+        <div class="filter-row">
+          <div class="filter-label" data-ru="Trend Score 90d (мин.)" data-en="Trend Score 90d (min)">Trend Score 90d (мин.)</div>
+          <input class="range-input" id="f-tmin" type="number" placeholder="Напр: 7" step="0.1" oninput="applyFilters()" style="width:100%">
+        </div>
+        <div class="filter-row">
+          <div class="filter-label" data-ru="Global Traffic Rank (до)" data-en="Global Traffic Rank (max)">Global Traffic Rank (до)</div>
+          <input class="range-input" id="f-trafficmax" type="number" placeholder="Напр: 1000000" oninput="applyFilters()" style="width:100%">
+        </div>
+        <div class="filter-row">
+          <div class="filter-label" data-ru="Monthly Visits (мин.)" data-en="Monthly Visits (min)">Monthly Visits (мин.)</div>
+          <input class="range-input" id="f-visitsmin" type="number" placeholder="Напр: 10000" oninput="applyFilters()" style="width:100%">
         </div>
       </div>
     </div>
 
-    <button class="reset-btn" onclick="resetFilters()">Сбросить все фильтры</button>
+    <button class="reset-btn" onclick="resetFilters()" data-ru="Сбросить все фильтры" data-en="Reset all filters">Сбросить все фильтры</button>
   </aside>
 
   <main class="main">
     <div class="toolbar">
       <div class="results-info" id="results-info"></div>
       <select class="sort-select" id="sort" onchange="applyFilters()">
-        <option value="score">По скорингу</option>
-        <option value="funding">По раунду</option>
-        <option value="trend">По тренду</option>
-        <option value="name">По алфавиту</option>
+        <option value="score" data-ru="По скорингу" data-en="By score">По скорингу</option>
+        <option value="funding" data-ru="По раунду" data-en="By funding">По раунду</option>
+        <option value="trend" data-ru="По тренду" data-en="By trend">По тренду</option>
+        <option value="cb" data-ru="По CB Rank" data-en="By CB Rank">По CB Rank</option>
+        <option value="name" data-ru="По алфавиту" data-en="Alphabetically">По алфавиту</option>
       </select>
     </div>
     <div class="cards-grid" id="cards-grid">
-      <div class="loading-state">
-        <div class="spinner"></div>
-        <span>Загружаем данные из Google Sheets...</span>
-      </div>
+      <div class="loading-state"><div class="spinner"></div><span id="loading-text">Загружаем данные из Google Sheets...</span></div>
     </div>
     <div class="pagination" id="pagination"></div>
   </main>
 </div>
 
-<!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal">
     <div class="modal-stripe"></div>
@@ -435,10 +437,62 @@ body { background: var(--bg2); color: var(--text); font-family: 'Inter', sans-se
 <script>
 const SHEET_ID = '1FPiPD7Kxd27IwM9OpdDr5dY2xk0B4qezh_2UhhWXCjM';
 
-const SCORE_TOOLTIPS = {
-  market: 'Оценка размера и динамики рынка. Источник: Growth Score Tier и Heat Score Tier из Crunchbase, объём последнего раунда. High Growth + High Heat = 2 балла.',
-  edge: 'Потенциал использования активов Яндекса: данные, трафик, экосистема. Считается по совпадению индустриальных тегов компании с ключевыми вертикалями Яндекса (AI, Data, Fintech, Health и др.).',
-  complexity: 'Сложность входа на рынок для Яндекса. Early Stage = 2 балла (проще войти или скопировать), Late Stage = 1 балл (рынок устоявшийся, конкуренты сильные).'
+const T = {
+  ru: {
+    search: 'Поиск компании...',
+    loading: 'Загружаем данные из Google Sheets...',
+    showing: (a,b) => `Показано <strong>${a}</strong> из <strong>${b}</strong>`,
+    notFound: 'Ничего не найдено',
+    notFoundSub: 'Попробуйте изменить фильтры',
+    errTitle: 'Не удалось загрузить данные',
+    errMsg: 'Убедитесь что таблица открыта для всех по ссылке.',
+    retry: 'Попробовать снова',
+    updated: t => `Обновлено: ${t}`,
+    all: 'Все', pipeline: 'В pipeline', study: 'Изучить', later: 'Отложить',
+    about: 'О компании', metrics: 'Метрики', scoring: 'Скоринг Яндекса',
+    investors: 'Инвесторы', industries: 'Вертикали',
+    raised: 'Привлечено', round: 'Раунд', team: 'Команда', revenue: 'Выручка',
+    growth: 'Growth Score', trend: 'Trend 90d', cb: 'CB Rank', visits: 'Monthly Visits',
+    totalScore: 'итоговый балл', market: 'Рынок', edge: 'Edge Яндекса', complexity: 'Сложность входа',
+    manualScoring: '✎ Скоринг выставлен вручную в Google Sheets',
+    autoScoring: 'Скоринг рассчитан автоматически по данным Crunchbase. Для ручной оценки заполните колонки Yandex Score Market / Edge / Complexity в таблице.',
+    manualBadge: '✎ ручной', selectAll: 'Все выбрано', nSelected: n => `Выбрано: ${n}`,
+    searchIn: 'Поиск...',
+  },
+  en: {
+    search: 'Search company...',
+    loading: 'Loading data from Google Sheets...',
+    showing: (a,b) => `Showing <strong>${a}</strong> of <strong>${b}</strong>`,
+    notFound: 'Nothing found',
+    notFoundSub: 'Try changing the filters',
+    errTitle: 'Failed to load data',
+    errMsg: 'Make sure the spreadsheet is shared publicly.',
+    retry: 'Try again',
+    updated: t => `Updated: ${t}`,
+    all: 'All', pipeline: 'Pipeline', study: 'Study', later: 'Later',
+    about: 'About', metrics: 'Metrics', scoring: 'Yandex Scoring',
+    investors: 'Investors', industries: 'Industries',
+    raised: 'Raised', round: 'Round', team: 'Team', revenue: 'Revenue',
+    growth: 'Growth Score', trend: 'Trend 90d', cb: 'CB Rank', visits: 'Monthly Visits',
+    totalScore: 'total score', market: 'Market', edge: 'Yandex Edge', complexity: 'Entry Complexity',
+    manualScoring: '✎ Score set manually in Google Sheets',
+    autoScoring: 'Score calculated automatically from Crunchbase data. Fill in Yandex Score Market / Edge / Complexity columns for manual scoring.',
+    manualBadge: '✎ manual', selectAll: 'All selected', nSelected: n => `Selected: ${n}`,
+    searchIn: 'Search...',
+  }
+};
+
+const SCORE_TIPS = {
+  ru: {
+    market: 'Размер и динамика рынка. Источник: Growth Score Tier и Heat Score Tier из Crunchbase, объём последнего раунда. High Growth + High Heat = 2 балла.',
+    edge: 'Потенциал использования активов Яндекса. Считается по совпадению тегов индустрии с вертикалями Яндекса (AI, Data, Fintech, Health и др.).',
+    complexity: 'Сложность входа для Яндекса. Early Stage = 2 балла (проще войти), Late Stage = 1 балл (рынок устоявшийся).'
+  },
+  en: {
+    market: 'Market size and dynamics. Source: Growth Score Tier and Heat Score Tier from Crunchbase, last funding amount. High Growth + High Heat = 2 pts.',
+    edge: 'Potential to leverage Yandex assets. Based on industry tag overlap with Yandex verticals (AI, Data, Fintech, Health, etc.).',
+    complexity: 'Entry complexity for Yandex. Early Stage = 2 pts (easier entry), Late Stage = 1 pt (established market).'
+  }
 };
 
 const VALID_INDUSTRIES = new Set([
@@ -457,102 +511,173 @@ const VALID_INDUSTRIES = new Set([
 ]);
 
 let companies = [], filtered = [];
-let currentVerdict = 'all', currentLang = 'ru', currentPage = 1;
+let currentVerdict = 'all', lang = 'ru', currentPage = 1;
 const PAGE_SIZE = 24;
 
-function toggleGroup(id) {
-  document.getElementById(id).classList.toggle('open');
+// Multi-select state
+const msState = { industry:[], stage:[], status:[], round:[], revenue:[], employees:[], growth:[], heat:[] };
+
+// ---- MULTI SELECT ----
+function buildMultiSelect(containerId, options, filterKey) {
+  const container = document.getElementById(containerId);
+  if(!container) return;
+  const selected = msState[filterKey] || [];
+
+  container.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'multi-select';
+  wrap.id = 'mswrap-' + filterKey;
+
+  const label = selected.length === 0
+    ? t('all')
+    : selected.length === options.length
+      ? t('selectAll')
+      : t('nSelected')(selected.length);
+
+  wrap.innerHTML = `
+    <div class="multi-select-trigger ${selected.length>0?'active':''}" onclick="toggleMS('${filterKey}')">
+      <span class="multi-select-trigger-text">${label}</span>
+      <span class="multi-select-arrow">▼</span>
+    </div>
+    <div class="multi-select-dropdown">
+      <div class="multi-select-search"><input placeholder="${t('searchIn')}" oninput="filterMSOptions(this,'${filterKey}')"></div>
+      ${options.map(o => `
+        <div class="multi-select-option ${selected.includes(o)?'selected':''}" data-value="${o}" onclick="toggleMSOption('${filterKey}','${o.replace(/'/g,"\\'")}',this)">
+          <div class="multi-select-checkbox"><span class="multi-select-checkmark">✓</span></div>
+          <span>${o}</span>
+          ${selected.includes(o)?`<span class="multi-select-count">✓</span>`:''}
+        </div>`).join('')}
+    </div>`;
+
+  container.appendChild(wrap);
 }
 
-function parseCSV(text) {
-  const lines = text.split('\n');
-  const headers = parseCSVLine(lines[0]);
-  const rows = [];
-  for(let i = 1; i < lines.length; i++) {
-    if(!lines[i].trim()) continue;
-    const vals = parseCSVLine(lines[i]);
-    const obj = {};
-    headers.forEach((h, idx) => { obj[h.trim()] = (vals[idx] || '').trim(); });
-    rows.push(obj);
+function toggleMS(filterKey) {
+  const wrap = document.getElementById('mswrap-' + filterKey);
+  if(!wrap) return;
+  const isOpen = wrap.classList.contains('open');
+  // Закрываем все
+  document.querySelectorAll('.multi-select.open').forEach(el => el.classList.remove('open'));
+  if(!isOpen) wrap.classList.add('open');
+}
+
+function filterMSOptions(input, filterKey) {
+  const q = input.value.toLowerCase();
+  const wrap = document.getElementById('mswrap-' + filterKey);
+  if(!wrap) return;
+  wrap.querySelectorAll('.multi-select-option').forEach(opt => {
+    opt.style.display = opt.dataset.value.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+function toggleMSOption(filterKey, value, el) {
+  const arr = msState[filterKey];
+  const idx = arr.indexOf(value);
+  if(idx >= 0) arr.splice(idx,1);
+  else arr.push(value);
+  el.classList.toggle('selected', arr.includes(value));
+  el.querySelector('.multi-select-checkbox').innerHTML =
+    arr.includes(value) ? '<span class="multi-select-checkmark">✓</span>' : '';
+
+  // Обновляем trigger label
+  const wrap = document.getElementById('mswrap-' + filterKey);
+  if(wrap) {
+    const trigger = wrap.querySelector('.multi-select-trigger');
+    const total = wrap.querySelectorAll('.multi-select-option').length;
+    trigger.querySelector('.multi-select-trigger-text').textContent =
+      arr.length === 0 ? t('all') : arr.length === total ? t('selectAll') : t('nSelected')(arr.length);
+    trigger.classList.toggle('active', arr.length > 0);
   }
-  return rows;
+  applyFilters();
 }
 
-function parseCSVLine(line) {
-  const result = []; let current = ''; let inQuotes = false;
-  for(let i = 0; i < line.length; i++) {
-    const ch = line[i];
-    if(ch === '"') {
-      if(inQuotes && line[i+1] === '"') { current += '"'; i++; }
-      else inQuotes = !inQuotes;
-    } else if(ch === ',' && !inQuotes) { result.push(current); current = ''; }
-    else { current += ch; }
+// Закрываем мультиселект при клике снаружи
+document.addEventListener('click', e => {
+  if(!e.target.closest('.multi-select')) {
+    document.querySelectorAll('.multi-select.open').forEach(el => el.classList.remove('open'));
   }
-  result.push(current);
-  return result;
-}
+});
 
+// ---- UTILS ----
+function t(key) { return T[lang][key] || T.ru[key] || key; }
+function toggleGroup(id) { document.getElementById(id).classList.toggle('open'); }
+function clean(v) { return (!v || v==='nan') ? '' : v; }
 function parseFundingM(val) {
-  if(!val || val === 'nan') return 0;
-  val = val.replace(/,/g,'').replace(/\$/g,'').trim();
+  if(!val||val==='nan') return 0;
+  val=val.replace(/,/g,'').replace(/\$/g,'').trim();
   if(val.includes('B')) return parseFloat(val)*1000;
   if(val.includes('M')) return parseFloat(val);
   if(val.includes('K')) return parseFloat(val)/1000;
-  try { return parseFloat(val)/1e6; } catch{ return 0; }
+  try{return parseFloat(val)/1e6;}catch{return 0;}
+}
+function parseNum(v) { const n=parseFloat((v||'').replace(/,/g,'')); return isNaN(n)?0:n; }
+function parseManualScore(v) { const n=parseInt(v); return(!isNaN(n)&&n>=0&&n<=2)?n:null; }
+
+// ---- CSV ----
+function parseCSV(text) {
+  const lines=text.split('\n'); const headers=parseCSVLine(lines[0]); const rows=[];
+  for(let i=1;i<lines.length;i++){
+    if(!lines[i].trim()) continue;
+    const vals=parseCSVLine(lines[i]); const obj={};
+    headers.forEach((h,idx)=>{obj[h.trim()]=(vals[idx]||'').trim();}); rows.push(obj);
+  }
+  return rows;
+}
+function parseCSVLine(line) {
+  const res=[]; let cur=''; let q=false;
+  for(let i=0;i<line.length;i++){
+    const ch=line[i];
+    if(ch==='"'){if(q&&line[i+1]==='"'){cur+='"';i++;}else q=!q;}
+    else if(ch===','&&!q){res.push(cur);cur='';}
+    else cur+=ch;
+  }
+  res.push(cur); return res;
 }
 
-function parseManualScore(val) {
-  const n = parseInt(val);
-  return (!isNaN(n) && n >= 0 && n <= 2) ? n : null;
-}
-
+// ---- SCORING ----
 function calcScore(row) {
-  // Проверяем ручной скоринг
-  const manualMarket = parseManualScore(row['Yandex Score Market']);
-  const manualEdge = parseManualScore(row['Yandex Score Edge']);
-  const manualComplexity = parseManualScore(row['Yandex Score Complexity']);
-  const isManual = manualMarket !== null || manualEdge !== null || manualComplexity !== null;
+  const mm=parseManualScore(row['Yandex Score Market']);
+  const me=parseManualScore(row['Yandex Score Edge']);
+  const mc=parseManualScore(row['Yandex Score Complexity']);
+  const isManual=mm!==null||me!==null||mc!==null;
 
-  // Авто-скоринг
-  const growth = (row['Growth Score Tier']||'').toLowerCase();
-  const heat   = (row['Heat Score Tier']||'').toLowerCase();
-  const stage  = (row['Investment Stage']||'').toLowerCase();
-  const ind    = (row['Industry Groups']||'').toLowerCase();
-  const fm     = parseFundingM(row['Last Funding Amount']);
+  const growth=(row['Growth Score Tier']||'').toLowerCase();
+  const heat=(row['Heat Score Tier']||'').toLowerCase();
+  const stage=(row['Investment Stage']||'').toLowerCase();
+  const ind=(row['Industry Groups']||'').toLowerCase();
+  const fm=parseFundingM(row['Last Funding Amount']);
 
-  let autoMarket = 0;
-  if(growth==='high') autoMarket=2; else if(growth==='medium') autoMarket=1;
-  if(heat==='high' && autoMarket<2) autoMarket=Math.min(autoMarket+1,2);
-  if(fm>100) autoMarket=Math.min(autoMarket+1,2);
-  autoMarket=Math.min(autoMarket,2);
+  let am=0;
+  if(growth==='high') am=2; else if(growth==='medium') am=1;
+  if(heat==='high'&&am<2) am=Math.min(am+1,2);
+  if(fm>100) am=Math.min(am+1,2); am=Math.min(am,2);
 
   const yv=['artificial intelligence','data','software','fintech','health','logistics','e-commerce','media','education','cloud','financial'];
   const hits=yv.filter(v=>ind.includes(v)).length;
-  const autoEdge=hits>=3?2:hits>=1?1:0;
-  const autoComplexity=stage.includes('early')?2:1;
+  const ae=hits>=3?2:hits>=1?1:0;
+  const ac=stage.includes('early')?2:1;
 
-  // Берём ручной если есть, иначе авто
-  const market = manualMarket !== null ? manualMarket : autoMarket;
-  const edge = manualEdge !== null ? manualEdge : autoEdge;
-  const complexity = manualComplexity !== null ? manualComplexity : autoComplexity;
-
-  const total = market + edge + complexity;
-  const verdict = total>=5?'В pipeline':total>=3?'Изучить':'Отложить';
-  return { market, edge, complexity, total, verdict, isManual };
+  const market=mm!==null?mm:am;
+  const edge=me!==null?me:ae;
+  const complexity=mc!==null?mc:ac;
+  const total=market+edge+complexity;
+  const verdict=total>=5?'В pipeline':total>=3?'Изучить':'Отложить';
+  return{market,edge,complexity,total,verdict,isManual};
 }
 
 function processRows(rows) {
   return rows
-    .filter(r => !r['Operating Status'] || r['Operating Status']==='Active')
-    .map(r => {
-      const rawInd = r['Industry Groups']||'';
-      const industries = rawInd.split(',').map(s=>s.trim()).filter(s=>VALID_INDUSTRIES.has(s));
+    .filter(r=>!r['Operating Status']||r['Operating Status']==='Active'||r['Operating Status']==='Closed')
+    .map(r=>{
+      const rawInd=r['Industry Groups']||'';
+      const industries=rawInd.split(',').map(s=>s.trim()).filter(s=>VALID_INDUSTRIES.has(s));
       return {
         name: r['Organization Name']||'',
         description: r['Description']||'',
         full_description: r['Full Description']||'',
         industries,
         stage: r['Investment Stage']||'',
+        status: r['Operating Status']||'',
         last_funding_type: r['Last Funding Type']||'',
         last_funding_amount: r['Last Funding Amount']||'',
         last_funding_amount_m: parseFundingM(r['Last Funding Amount']),
@@ -562,86 +687,65 @@ function processRows(rows) {
         growth_score: r['Growth Score Tier']||'',
         heat_score: r['Heat Score Tier']||'',
         trend_score: r['Trend Score (90 Days)']||'',
+        cb_rank: parseNum(r['CB Rank (Company)']),
+        global_traffic_rank: parseNum(r['Global Traffic Rank']),
+        monthly_visits: parseNum(r['Monthly Visits']),
+        downloads: r['Downloads Last 30 Days']||'',
         lead_investors: r['Lead Investors']||'',
         top_investors: r['Top 5 Investors']||'',
         score: calcScore(r),
       };
     })
-    .filter(c => c.name);
+    .filter(c=>c.name);
 }
 
+// ---- LOAD ----
 async function loadData(manual=false) {
-  const btn = document.getElementById('refresh-btn');
-  const label = document.getElementById('refresh-label');
+  const btn=document.getElementById('refresh-btn');
+  const lbl=document.getElementById('refresh-label');
   btn.disabled=true; btn.classList.add('loading');
-  label.textContent='Загрузка...';
-
-  if(!manual) {
-    document.getElementById('cards-grid').innerHTML=`
-      <div class="loading-state"><div class="spinner"></div><span>Загружаем данные из Google Sheets...</span></div>`;
+  lbl.textContent=lang==='ru'?'Загрузка...':'Loading...';
+  if(!manual){
+    document.getElementById('cards-grid').innerHTML=
+      `<div class="loading-state"><div class="spinner"></div><span>${t('loading')}</span></div>`;
   }
-
-  try {
-    const res = await fetch('/api/sheet');
-    if(!res.ok) throw new Error('HTTP ' + res.status);
-    const csv = await res.text();
-    if(!csv.includes(',') || csv.length < 100) throw new Error('Пустой ответ');
-    const rows = parseCSV(csv);
-    companies = processRows(rows);
-    const now = new Date();
-    document.getElementById('last-updated').textContent =
-      `Обновлено: ${now.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})}`;
-    initFilters();
-    applyFilters();
-  } catch(e) {
+  try{
+    const res=await fetch('/api/sheet');
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const csv=await res.text();
+    if(!csv.includes(',') || csv.length<100) throw new Error('Empty response');
+    const rows=parseCSV(csv);
+    companies=processRows(rows);
+    const now=new Date();
+    document.getElementById('last-updated').textContent=
+      t('updated')(now.toLocaleTimeString(lang==='ru'?'ru-RU':'en-US',{hour:'2-digit',minute:'2-digit'}));
+    initFilters(); applyFilters();
+  }catch(e){
     document.getElementById('cards-grid').innerHTML=`
       <div class="error-state">
-        <h3>Не удалось загрузить данные</h3>
-        <p>Убедитесь что таблица открыта для всех по ссылке.</p>
-        <button class="retry-btn" onclick="loadData(true)">Попробовать снова</button>
+        <h3>${t('errTitle')}</h3>
+        <p>${t('errMsg')}</p>
+        <button class="retry-btn" onclick="loadData(true)">${t('retry')}</button>
       </div>`;
   }
-
   btn.disabled=false; btn.classList.remove('loading');
-  label.textContent='Обновить';
+  lbl.textContent=t('updated')('').replace(': ','') || (lang==='ru'?'Обновить':'Refresh');
+  lbl.textContent = lang==='ru'?'Обновить':'Refresh';
 }
 
+// ---- INIT FILTERS ----
 function initFilters() {
-  const industries = new Set();
-  companies.forEach(c=>c.industries.forEach(i=>{if(i)industries.add(i);}));
-  const isel = document.getElementById('f-industry');
-  const icur = isel.value;
-  isel.innerHTML='<option value="">Все вертикали</option>';
-  [...industries].sort().forEach(i=>{
-    const o=document.createElement('option');
-    o.value=i; o.textContent=i;
-    if(i===icur) o.selected=true;
-    isel.appendChild(o);
-  });
+  const getUniq=(fn)=>[...new Set(companies.map(fn).filter(Boolean).filter(v=>v!=='nan'))].sort();
 
-  const rounds = new Set();
-  companies.forEach(c=>{if(c.last_funding_type&&c.last_funding_type!=='nan')rounds.add(c.last_funding_type);});
-  const rsel = document.getElementById('f-round');
-  const rcur = rsel.value;
-  rsel.innerHTML='<option value="">Все раунды</option>';
-  [...rounds].sort().forEach(r=>{
-    const o=document.createElement('option');
-    o.value=r; o.textContent=r;
-    if(r===rcur) o.selected=true;
-    rsel.appendChild(o);
-  });
-
-  const revenues = new Set();
-  companies.forEach(c=>{if(c.revenue_range&&c.revenue_range!=='nan')revenues.add(c.revenue_range);});
-  const rvsel = document.getElementById('f-revenue');
-  const rvcur = rvsel.value;
-  rvsel.innerHTML='<option value="">Любая</option>';
-  [...revenues].sort().forEach(r=>{
-    const o=document.createElement('option');
-    o.value=r; o.textContent=r;
-    if(r===rvcur) o.selected=true;
-    rvsel.appendChild(o);
-  });
+  const allIndustries=[...new Set(companies.flatMap(c=>c.industries))].sort();
+  buildMultiSelect('ms-industry', allIndustries, 'industry');
+  buildMultiSelect('ms-stage', getUniq(c=>c.stage), 'stage');
+  buildMultiSelect('ms-status', getUniq(c=>c.status), 'status');
+  buildMultiSelect('ms-round', getUniq(c=>c.last_funding_type), 'round');
+  buildMultiSelect('ms-revenue', getUniq(c=>c.revenue_range), 'revenue');
+  buildMultiSelect('ms-employees', getUniq(c=>c.employees), 'employees');
+  buildMultiSelect('ms-growth', ['High','Medium','Low'], 'growth');
+  buildMultiSelect('ms-heat', ['High','Medium','Low'], 'heat');
 
   updateCounts();
 }
@@ -659,56 +763,59 @@ function updateCounts() {
   document.getElementById('cnt-later').textContent=c.later;
 }
 
+// ---- FILTERS ----
 function setVerdict(v,el) {
   currentVerdict=v;
   document.querySelectorAll('.verdict-chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  currentPage=1; applyFilters();
+  el.classList.add('active'); currentPage=1; applyFilters();
 }
 
 function applyFilters() {
-  const q        = document.getElementById('search').value.toLowerCase().trim();
-  const ind      = document.getElementById('f-industry').value;
-  const st       = document.getElementById('f-stage').value;
-  const rn       = document.getElementById('f-round').value;
-  const em       = document.getElementById('f-employees').value;
-  const gr       = document.getElementById('f-growth').value;
-  const ht       = document.getElementById('f-heat').value;
-  const rv       = document.getElementById('f-revenue').value;
-  const fmin     = parseFloat(document.getElementById('f-funding-min').value) || 0;
-  const fmax     = parseFloat(document.getElementById('f-funding-max').value) || Infinity;
-  const tmin     = parseFloat(document.getElementById('f-trend-min').value) || 0;
-  const minscore = parseInt(document.getElementById('f-minscore').value) || 0;
-  const manualF  = document.getElementById('f-manual').value;
-  const so       = document.getElementById('sort').value;
+  const q=document.getElementById('search').value.toLowerCase().trim();
+  const manual=document.getElementById('f-manual').value;
+  const minscore=parseInt(document.getElementById('f-minscore').value)||0;
+  const fmin=parseFloat(document.getElementById('f-fmin').value)||0;
+  const fmax=parseFloat(document.getElementById('f-fmax').value)||Infinity;
+  const tmin=parseFloat(document.getElementById('f-tmin').value)||0;
+  const cbmin=parseFloat(document.getElementById('f-cbmin').value)||0;
+  const cbmax=parseFloat(document.getElementById('f-cbmax').value)||Infinity;
+  const trafficmax=parseFloat(document.getElementById('f-trafficmax').value)||Infinity;
+  const visitsmin=parseFloat(document.getElementById('f-visitsmin').value)||0;
+  const so=document.getElementById('sort').value;
 
-  filtered = companies.filter(c=>{
-    if(currentVerdict!=='all' && c.score.verdict!==currentVerdict) return false;
+  filtered=companies.filter(c=>{
+    if(currentVerdict!=='all'&&c.score.verdict!==currentVerdict) return false;
     if(q){
       const hay=(c.name+' '+c.description+' '+c.full_description+' '+c.industries.join(' ')+' '+(c.lead_investors||'')).toLowerCase();
       if(!hay.includes(q)) return false;
     }
-    if(ind && !c.industries.includes(ind)) return false;
-    if(st && c.stage!==st) return false;
-    if(rn && c.last_funding_type!==rn) return false;
-    if(em && c.employees!==em) return false;
-    if(gr && c.growth_score!==gr) return false;
-    if(ht && c.heat_score!==ht) return false;
-    if(rv && c.revenue_range!==rv) return false;
-    if(fmin > 0 && c.last_funding_amount_m < fmin) return false;
-    if(fmax < Infinity && c.last_funding_amount_m > fmax) return false;
-    if(tmin > 0 && parseFloat(c.trend_score||0) < tmin) return false;
-    if(minscore > 0 && c.score.total < minscore) return false;
-    if(manualF==='manual' && !c.score.isManual) return false;
-    if(manualF==='auto' && c.score.isManual) return false;
+    if(msState.industry.length&&!c.industries.some(i=>msState.industry.includes(i))) return false;
+    if(msState.stage.length&&!msState.stage.includes(c.stage)) return false;
+    if(msState.status.length&&!msState.status.includes(c.status)) return false;
+    if(msState.round.length&&!msState.round.includes(c.last_funding_type)) return false;
+    if(msState.revenue.length&&!msState.revenue.includes(c.revenue_range)) return false;
+    if(msState.employees.length&&!msState.employees.includes(c.employees)) return false;
+    if(msState.growth.length&&!msState.growth.includes(c.growth_score)) return false;
+    if(msState.heat.length&&!msState.heat.includes(c.heat_score)) return false;
+    if(minscore&&c.score.total<minscore) return false;
+    if(manual==='manual'&&!c.score.isManual) return false;
+    if(manual==='auto'&&c.score.isManual) return false;
+    if(fmin&&c.last_funding_amount_m<fmin) return false;
+    if(fmax<Infinity&&c.last_funding_amount_m>fmax) return false;
+    if(tmin&&parseFloat(c.trend_score||0)<tmin) return false;
+    if(cbmin&&c.cb_rank<cbmin) return false;
+    if(cbmax<Infinity&&c.cb_rank>cbmax) return false;
+    if(trafficmax<Infinity&&c.global_traffic_rank>trafficmax) return false;
+    if(visitsmin&&c.monthly_visits<visitsmin) return false;
     return true;
   });
 
   filtered.sort((a,b)=>{
-    if(so==='score')   return b.score.total-a.score.total;
+    if(so==='score') return b.score.total-a.score.total;
     if(so==='funding') return b.last_funding_amount_m-a.last_funding_amount_m;
-    if(so==='trend')   return parseFloat(b.trend_score||0)-parseFloat(a.trend_score||0);
-    if(so==='name')    return a.name.localeCompare(b.name);
+    if(so==='trend') return parseFloat(b.trend_score||0)-parseFloat(a.trend_score||0);
+    if(so==='cb') return (a.cb_rank||999999)-(b.cb_rank||999999);
+    if(so==='name') return a.name.localeCompare(b.name);
     return 0;
   });
 
@@ -717,36 +824,27 @@ function applyFilters() {
 
 function resetFilters() {
   document.getElementById('search').value='';
-  ['f-industry','f-stage','f-round','f-employees','f-growth','f-heat','f-revenue','f-minscore','f-manual'].forEach(id=>{
-    document.getElementById(id).value='';
-  });
-  ['f-funding-min','f-funding-max','f-trend-min'].forEach(id=>{
-    document.getElementById(id).value='';
-  });
+  ['f-manual','f-minscore'].forEach(id=>document.getElementById(id).value='');
+  ['f-fmin','f-fmax','f-tmin','f-cbmin','f-cbmax','f-trafficmax','f-visitsmin'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('sort').value='score';
+  Object.keys(msState).forEach(k=>msState[k]=[]);
   currentVerdict='all';
   document.querySelectorAll('.verdict-chip').forEach((c,i)=>c.classList.toggle('active',i===0));
-  currentPage=1; applyFilters();
+  initFilters(); currentPage=1; applyFilters();
 }
 
-const COLORS=[
-  ['#F0531C','#C93D10'],['#2563EB','#1D4ED8'],['#059669','#047857'],
-  ['#7C3AED','#6D28D9'],['#D97706','#B45309'],['#0891B2','#0E7490'],
-  ['#DB2777','#BE185D'],['#4F46E5','#4338CA']
-];
-
-function avatarStyle(name){
-  let h=0; for(let i=0;i<name.length;i++) h=name.charCodeAt(i)+((h<<5)-h);
-  const [c1,c2]=COLORS[Math.abs(h)%COLORS.length];
-  return `background:linear-gradient(135deg,${c1},${c2})`;
+// ---- RENDER ----
+const COLORS=[['#F0531C','#C93D10'],['#2563EB','#1D4ED8'],['#059669','#047857'],['#7C3AED','#6D28D9'],['#D97706','#B45309'],['#0891B2','#0E7490'],['#DB2777','#BE185D'],['#4F46E5','#4338CA']];
+function avatarStyle(name){let h=0;for(let i=0;i<name.length;i++)h=name.charCodeAt(i)+((h<<5)-h);const[c1,c2]=COLORS[Math.abs(h)%COLORS.length];return`background:linear-gradient(135deg,${c1},${c2})`;}
+function initials(name){return name.split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';}
+function vc(v){return v==='В pipeline'?'pipeline':v==='Изучить'?'study':'later';}
+function vl(v){
+  const map={ru:{'В pipeline':'В pipeline','Изучить':'Изучить','Отложить':'Отложить'},en:{'В pipeline':'Pipeline','Изучить':'Study','Отложить':'Later'}};
+  return(map[lang]||map.ru)[v]||v;
 }
-function initials(name){ return name.split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?'; }
-function vc(v){ return v==='В pipeline'?'pipeline':v==='Изучить'?'study':'later'; }
-function vl(v){ if(currentLang==='en'){ return v==='В pipeline'?'Pipeline':v==='Изучить'?'Study':'Later'; } return v; }
-function clean(val){ return (!val||val==='nan')?'':val; }
 
-function tooltip(key){
-  return `<span class="tooltip-wrap"><span class="info-icon">i</span><span class="tooltip">${SCORE_TOOLTIPS[key]}</span></span>`;
+function tip(key){
+  return `<span class="tooltip-wrap"><span class="info-icon">i</span><span class="tooltip">${SCORE_TIPS[lang][key]}</span></span>`;
 }
 
 function renderCards(){
@@ -756,12 +854,11 @@ function renderCards(){
   const start=(currentPage-1)*PAGE_SIZE;
   const page=filtered.slice(start,start+PAGE_SIZE);
 
-  info.innerHTML=`Показано <strong>${Math.min(start+PAGE_SIZE,total)}</strong> из <strong>${total}</strong>`;
+  info.innerHTML=t('showing')(Math.min(start+PAGE_SIZE,total),total);
 
   if(!page.length){
-    grid.innerHTML=`<div class="empty-state"><h3>Ничего не найдено</h3><p>Попробуйте изменить фильтры</p></div>`;
-    document.getElementById('pagination').innerHTML='';
-    return;
+    grid.innerHTML=`<div class="empty-state"><h3>${t('notFound')}</h3><p>${t('notFoundSub')}</p></div>`;
+    document.getElementById('pagination').innerHTML=''; return;
   }
 
   grid.innerHTML=page.map((c,i)=>{
@@ -772,7 +869,6 @@ function renderCards(){
     const round=clean(c.last_funding_type);
     const growth=clean(c.growth_score);
     const gc=growth==='High'?'var(--green)':growth==='Medium'?'#D97706':'var(--text3)';
-    const manualBadge=c.score.isManual?`<span class="manual-badge">✎ ручной</span>`:'';
 
     return `<div class="card" onclick="openModal(${start+i})">
       <div class="card-header">
@@ -781,20 +877,20 @@ function renderCards(){
           <div class="card-name">${c.name}</div>
           <div class="card-meta">${round||'—'}${c.employees?' · '+c.employees:''}</div>
         </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0">
           <span class="verdict-badge ${vc(c.score.verdict)}">${vl(c.score.verdict)}</span>
-          ${manualBadge}
+          ${c.score.isManual?`<span class="manual-badge">${t('manualBadge')}</span>`:''}
         </div>
       </div>
       ${short?`<div class="card-desc">${short}</div>`:''}
-      ${tags.length?`<div class="card-tags">${tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>`:''}
+      ${tags.length?`<div class="card-tags">${tags.map(tg=>`<span class="tag">${tg}</span>`).join('')}</div>`:''}
       <div class="card-footer">
         <div>
-          <div class="card-stat-label">Раунд</div>
+          <div class="card-stat-label">${t('round')}</div>
           <div class="card-stat-value" style="font-size:11px">${funding||'—'}</div>
         </div>
         <div>
-          <div class="card-stat-label">Growth</div>
+          <div class="card-stat-label">${t('growth')}</div>
           <div class="card-stat-value" style="color:${gc}">${growth||'—'}</div>
         </div>
         <div>
@@ -829,106 +925,102 @@ function renderPagination(total){
   pag.innerHTML=html;
 }
 
-function goPage(p){ currentPage=p; renderCards(); window.scrollTo({top:54,behavior:'smooth'}); }
+function goPage(p){currentPage=p;renderCards();window.scrollTo({top:54,behavior:'smooth'});}
 
+// ---- MODAL ----
 function openModal(idx){
   const c=filtered[idx]; if(!c) return;
   document.getElementById('m-avatar').style=avatarStyle(c.name);
   document.getElementById('m-avatar').textContent=initials(c.name);
   document.getElementById('m-name').textContent=c.name;
 
-  const round=clean(c.last_funding_type);
-  const amount=clean(c.last_funding_amount);
+  const round=clean(c.last_funding_type), amount=clean(c.last_funding_amount);
   document.getElementById('m-subtitle').innerHTML=
     `${round?`<span>${round}</span>`:''}${amount?`<span>·</span><span>${amount}</span>`:''}
      <span class="verdict-badge ${vc(c.score.verdict)}" style="margin-left:4px">${vl(c.score.verdict)}</span>
-     ${c.score.isManual?`<span class="manual-badge">✎ ручной скоринг</span>`:''}`;
+     ${c.score.isManual?`<span class="manual-badge">${t('manualBadge')}</span>`:''}`;
 
   const desc=clean(c.full_description)||clean(c.description);
   const investors=clean(c.top_investors)||clean(c.lead_investors);
   const sc=c.score.total>=5?'var(--green)':c.score.total>=3?'#D97706':'var(--text3)';
 
   document.getElementById('m-body').innerHTML=`
-    ${desc?`<div>
-      <div class="modal-section-title">О компании</div>
-      <div class="modal-desc">${desc}</div>
-    </div>`:''}
-
+    ${desc?`<div><div class="modal-section-title">${t('about')}</div><div class="modal-desc">${desc}</div></div>`:''}
     <div>
-      <div class="modal-section-title">Метрики</div>
+      <div class="modal-section-title">${t('metrics')}</div>
       <div class="stats-grid">
-        <div class="stat-box"><div class="stat-box-label">Привлечено</div><div class="stat-box-value accent">${clean(c.last_funding_amount)||'—'}</div></div>
-        <div class="stat-box"><div class="stat-box-label">Раунд</div><div class="stat-box-value">${clean(c.last_funding_type)||'—'}</div></div>
-        <div class="stat-box"><div class="stat-box-label">Команда</div><div class="stat-box-value">${clean(c.employees)||'—'}</div></div>
-        <div class="stat-box"><div class="stat-box-label">Выручка</div><div class="stat-box-value">${clean(c.revenue_range)||'—'}</div></div>
-        <div class="stat-box"><div class="stat-box-label">Growth Score</div><div class="stat-box-value ${c.growth_score==='High'?'green':''}">${clean(c.growth_score)||'—'}</div></div>
-        <div class="stat-box"><div class="stat-box-label">Trend 90d</div><div class="stat-box-value accent">${c.trend_score?parseFloat(c.trend_score).toFixed(1):'—'}</div></div>
+        <div class="stat-box"><div class="stat-box-label">${t('raised')}</div><div class="stat-box-value accent">${clean(c.last_funding_amount)||'—'}</div></div>
+        <div class="stat-box"><div class="stat-box-label">${t('round')}</div><div class="stat-box-value">${clean(c.last_funding_type)||'—'}</div></div>
+        <div class="stat-box"><div class="stat-box-label">${t('team')}</div><div class="stat-box-value">${clean(c.employees)||'—'}</div></div>
+        <div class="stat-box"><div class="stat-box-label">${t('revenue')}</div><div class="stat-box-value">${clean(c.revenue_range)||'—'}</div></div>
+        <div class="stat-box"><div class="stat-box-label">${t('growth')}</div><div class="stat-box-value ${c.growth_score==='High'?'green':''}">${clean(c.growth_score)||'—'}</div></div>
+        <div class="stat-box"><div class="stat-box-label">${t('trend')}</div><div class="stat-box-value accent">${c.trend_score?parseFloat(c.trend_score).toFixed(1):'—'}</div></div>
+        <div class="stat-box"><div class="stat-box-label">${t('cb')}</div><div class="stat-box-value">${c.cb_rank||'—'}</div></div>
+        <div class="stat-box"><div class="stat-box-label">${t('visits')}</div><div class="stat-box-value">${c.monthly_visits?c.monthly_visits.toLocaleString():'—'}</div></div>
       </div>
     </div>
-
     <div>
-      <div class="modal-section-title">Скоринг Яндекса</div>
+      <div class="modal-section-title">${t('scoring')}</div>
       <div class="scoring-wrap">
         <div class="scoring-header">
           <div>
             <div class="scoring-total-num" style="color:${sc}">${c.score.total}<span style="font-size:16px;color:var(--text3);font-weight:400">/6</span></div>
-            <div class="scoring-total-sub">итоговый балл</div>
+            <div class="scoring-total-sub">${t('totalScore')}</div>
           </div>
           <span class="verdict-badge ${vc(c.score.verdict)}" style="font-size:13px;padding:5px 12px">${vl(c.score.verdict)}</span>
         </div>
         <div class="scoring-row">
           <div class="scoring-row-header">
-            <span class="scoring-row-name">Рынок${tooltip('market')}</span>
+            <span class="scoring-row-name">${t('market')}${tip('market')}</span>
             <span class="scoring-row-val">${c.score.market}/2</span>
           </div>
           <div class="scoring-bar"><div class="scoring-bar-fill bar-market" style="width:${c.score.market/2*100}%"></div></div>
         </div>
         <div class="scoring-row">
           <div class="scoring-row-header">
-            <span class="scoring-row-name">Edge Яндекса${tooltip('edge')}</span>
+            <span class="scoring-row-name">${t('edge')}${tip('edge')}</span>
             <span class="scoring-row-val" style="color:var(--green)">${c.score.edge}/2</span>
           </div>
           <div class="scoring-bar"><div class="scoring-bar-fill bar-edge" style="width:${c.score.edge/2*100}%"></div></div>
         </div>
         <div class="scoring-row">
           <div class="scoring-row-header">
-            <span class="scoring-row-name">Сложность входа${tooltip('complexity')}</span>
+            <span class="scoring-row-name">${t('complexity')}${tip('complexity')}</span>
             <span class="scoring-row-val" style="color:#D97706">${c.score.complexity}/2</span>
           </div>
           <div class="scoring-bar"><div class="scoring-bar-fill bar-complexity" style="width:${c.score.complexity/2*100}%"></div></div>
         </div>
-        ${c.score.isManual
-          ? `<div class="manual-note">✎ Скоринг выставлен вручную в Google Sheets</div>`
-          : `<div class="auto-note">Скоринг рассчитан автоматически по данным Crunchbase. Для ручной оценки заполните колонки Yandex Score Market / Edge / Complexity в таблице.</div>`
-        }
+        ${c.score.isManual?`<div class="manual-note">${t('manualScoring')}</div>`:`<div class="auto-note">${t('autoScoring')}</div>`}
       </div>
     </div>
-
-    ${investors?`<div>
-      <div class="modal-section-title">Инвесторы</div>
-      <div class="investors-text">${investors}</div>
-    </div>`:''}
-
-    ${c.industries.length?`<div>
-      <div class="modal-section-title">Вертикали</div>
-      <div class="card-tags">${c.industries.map(i=>`<span class="tag">${i}</span>`).join('')}</div>
-    </div>`:''}
+    ${investors?`<div><div class="modal-section-title">${t('investors')}</div><div class="investors-text">${investors}</div></div>`:''}
+    ${c.industries.length?`<div><div class="modal-section-title">${t('industries')}</div><div class="card-tags">${c.industries.map(i=>`<span class="tag">${i}</span>`).join('')}</div></div>`:''}
   `;
-
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow='hidden';
 }
 
-function closeModal(e){ if(e.target===document.getElementById('modal-overlay')) closeModalDirect(); }
-function closeModalDirect(){ document.getElementById('modal-overlay').classList.remove('open'); document.body.style.overflow=''; }
+function closeModal(e){if(e.target===document.getElementById('modal-overlay'))closeModalDirect();}
+function closeModalDirect(){document.getElementById('modal-overlay').classList.remove('open');document.body.style.overflow='';}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModalDirect();});
 
-function setLang(lang){
-  currentLang=lang;
+// ---- LANG ----
+function setLang(newLang){
+  lang=newLang;
   document.querySelectorAll('.lang-btn').forEach(b=>{
-    b.classList.toggle('active', b.textContent.trim().toLowerCase().includes(lang==='ru'?'ру':'en'));
+    b.classList.toggle('active',b.textContent.trim().toLowerCase().includes(lang==='ru'?'ру':'en'));
   });
-  if(companies.length) renderCards();
+  // Переводим статичные элементы
+  document.querySelectorAll('[data-ru]').forEach(el=>{
+    if(el.tagName!=='OPTION') el.textContent=lang==='ru'?el.dataset.ru:el.dataset.en;
+  });
+  document.getElementById('search').placeholder=t('search');
+  // Переводим options в select
+  document.querySelectorAll('select option[data-ru]').forEach(opt=>{
+    opt.textContent=lang==='ru'?opt.dataset.ru:opt.dataset.en;
+  });
+  // Перестраиваем мультиселекты с новыми лейблами
+  if(companies.length){ initFilters(); renderCards(); }
 }
 
 loadData();
