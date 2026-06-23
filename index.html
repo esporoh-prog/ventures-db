@@ -213,13 +213,108 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
 .auto-note{font-size:11px;color:var(--text3);background:var(--bg3);padding:6px 10px;border-radius:var(--radius-sm);margin-top:10px;}
 .investors-text{font-size:13px;color:var(--text2);line-height:1.7;}
 
-@media(max-width:900px){
-  .layout{grid-template-columns:1fr;}
-  .sidebar{position:static;height:auto;border-right:none;border-bottom:1px solid var(--border);}
+/* MOBILE FILTER BUTTON */
+.mobile-filter-btn{display:none;}
+
+@media(max-width:768px){
+  /* Layout — компании сразу */
+  .layout{grid-template-columns:1fr;position:relative;}
+  .main{padding:12px;order:1;}
   .cards-grid{grid-template-columns:1fr;}
-  .main{padding:14px;}
-  .header-top{padding:0 16px;}
+  .header-top{padding:0 14px;}
   .last-updated{display:none;}
+  .logo-sub{display:none;}
+
+  /* Сайдбар — скрыт по умолчанию, открывается оверлеем */
+  .sidebar{
+    position:fixed;
+    top:0; left:0; bottom:0;
+    width:85%;
+    max-width:320px;
+    z-index:300;
+    transform:translateX(-100%);
+    transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);
+    box-shadow:4px 0 24px rgba(0,0,0,0.15);
+    height:100vh;
+    top:0;
+    padding-top:60px;
+    border-right:1px solid var(--border);
+    order:2;
+  }
+  .sidebar.mobile-open{transform:translateX(0);}
+
+  /* Оверлей за сайдбаром */
+  .sidebar-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.4);
+    z-index:299;
+    backdrop-filter:blur(2px);
+  }
+  .sidebar-overlay.open{display:block;}
+
+  /* Кнопка открытия фильтров */
+  .mobile-filter-btn{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:7px 13px;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    font-size:13px;
+    font-weight:500;
+    font-family:'Inter',sans-serif;
+    color:var(--text);
+    cursor:pointer;
+    transition:all 0.15s;
+  }
+  .mobile-filter-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .mobile-filter-badge{
+    background:var(--accent);
+    color:white;
+    border-radius:10px;
+    font-size:10px;
+    font-weight:700;
+    padding:1px 6px;
+    min-width:18px;
+    text-align:center;
+    display:none;
+  }
+  .mobile-filter-badge.visible{display:inline-block;}
+
+  /* Кнопка закрытия фильтров внутри сайдбара */
+  .sidebar-close-btn{
+    position:absolute;
+    top:14px; right:14px;
+    width:32px; height:32px;
+    border-radius:8px;
+    border:1px solid var(--border);
+    background:#fff;
+    color:var(--text2);
+    font-size:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    z-index:1;
+  }
+  .sidebar-close-btn:hover{border-color:var(--text);color:var(--text);}
+
+  /* Тулбар на мобиле */
+  .toolbar{flex-wrap:wrap;gap:8px;}
+  .results-info{font-size:12px;}
+
+  /* Таблица на мобиле — скрываем лишние колонки */
+  .companies-table th:nth-child(2),
+  .companies-table td:nth-child(2),
+  .companies-table th:nth-child(6),
+  .companies-table td:nth-child(6){display:none;}
+
+  /* Карточки чуть компактнее */
+  .card{padding:14px;}
+  .card-footer{gap:6px;}
 }
 
 /* VIEW TOGGLE */
@@ -285,8 +380,10 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
   </div>
 </header>
 
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileFilters()"></div>
 <div class="layout">
   <aside class="sidebar" id="sidebar">
+    <button class="sidebar-close-btn" onclick="closeMobileFilters()">✕</button>
     <div class="search-wrap">
       <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <input class="search-input" id="search" placeholder="Поиск компании..." oninput="applyFilters()">
@@ -477,7 +574,17 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
 
   <main class="main">
     <div class="toolbar">
-      <div class="results-info" id="results-info"></div>
+      <div style="display:flex;align-items:center;gap:8px">
+          <div class="results-info" id="results-info"></div>
+          <button class="mobile-filter-btn" onclick="openMobileFilters()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/>
+              <line x1="11" y1="18" x2="13" y2="18"/>
+            </svg>
+            <span data-ru="Фильтры" data-en="Filters">Фильтры</span>
+            <span class="mobile-filter-badge" id="mobile-filter-badge">0</span>
+          </button>
+        </div>
       <div style="display:flex;align-items:center;gap:8px">
         <select class="sort-select" id="sort" onchange="applyFilters()">
           <option value="score" data-ru="По скорингу" data-en="By score">По скорингу</option>
@@ -613,6 +720,34 @@ const VALID_INDUSTRIES = new Set([
 let companies = [], filtered = [];
 let currentVerdict = 'all', lang = 'ru', currentPage = 1, viewMode = 'grid';
 const PAGE_SIZE = 24;
+
+function openMobileFilters(){
+  document.getElementById('sidebar').classList.add('mobile-open');
+  document.getElementById('sidebar-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeMobileFilters(){
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function updateMobileFilterBadge(){
+  const badge=document.getElementById('mobile-filter-badge');
+  if(!badge) return;
+  // Считаем активные фильтры
+  let count=0;
+  if(currentVerdict!=='all') count++;
+  Object.values(msState).forEach(arr=>{if(arr.length) count++;});
+  const textFields=['search','f-manual','f-minscore','f-fmin','f-fmax','f-tmin','f-cbmin','f-cbmax','f-trafficmax','f-visitsmin','f-investor'];
+  textFields.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&el.value) count++;
+  });
+  badge.textContent=count;
+  badge.classList.toggle('visible', count>0);
+}
 
 function setView(mode){
   viewMode=mode;
@@ -926,6 +1061,7 @@ function applyFilters() {
     return 0;
   });
 
+  updateMobileFilterBadge();
   currentPage=1; renderCards();
 }
 
