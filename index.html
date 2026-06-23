@@ -301,21 +301,7 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
   .mobile-filter-badge.visible{display:inline-block;}
 
   /* Кнопка закрытия фильтров внутри сайдбара */
-  .sidebar-close-btn{
-    position:absolute;
-    top:14px; right:14px;
-    width:32px; height:32px;
-    border-radius:8px;
-    border:1px solid var(--border);
-    background:#fff;
-    color:var(--text2);
-    font-size:16px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    z-index:1;
-  }
+  .sidebar-close-btn{display:none;}
   .sidebar-close-btn:hover{border-color:var(--text);color:var(--text);}
 
   /* Тулбар на мобиле */
@@ -330,6 +316,9 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
   /* Карточки чуть компактнее */
   .card{padding:14px;}
   .card-footer{gap:6px;}
+
+  /* Кнопка закрытия — показываем только на мобиле */
+  .sidebar-close-btn{display:flex;position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:#fff;color:var(--text2);font-size:16px;align-items:center;justify-content:center;cursor:pointer;z-index:1;}
 }
 
 /* VIEW TOGGLE */
