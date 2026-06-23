@@ -167,6 +167,7 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
 .tooltip-wrap{position:relative;display:inline-flex;align-items:center;}
 .info-icon{width:15px;height:15px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:help;margin-left:5px;flex-shrink:0;transition:all 0.15s;}
 .info-icon:hover{background:var(--accent);border-color:var(--accent);color:white;}
+.tooltip-wrap{position:relative;display:inline-flex;align-items:center;}
 .tooltip{
   position:fixed;
   background:#1E1E2E;
@@ -175,19 +176,36 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
   line-height:1.65;
   padding:13px 15px;
   border-radius:10px;
-  width:280px;
-  max-width:calc(100vw - 32px);
+  width:260px;
+  max-width:calc(100vw - 24px);
   pointer-events:none;
   opacity:0;
-  transition:opacity 0.18s;
-  z-index:9999;
+  visibility:hidden;
+  transition:opacity 0.15s, visibility 0.15s;
+  z-index:99999;
   white-space:normal;
   box-shadow:0 8px 28px rgba(0,0,0,0.28);
   border:1px solid rgba(255,255,255,0.08);
 }
-.tooltip b{color:white;font-weight:700;display:block;margin-bottom:4px;font-size:12px;}
-.tooltip-wrap{position:relative;display:inline-flex;align-items:center;}
-.tooltip-wrap:hover .tooltip{opacity:1;}
+.tooltip::after{
+  content:'';
+  position:absolute;
+  top:100%;
+  left:var(--arrow-x, 50%);
+  transform:translateX(-50%);
+  border:5px solid transparent;
+  border-top-color:#1E1E2E;
+}
+.tooltip.tip-below::after{
+  top:auto;
+  bottom:100%;
+  left:var(--arrow-x, 50%);
+  transform:translateX(-50%);
+  border-top-color:transparent;
+  border-bottom-color:#1E1E2E;
+}
+.tooltip b{color:white;font-weight:700;display:block;margin-bottom:5px;font-size:12px;}
+.tooltip-wrap:hover .tooltip{opacity:1;visibility:visible;}
 
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(15,20,35,0.45);backdrop-filter:blur(3px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.2s;}
@@ -1343,25 +1361,44 @@ function openModal(idx){
   document.body.style.overflow='hidden';
 }
 
-// Умное позиционирование тултипов — не уходят за край экрана
-document.addEventListener('mousemove', e => {
+// Умное позиционирование тултипов — fixed, через getBoundingClientRect
+document.addEventListener('mouseover', e => {
   const wrap = e.target.closest('.tooltip-wrap');
   if(!wrap) return;
   const tip = wrap.querySelector('.tooltip');
   if(!tip) return;
+
+  const icon = wrap.querySelector('.info-icon');
+  const ref = icon || wrap;
+  const rect = ref.getBoundingClientRect();
+  const tw = 260;
+  const th = 120; // примерная высота до рендера
   const margin = 12;
-  const tw = 280;
-  const th = tip.offsetHeight || 80;
-  let x = e.clientX - tw/2;
-  let y = e.clientY - th - 14;
+
+  // Центрируем по иконке
+  let x = rect.left + rect.width/2 - tw/2;
+  let y = rect.top - th - 10;
+
   // Не уходим за правый край
   if(x + tw > window.innerWidth - margin) x = window.innerWidth - tw - margin;
   // Не уходим за левый край
   if(x < margin) x = margin;
+
   // Если не влезает сверху — показываем снизу
-  if(y < margin) y = e.clientY + 14;
+  const below = rect.top < 160;
+  if(below){
+    y = rect.bottom + 10;
+    tip.classList.add('tip-below');
+  } else {
+    tip.classList.remove('tip-below');
+  }
+
   tip.style.left = x + 'px';
   tip.style.top = y + 'px';
+
+  // Корректируем стрелку по X
+  const arrowX = rect.left + rect.width/2 - x;
+  tip.style.setProperty('--arrow-x', Math.max(16, Math.min(arrowX, tw-16)) + 'px');
 });
 
 function closeModal(e){if(e.target===document.getElementById('modal-overlay'))closeModalDirect();}
