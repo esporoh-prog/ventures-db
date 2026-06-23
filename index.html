@@ -221,6 +221,45 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
   .header-top{padding:0 16px;}
   .last-updated{display:none;}
 }
+
+/* VIEW TOGGLE */
+.view-toggle{display:flex;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;}
+.view-btn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:none;background:#fff;color:var(--text3);cursor:pointer;transition:all 0.15s;}
+.view-btn:hover{background:var(--bg2);color:var(--text);}
+.view-btn.active{background:var(--accent);color:white;}
+
+/* CARD HOT MARKER */
+.card.hot::after{background:var(--green)!important;}
+.card.warm::after{background:var(--yellow,#D97706)!important;}
+.hot-badge{font-size:10px;padding:2px 7px;border-radius:10px;background:rgba(22,163,74,0.1);color:var(--green);border:1px solid rgba(22,163,74,0.25);font-weight:600;}
+
+/* SIGNAL ROW */
+.card-signal{font-size:11px;color:var(--text2);display:flex;align-items:center;gap:5px;margin-top:-4px;flex-wrap:wrap;}
+.signal-item{display:flex;align-items:center;gap:3px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:2px 8px;font-size:11px;color:var(--text2);}
+.signal-item.hot{background:rgba(22,163,74,0.08);border-color:rgba(22,163,74,0.25);color:var(--green);}
+.signal-item.warm{background:rgba(217,119,6,0.08);border-color:rgba(217,119,6,0.25);color:#D97706;}
+.signal-item.accent{background:var(--accent-light);border-color:rgba(240,83,28,0.25);color:var(--accent);}
+
+/* TABLE VIEW */
+.table-wrap{width:100%;overflow-x:auto;}
+.companies-table{width:100%;border-collapse:collapse;font-size:13px;}
+.companies-table th{padding:8px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text3);border-bottom:2px solid var(--border);background:#fff;position:sticky;top:0;white-space:nowrap;cursor:pointer;user-select:none;}
+.companies-table th:hover{color:var(--text);}
+.companies-table td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle;background:#fff;}
+.companies-table tr:hover td{background:var(--bg2);cursor:pointer;}
+.td-name{font-weight:600;color:var(--text);max-width:180px;}
+.td-name a{color:var(--accent);font-size:11px;text-decoration:none;margin-left:6px;opacity:0.8;}
+.td-name a:hover{opacity:1;}
+.td-desc{color:var(--text2);max-width:280px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.td-tag{display:inline-block;padding:1px 7px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;font-size:11px;color:var(--text2);margin:1px;}
+.td-amount{font-weight:600;color:var(--accent);white-space:nowrap;}
+.td-score{font-weight:700;color:var(--text2);}
+.td-score.high{color:var(--green);}
+.growth-pill{padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;}
+.growth-pill.High{background:var(--green-bg);color:var(--green);}
+.growth-pill.Medium{background:var(--yellow-bg);color:#B45309;}
+.growth-pill.Low{background:var(--bg3);color:var(--text3);}
+
 </style>
 </head>
 <body>
@@ -439,13 +478,29 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
   <main class="main">
     <div class="toolbar">
       <div class="results-info" id="results-info"></div>
-      <select class="sort-select" id="sort" onchange="applyFilters()">
-        <option value="score" data-ru="По скорингу" data-en="By score">По скорингу</option>
-        <option value="funding" data-ru="По раунду" data-en="By funding">По раунду</option>
-        <option value="trend" data-ru="По тренду" data-en="By trend">По тренду</option>
-        <option value="cb" data-ru="По CB Rank" data-en="By CB Rank">По CB Rank</option>
-        <option value="name" data-ru="По алфавиту" data-en="Alphabetically">По алфавиту</option>
-      </select>
+      <div style="display:flex;align-items:center;gap:8px">
+        <select class="sort-select" id="sort" onchange="applyFilters()">
+          <option value="score" data-ru="По скорингу" data-en="By score">По скорингу</option>
+          <option value="funding" data-ru="По раунду" data-en="By funding">По раунду</option>
+          <option value="trend" data-ru="По тренду" data-en="By trend">По тренду</option>
+          <option value="cb" data-ru="По CB Rank" data-en="By CB Rank">По CB Rank</option>
+          <option value="name" data-ru="По алфавиту" data-en="Alphabetically">По алфавиту</option>
+        </select>
+        <div class="view-toggle">
+          <button class="view-btn active" id="btn-grid" onclick="setView('grid')" title="Карточки">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+            </svg>
+          </button>
+          <button class="view-btn" id="btn-list" onclick="setView('list')" title="Таблица">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </button>
+        </div>
+      </div>
     </div>
     <div class="cards-grid" id="cards-grid">
       <div class="loading-state"><div class="spinner"></div><span id="loading-text">Загружаем данные из Google Sheets...</span></div>
@@ -556,8 +611,15 @@ const VALID_INDUSTRIES = new Set([
 ]);
 
 let companies = [], filtered = [];
-let currentVerdict = 'all', lang = 'ru', currentPage = 1;
+let currentVerdict = 'all', lang = 'ru', currentPage = 1, viewMode = 'grid';
 const PAGE_SIZE = 24;
+
+function setView(mode){
+  viewMode=mode;
+  document.getElementById('btn-grid').classList.toggle('active',mode==='grid');
+  document.getElementById('btn-list').classList.toggle('active',mode==='list');
+  renderCards();
+}
 
 // Multi-select state
 const msState = { industry:[], fundingtype:[], status:[], revenue:[], employees:[], growth:[], heat:[], investors:[], valuation:[] };
@@ -930,51 +992,113 @@ function renderCards(){
     document.getElementById('pagination').innerHTML=''; return;
   }
 
+  if(viewMode==='list'){
+    renderTable(page, start);
+    renderPagination(total);
+    return;
+  }
+
+  const knownFunds=['Sequoia', 'a16z', 'Andreessen', 'General Catalyst', 'Accel', 'Lightspeed', 'Benchmark', 'Founders Fund', 'Tiger Global', 'Coatue', 'Insight', 'SoftBank', 'GV', 'Google Ventures', 'Kleiner', 'Bessemer', 'Index Ventures', 'Greylock', 'NEA', 'IVP', 'Spark Capital', 'Khosla', 'Menlo', 'Redpoint', 'Battery', 'Thrive', 'DST', 'Lone Pine', 'Silver Lake', 'Vista'];
+
+  grid.className='cards-grid';
   grid.innerHTML=page.map((c,i)=>{
     const desc=clean(c.full_description);
-    const short=desc?desc.substring(0,160):'';
-    const tags=c.industries.slice(0,3);
+    const short=desc?desc.substring(0,140):'';
+    const tags=c.industries.slice(0,2);
     const funding=clean(c.last_funding_amount);
     const round=clean(c.last_funding_type);
     const growth=clean(c.growth_score);
     const gc=growth==='High'?'var(--green)':growth==='Medium'?'#D97706':'var(--text3)';
     const trendNum=parseFloat(c.trend_score||0);
-    const growthSignal=trendNum>5?'<span style="color:var(--green);font-size:9px">▲</span>':trendNum<-5?'<span style="color:var(--red,#EF4444);font-size:9px">▼</span>':'';
+    const isHot=growth==='High'&&c.score.total>=5;
+    const isWarm=growth==='High'&&c.score.total>=3&&!isHot;
 
-    return `<div class="card" onclick="openModal(${start+i})">
+    // Главный сигнал карточки
+    const allInv=(c.lead_investors+' '+c.top_investors);
+    const topFund=knownFunds.find(f=>allInv.includes(f));
+    const signals=[];
+    if(topFund) signals.push(`<span class="signal-item accent">📍 ${topFund}</span>`);
+    if(growth==='High') signals.push(`<span class="signal-item hot">▲ High Growth</span>`);
+    else if(growth==='Medium') signals.push(`<span class="signal-item warm">~ Medium Growth</span>`);
+    if(trendNum>10) signals.push(`<span class="signal-item hot">🔥 Trend +${trendNum.toFixed(0)}</span>`);
+    if(c.last_funding_amount_m>100) signals.push(`<span class="signal-item accent">💰 ${funding}</span>`);
+
+    const signalHtml=signals.length?`<div class="card-signal">${signals.slice(0,2).join('')}</div>`:'';
+
+    return `<div class="card${isHot?' hot':isWarm?' warm':''}" onclick="openModal(${start+i})">
       <div class="card-header">
         ${avatarHtml(c)}
         <div class="card-title-wrap">
-          <div class="card-name">${c.name}</div>
-          <div class="card-meta">${round||'—'}${c.last_funding_date?' · '+c.last_funding_date.substring(0,7):''}</div>
+          <div class="card-name">${c.name}${isHot?'<span style="margin-left:5px;font-size:11px">🔥</span>':''}</div>
+          <div class="card-meta">${round||'—'}${funding?' · '+funding:''}</div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0">
           <span class="verdict-badge ${vc(c.score.verdict)}">${vl(c.score.verdict)}</span>
           ${c.score.isManual?`<span class="manual-badge">${t('manualBadge')}</span>`:''}
         </div>
       </div>
-      ${c.website?`<a href="${c.website}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-size:11px;color:var(--accent);text-decoration:none;display:flex;align-items:center;gap:4px;margin-top:-4px"><svg width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5'><path d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'/><polyline points='15 3 21 3 21 9'/><line x1='10' y1='14' x2='21' y2='3'/></svg>${c.website.replace('https://','').replace('http://','').replace('www.','').split('/')[0]}</a>`:''}
+      ${signalHtml}
+      ${c.website?`<a href="${c.website}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-size:11px;color:var(--accent);text-decoration:none;display:flex;align-items:center;gap:4px;margin-top:-2px"><svg width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5'><path d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'/><polyline points='15 3 21 3 21 9'/><line x1='10' y1='14' x2='21' y2='3'/></svg>${c.website.replace('https://','').replace('http://','').replace('www.','').split('/')[0]}</a>`:''}
       ${short?`<div class="card-desc">${short}</div>`:''}
       ${tags.length?`<div class="card-tags">${tags.map(tg=>`<span class="tag">${tg}</span>`).join('')}</div>`:''}
       <div class="card-footer">
         <div>
-          <div class="card-stat-label">${t('raised')}</div>
-          <div class="card-stat-value" style="color:var(--accent);font-weight:700">${funding||'—'}</div>
+          <div class="card-stat-label">${t('round')}</div>
+          <div class="card-stat-value" style="font-size:12px">${round||'—'}</div>
         </div>
         <div>
-          <div class="card-stat-label">${t('growth')} ${growthSignal}</div>
+          <div class="card-stat-label">${t('growth')}</div>
           <div class="card-stat-value" style="color:${gc}">${growth||'—'}</div>
         </div>
         <div style="text-align:right">
           <div class="card-stat-label">Score</div>
-          <div class="card-score-mini" title="Авто-скоринг Яндекса">${c.score.total}<span style="color:var(--text3);font-weight:400">/6</span>${c.score.isManual?'<span style="color:var(--accent);margin-left:2px">✎</span>':''}</div>
+          <div class="card-score-mini" title="Яндекс-скоринг">${c.score.total}<span style="color:var(--text3);font-weight:400">/6</span>${c.score.isManual?'<span style="color:var(--accent);margin-left:2px">✎</span>':''}</div>
         </div>
       </div>
     </div>`;
   }).join('');
 
-  renderPagination(total);
+
 }
+
+function renderTable(page, start){
+  const grid=document.getElementById('cards-grid');
+  grid.className='table-wrap';
+  grid.innerHTML=`<table class="companies-table">
+    <thead>
+      <tr>
+        <th>Компания</th>
+        <th>Индустрия</th>
+        <th>Раунд</th>
+        <th>Привлечено</th>
+        <th>Growth</th>
+        <th>Trend</th>
+        <th>Score</th>
+        <th>Вердикт</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${page.map((c,i)=>{
+        const funding=clean(c.last_funding_amount);
+        const round=clean(c.last_funding_type);
+        const growth=clean(c.growth_score);
+        const trend=c.trend_score?parseFloat(c.trend_score).toFixed(1):'—';
+        const domain=c.website?c.website.replace('https://','').replace('http://','').replace('www.','').split('/')[0]:'';
+        return `<tr onclick="openModal(${start+i})">
+          <td><div class="td-name">${c.name}${domain?`<a href="${c.website}" target="_blank" onclick="event.stopPropagation()">↗</a>`:''}</div></td>
+          <td>${c.industries.slice(0,2).map(t=>`<span class="td-tag">${t}</span>`).join('')}</td>
+          <td style="color:var(--text2)">${round||'—'}</td>
+          <td class="td-amount">${funding||'—'}</td>
+          <td><span class="growth-pill ${growth}">${growth||'—'}</span></td>
+          <td style="color:${parseFloat(c.trend_score||0)>5?'var(--green)':parseFloat(c.trend_score||0)<-5?'#EF4444':'var(--text2)'}">${trend}</td>
+          <td class="td-score ${c.score.total>=5?'high':''}">${c.score.total}/6${c.score.isManual?' ✎':''}</td>
+          <td><span class="verdict-badge ${vc(c.score.verdict)}">${vl(c.score.verdict)}</span></td>
+        </tr>`;
+      }).join('')}
+    </tbody>
+  </table>`;
+}
+
 
 function renderPagination(total){
   const pages=Math.ceil(total/PAGE_SIZE);
