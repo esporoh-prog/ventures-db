@@ -11,7 +11,7 @@
   --accent:#F0531C; --accent-light:#FEF0EB; --accent-dark:#C93D10;
   --text:#1E293B; --text2:#5A6478; --text3:#8A929E;
   --green:#16A34A; --green-bg:#F0FDF4;
-  --yellow:#B45309; --yellow-bg:#FFFBEB;
+  --yellow:#B45309; --yellow-bg:#FFFBEB; --red:#EF4444;
   --radius:10px; --radius-sm:6px;
   --shadow-md:0 4px 16px rgba(0,0,0,0.10);
 }
@@ -145,6 +145,7 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
 .score-bar{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
 .score-bar-fill{height:100%;background:var(--accent);border-radius:2px;}
 .score-num{font-size:12px;font-weight:700;color:var(--accent);min-width:16px;}
+.card-score-mini{font-size:13px;font-weight:600;color:var(--text2);}
 
 /* PAGINATION */
 .pagination{display:flex;align-items:center;justify-content:center;gap:6px;padding:22px 0;flex-wrap:wrap;}
@@ -180,7 +181,7 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
 .modal::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
 .modal-stripe{height:4px;background:var(--accent);border-radius:14px 14px 0 0;}
 .modal-header{padding:18px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:13px;position:sticky;top:0;background:#fff;z-index:1;}
-.modal-avatar{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:white;flex-shrink:0;}
+.modal-avatar{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:white;flex-shrink:0;overflow:hidden;}
 .modal-name{font-size:18px;font-weight:700;letter-spacing:-0.4px;color:var(--text);}
 .modal-subtitle{font-size:12px;color:var(--text3);margin-top:4px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
 .modal-close{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text3);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;margin-left:auto;}
@@ -882,6 +883,29 @@ function resetFilters() {
 const COLORS=[['#F0531C','#C93D10'],['#2563EB','#1D4ED8'],['#059669','#047857'],['#7C3AED','#6D28D9'],['#D97706','#B45309'],['#0891B2','#0E7490'],['#DB2777','#BE185D'],['#4F46E5','#4338CA']];
 function avatarStyle(name){let h=0;for(let i=0;i<name.length;i++)h=name.charCodeAt(i)+((h<<5)-h);const[c1,c2]=COLORS[Math.abs(h)%COLORS.length];return`background:linear-gradient(135deg,${c1},${c2})`;}
 function initials(name){return name.split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';}
+function getDomain(url){
+  if(!url) return '';
+  try{ return url.replace('https://','').replace('http://','').replace('www.','').split('/')[0]; }
+  catch{ return ''; }
+}
+function faviconUrl(website){
+  const domain=getDomain(website);
+  return domain?`https://www.google.com/s2/favicons?domain=${domain}&sz=64`:'';
+}
+// Аватар с фавиконом и fallback на инициалы
+function avatarHtml(c, size){
+  const fav=faviconUrl(c.website);
+  const init=initials(c.name);
+  const style=avatarStyle(c.name);
+  if(fav){
+    return `<div class="company-avatar" style="${style};position:relative;overflow:hidden">
+      <img src="${fav}" style="width:100%;height:100%;object-fit:cover" 
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <span style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;font-weight:700;color:white">${init}</span>
+    </div>`;
+  }
+  return `<div class="company-avatar" style="${style}">${init}</div>`;
+}
 function vc(v){return v==='В pipeline'?'pipeline':v==='Изучить'?'study':'later';}
 function vl(v){
   const map={ru:{'В pipeline':'В pipeline','Изучить':'Изучить','Отложить':'Отложить'},en:{'В pipeline':'Pipeline','Изучить':'Study','Отложить':'Later'}};
@@ -914,10 +938,12 @@ function renderCards(){
     const round=clean(c.last_funding_type);
     const growth=clean(c.growth_score);
     const gc=growth==='High'?'var(--green)':growth==='Medium'?'#D97706':'var(--text3)';
+    const trendNum=parseFloat(c.trend_score||0);
+    const growthSignal=trendNum>5?'<span style="color:var(--green);font-size:9px">▲</span>':trendNum<-5?'<span style="color:var(--red,#EF4444);font-size:9px">▼</span>':'';
 
     return `<div class="card" onclick="openModal(${start+i})">
       <div class="card-header">
-        <div class="company-avatar" style="${avatarStyle(c.name)}">${initials(c.name)}</div>
+        ${avatarHtml(c)}
         <div class="card-title-wrap">
           <div class="card-name">${c.name}</div>
           <div class="card-meta">${round||'—'}${c.last_funding_date?' · '+c.last_funding_date.substring(0,7):''}</div>
@@ -933,18 +959,15 @@ function renderCards(){
       <div class="card-footer">
         <div>
           <div class="card-stat-label">${t('raised')}</div>
-          <div class="card-stat-value" style="font-size:11px;color:var(--accent)">${funding||'—'}</div>
+          <div class="card-stat-value" style="color:var(--accent);font-weight:700">${funding||'—'}</div>
         </div>
         <div>
-          <div class="card-stat-label">${t('growth')}</div>
+          <div class="card-stat-label">${t('growth')} ${growthSignal}</div>
           <div class="card-stat-value" style="color:${gc}">${growth||'—'}</div>
         </div>
-        <div>
+        <div style="text-align:right">
           <div class="card-stat-label">Score</div>
-          <div class="score-wrap">
-            <div class="score-bar"><div class="score-bar-fill" style="width:${c.score.total/6*100}%"></div></div>
-            <div class="score-num">${c.score.total}</div>
-          </div>
+          <div class="card-score-mini" title="Авто-скоринг Яндекса">${c.score.total}<span style="color:var(--text3);font-weight:400">/6</span>${c.score.isManual?'<span style="color:var(--accent);margin-left:2px">✎</span>':''}</div>
         </div>
       </div>
     </div>`;
@@ -976,8 +999,14 @@ function goPage(p){currentPage=p;renderCards();window.scrollTo({top:54,behavior:
 // ---- MODAL ----
 function openModal(idx){
   const c=filtered[idx]; if(!c) return;
-  document.getElementById('m-avatar').style=avatarStyle(c.name);
-  document.getElementById('m-avatar').textContent=initials(c.name);
+  const mFav=faviconUrl(c.website);
+  const mAvatar=document.getElementById('m-avatar');
+  mAvatar.style=avatarStyle(c.name);
+  if(mFav){
+    mAvatar.innerHTML=`<img src="${mFav}" style="width:100%;height:100%;object-fit:cover;border-radius:10px" onerror="this.parentElement.textContent='${initials(c.name)}'">`;
+  } else {
+    mAvatar.textContent=initials(c.name);
+  }
   document.getElementById('m-name').innerHTML=
     c.name + (c.website?` <a href="${c.website}" target="_blank" style="font-size:13px;font-weight:400;color:var(--accent);text-decoration:none;margin-left:8px" title="${c.website}">↗ ${c.website.replace('https://','').replace('http://','').split('/')[0]}</a>`:'');
 
