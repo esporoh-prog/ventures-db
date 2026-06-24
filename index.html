@@ -205,7 +205,7 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
   border-bottom-color:#1E1E2E;
 }
 .tooltip b{color:white;font-weight:700;display:block;margin-bottom:5px;font-size:12px;}
-.tooltip-wrap:hover .tooltip{opacity:1;visibility:visible;}
+/* hover управляется через JS floating tip */
 
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(15,20,35,0.45);backdrop-filter:blur(3px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.2s;}
@@ -481,10 +481,7 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
           <div class="filter-label" data-ru="Тип раунда" data-en="Funding Type">Тип раунда</div>
           <div class="multi-select" id="ms-fundingtype" data-filter="fundingtype"></div>
         </div>
-        <div class="filter-row">
-          <div class="filter-label" data-ru="Операционный статус" data-en="Operating Status">Операционный статус</div>
-          <div class="multi-select" id="ms-status" data-filter="status"></div>
-        </div>
+
       </div>
     </div>
 
@@ -610,7 +607,7 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
         <select class="sort-select" id="sort" onchange="applyFilters()">
           <option value="score" data-ru="По скорингу" data-en="By score">По скорингу</option>
           <option value="funding" data-ru="По раунду" data-en="By funding">По раунду</option>
-          <option value="trend" data-ru="По тренду" data-en="By trend">По тренду</option>
+          <option value="date" data-ru="По дате раунда" data-en="By funding date">По дате раунда</option>
           <option value="cb" data-ru="По CB Rank" data-en="By CB Rank">По CB Rank</option>
           <option value="name" data-ru="По алфавиту" data-en="Alphabetically">По алфавиту</option>
         </select>
@@ -979,7 +976,6 @@ function initFilters() {
   const allIndustries=[...new Set(companies.flatMap(c=>c.industries))].sort();
   buildMultiSelect('ms-industry', allIndustries, 'industry');
   buildMultiSelect('ms-fundingtype', getUniq(c=>c.last_funding_type), 'fundingtype');
-  buildMultiSelect('ms-status', getUniq(c=>c.status), 'status');
   buildMultiSelect('ms-revenue', getUniq(c=>c.revenue_range), 'revenue');
   buildMultiSelect('ms-valuation', getUniq(c=>c.valuation), 'valuation');
   buildMultiSelect('ms-employees', getUniq(c=>c.employees), 'employees');
@@ -1046,7 +1042,6 @@ function applyFilters() {
     }
     if(msState.industry.length&&!c.industries.some(i=>msState.industry.includes(i))) return false;
     if(msState.fundingtype.length&&!msState.fundingtype.includes(c.last_funding_type)) return false;
-    if(msState.status.length&&!msState.status.includes(c.status)) return false;
     if(msState.valuation.length&&!msState.valuation.includes(c.valuation)) return false;
     if(msState.revenue.length&&!msState.revenue.includes(c.revenue_range)) return false;
     if(msState.employees.length&&!msState.employees.includes(c.employees)) return false;
@@ -1077,6 +1072,11 @@ function applyFilters() {
     if(so==='score') return b.score.total-a.score.total;
     if(so==='funding') return b.last_funding_amount_m-a.last_funding_amount_m;
     if(so==='trend') return parseFloat(b.trend_score||0)-parseFloat(a.trend_score||0);
+    if(so==='date'){
+      const da = a.last_funding_date ? new Date(a.last_funding_date) : new Date(0);
+      const db = b.last_funding_date ? new Date(b.last_funding_date) : new Date(0);
+      return db - da;
+    }
     if(so==='cb') return (a.cb_rank||999999)-(b.cb_rank||999999);
     if(so==='name') return a.name.localeCompare(b.name);
     return 0;
@@ -1187,7 +1187,7 @@ function renderCards(){
         ${avatarHtml(c)}
         <div class="card-title-wrap">
           <div class="card-name">${c.name}${isHot?'<span style="margin-left:5px;font-size:11px">🔥</span>':''}</div>
-          <div class="card-meta">${round||'—'}${funding?' · '+funding:''}</div>
+          <div class="card-meta">${round||'—'}${funding?' · '+funding:''}${c.last_funding_date?' · '+c.last_funding_date:''}</div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0">
           <span class="verdict-badge ${vc(c.score.verdict)}">${vl(c.score.verdict)}</span>
@@ -1228,6 +1228,7 @@ function renderTable(page, start){
         <th>Индустрия</th>
         <th>Раунд</th>
         <th>Привлечено</th>
+        <th>Дата</th>
         <th>Growth</th>
         
         <th>Score</th>
@@ -1246,6 +1247,7 @@ function renderTable(page, start){
           <td>${c.industries.slice(0,2).map(t=>`<span class="td-tag">${t}</span>`).join('')}</td>
           <td style="color:var(--text2)">${round||'—'}</td>
           <td class="td-amount">${funding||'—'}</td>
+          <td style="color:var(--text2);white-space:nowrap;font-size:12px">${clean(c.last_funding_date)||'—'}</td>
           <td><span class="growth-pill ${growth}">${growth||'—'}</span></td>
           
           <td class="td-score ${c.score.total>=5?'high':''}">${c.score.total}/6${c.score.isManual?' ✎':''}</td>
@@ -1361,44 +1363,72 @@ function openModal(idx){
   document.body.style.overflow='hidden';
 }
 
-// Умное позиционирование тултипов — fixed, через getBoundingClientRect
-document.addEventListener('mouseover', e => {
-  const wrap = e.target.closest('.tooltip-wrap');
-  if(!wrap) return;
-  const tip = wrap.querySelector('.tooltip');
-  if(!tip) return;
+// Тултипы — глобальный floating элемент вне DOM карточки
+const floatingTip = document.createElement('div');
+floatingTip.className = 'tooltip';
+floatingTip.style.cssText = 'position:fixed;z-index:99999;pointer-events:none;opacity:0;visibility:hidden;transition:opacity 0.15s;';
+document.body.appendChild(floatingTip);
 
-  const icon = wrap.querySelector('.info-icon');
-  const ref = icon || wrap;
-  const rect = ref.getBoundingClientRect();
-  const tw = 260;
-  const th = 120; // примерная высота до рендера
+let tipHideTimer = null;
+
+document.addEventListener('mouseover', e => {
+  const icon = e.target.closest('.info-icon');
+  if(!icon) return;
+  const wrap = icon.closest('.tooltip-wrap');
+  if(!wrap) return;
+  const srcTip = wrap.querySelector('.tooltip');
+  if(!srcTip) return;
+
+  clearTimeout(tipHideTimer);
+
+  // Копируем содержимое
+  floatingTip.innerHTML = srcTip.innerHTML;
+
+  const rect = icon.getBoundingClientRect();
+  const tw = 280;
   const margin = 12;
 
-  // Центрируем по иконке
-  let x = rect.left + rect.width/2 - tw/2;
-  let y = rect.top - th - 10;
+  // Сначала показываем чтобы получить высоту
+  floatingTip.style.visibility = 'hidden';
+  floatingTip.style.opacity = '0';
+  floatingTip.style.left = '0px';
+  floatingTip.style.top = '0px';
 
-  // Не уходим за правый край
-  if(x + tw > window.innerWidth - margin) x = window.innerWidth - tw - margin;
-  // Не уходим за левый край
-  if(x < margin) x = margin;
+  requestAnimationFrame(() => {
+    const th = floatingTip.offsetHeight || 100;
 
-  // Если не влезает сверху — показываем снизу
-  const below = rect.top < 160;
-  if(below){
-    y = rect.bottom + 10;
-    tip.classList.add('tip-below');
-  } else {
-    tip.classList.remove('tip-below');
-  }
+    let x = rect.left + rect.width/2 - tw/2;
+    let y = rect.top - th - 10;
 
-  tip.style.left = x + 'px';
-  tip.style.top = y + 'px';
+    if(x + tw > window.innerWidth - margin) x = window.innerWidth - tw - margin;
+    if(x < margin) x = margin;
 
-  // Корректируем стрелку по X
-  const arrowX = rect.left + rect.width/2 - x;
-  tip.style.setProperty('--arrow-x', Math.max(16, Math.min(arrowX, tw-16)) + 'px');
+    const below = y < margin;
+    if(below) {
+      y = rect.bottom + 10;
+      floatingTip.classList.add('tip-below');
+    } else {
+      floatingTip.classList.remove('tip-below');
+    }
+
+    // Стрелка
+    const arrowX = rect.left + rect.width/2 - x;
+    floatingTip.style.setProperty('--arrow-x', Math.max(16, Math.min(arrowX, tw-16)) + 'px');
+    floatingTip.style.width = tw + 'px';
+    floatingTip.style.left = x + 'px';
+    floatingTip.style.top = y + 'px';
+    floatingTip.style.visibility = 'visible';
+    floatingTip.style.opacity = '1';
+  });
+});
+
+document.addEventListener('mouseout', e => {
+  const icon = e.target.closest('.info-icon');
+  if(!icon) return;
+  tipHideTimer = setTimeout(() => {
+    floatingTip.style.opacity = '0';
+    floatingTip.style.visibility = 'hidden';
+  }, 100);
 });
 
 function closeModal(e){if(e.target===document.getElementById('modal-overlay'))closeModalDirect();}
