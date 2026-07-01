@@ -379,6 +379,91 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
 .growth-pill.Medium{background:var(--yellow-bg);color:#B45309;}
 .growth-pill.Low{background:var(--bg3);color:var(--text3);}
 
+
+/* УМНЫЙ ПОИСК */
+.smart-search-wrap{
+  margin-bottom:20px;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:0 1px 4px rgba(0,0,0,0.05);
+  transition:box-shadow 0.2s;
+}
+.smart-search-wrap:focus-within{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(240,83,28,0.08);
+}
+.smart-search-row{
+  display:flex;
+  align-items:center;
+  padding:4px 4px 4px 16px;
+  gap:8px;
+}
+.smart-search-icon{color:var(--accent);flex-shrink:0;}
+.smart-search-input{
+  flex:1;
+  border:none;
+  outline:none;
+  font-size:14px;
+  font-family:var(--font-body, 'Inter', sans-serif);
+  color:var(--text);
+  padding:10px 0;
+  background:transparent;
+}
+.smart-search-input::placeholder{color:var(--text3);}
+.smart-search-btn{
+  padding:8px 16px;
+  background:var(--accent);
+  color:white;
+  border:none;
+  border-radius:8px;
+  font-size:13px;
+  font-weight:600;
+  font-family:var(--font-body,'Inter',sans-serif);
+  cursor:pointer;
+  transition:background 0.15s;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.smart-search-btn:hover{background:var(--accent-dark,#C93D10);}
+.smart-search-btn:disabled{background:var(--text3);cursor:not-allowed;}
+.smart-search-result{
+  border-top:1px solid var(--border);
+  padding:10px 16px;
+  display:none;
+  align-items:flex-start;
+  gap:10px;
+  background:var(--bg2,#F8F9FB);
+}
+.smart-search-result.visible{display:flex;}
+.smart-result-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+.smart-result-text{font-size:13px;color:var(--text2);line-height:1.5;}
+.smart-result-text strong{color:var(--text);font-weight:600;}
+.smart-search-clear{
+  font-size:11px;
+  color:var(--accent);
+  cursor:pointer;
+  text-decoration:underline;
+  margin-left:8px;
+  white-space:nowrap;
+}
+.smart-search-clear:hover{color:var(--accent-dark,#C93D10);}
+.smart-loading{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  color:var(--text3);
+  font-size:13px;
+}
+.smart-dots span{
+  animation:smart-blink 1.2s infinite;
+  font-weight:700;
+}
+.smart-dots span:nth-child(2){animation-delay:0.2s;}
+.smart-dots span:nth-child(3){animation-delay:0.4s;}
+@keyframes smart-blink{0%,80%,100%{opacity:0.2;}40%{opacity:1;}}
+
 </style>
 </head>
 <body>
@@ -591,6 +676,27 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
   </aside>
 
   <main class="main">
+    <div class="smart-search-wrap" id="smart-search-wrap">
+      <div class="smart-search-row">
+        <svg class="smart-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/><path d="M12 8v4l3 3"/>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <input
+          class="smart-search-input"
+          id="smart-input"
+          placeholder="Спроси умный поиск: &quot;быстрорастущие стартапы в healthcare с Series B, использующие AI&quot;"
+          onkeydown="if(event.key==='Enter')runSmartSearch()"
+        >
+        <button class="smart-search-btn" id="smart-btn" onclick="runSmartSearch()">Найти</button>
+      </div>
+      <div class="smart-search-result" id="smart-result">
+        <span class="smart-result-icon">✦</span>
+        <div class="smart-result-text" id="smart-result-text"></div>
+      </div>
+    </div>
+
     <div class="toolbar">
       <div style="display:flex;align-items:center;gap:8px">
           <div class="results-info" id="results-info"></div>
@@ -1487,6 +1593,146 @@ async function loadData(manual=false) {
   lbl.textContent=lang==='ru'?'Обновить':'Refresh';
 }
 
+
+// ============================================================
+// УМНЫЙ ПОИСК — Claude API
+// ============================================================
+async function runSmartSearch() {
+  const input = document.getElementById('smart-input');
+  const btn = document.getElementById('smart-btn');
+  const resultBox = document.getElementById('smart-search-result') || document.getElementById('smart-result')?.parentElement;
+  const resultText = document.getElementById('smart-result-text');
+  const query = input.value.trim();
+
+  if(!query) { input.focus(); return; }
+
+  // Показываем загрузку
+  btn.disabled = true;
+  btn.textContent = '...';
+  const resultEl = document.getElementById('smart-result');
+  resultEl.classList.add('visible');
+  resultText.innerHTML = '<span class="smart-loading">Анализирую запрос<span class="smart-dots"><span>.</span><span>.</span><span>.</span></span></span>';
+
+  // Собираем контекст из базы
+  const allIndustries = [...new Set(companies.flatMap(c=>c.industries))].sort();
+  const allRounds = [...new Set(companies.map(c=>c.last_funding_type).filter(Boolean).filter(v=>v!=='nan'))].sort();
+  const allRevenues = [...new Set(companies.map(c=>c.revenue_range).filter(Boolean).filter(v=>v!=='nan'))].sort();
+
+  const systemPrompt = `Ты помощник по поиску стартапов в базе данных. 
+Пользователь вводит запрос на естественном языке. 
+Твоя задача — преобразовать его в параметры фильтрации.
+
+Доступные индустрии: ${allIndustries.join(', ')}
+Доступные типы раундов: ${allRounds.join(', ')}
+Доступные диапазоны выручки: ${allRevenues.join(', ')}
+
+Верни ТОЛЬКО валидный JSON без пояснений и markdown:
+{
+  "industries": [],
+  "rounds": [],
+  "growth_scores": [],
+  "revenue_ranges": [],
+  "min_score": null,
+  "keywords": [],
+  "explanation": "краткое объяснение что ты понял из запроса (1 предложение, на русском)"
+}
+
+Правила:
+- industries: выбирай из списка доступных, только точные совпадения
+- rounds: типы раундов из списка
+- growth_scores: ["High", "Medium", "Low"] — только если явно указан рост
+- keywords: слова для поиска в описании компании
+- min_score: минимальный балл Яндекс-скоринга (1-6), null если не указан
+- explanation: всегда на русском, коротко`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: query }]
+      })
+    });
+
+    const data = await response.json();
+    const raw = data.content?.[0]?.text || '';
+
+    // Парсим JSON из ответа
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
+    if(!jsonMatch) throw new Error('Не удалось разобрать ответ');
+
+    const params = JSON.parse(jsonMatch[0]);
+
+    // Применяем фильтры
+    applySmartFilters(params, query);
+
+  } catch(err) {
+    resultText.innerHTML = `<strong>Ошибка:</strong> ${err.message}. Попробуйте переформулировать запрос.`;
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Найти';
+}
+
+function applySmartFilters(params, originalQuery) {
+  const resultText = document.getElementById('smart-result-text');
+
+  // Сбрасываем обычные фильтры
+  Object.keys(msState).forEach(k => msState[k] = []);
+  currentVerdict = 'all';
+  document.querySelectorAll('.verdict-chip').forEach((c,i) => c.classList.toggle('active', i===0));
+  document.getElementById('search').value = '';
+  document.getElementById('f-minscore').value = '';
+  document.getElementById('f-manual').value = '';
+
+  // Применяем параметры от Claude
+  if(params.industries?.length) msState.industry = params.industries;
+  if(params.rounds?.length) msState.stage = params.rounds;
+  if(params.growth_scores?.length) msState.growth = params.growth_scores;
+  if(params.revenue_ranges?.length) msState.revenue = params.revenue_ranges;
+  if(params.min_score) document.getElementById('f-minscore').value = params.min_score;
+  if(params.keywords?.length) document.getElementById('search').value = params.keywords.join(' ');
+
+  // Обновляем мультиселекты визуально
+  initFilters();
+
+  // Применяем фильтры
+  applyFilters();
+
+  // Считаем результат
+  const count = filtered.length;
+
+  // Формируем объяснение
+  const parts = [];
+  if(params.industries?.length) parts.push(`индустрии: <strong>${params.industries.join(', ')}</strong>`);
+  if(params.rounds?.length) parts.push(`раунды: <strong>${params.rounds.join(', ')}</strong>`);
+  if(params.growth_scores?.length) parts.push(`рост: <strong>${params.growth_scores.join(', ')}</strong>`);
+  if(params.keywords?.length) parts.push(`ключевые слова: <strong>${params.keywords.join(', ')}</strong>`);
+
+  const clearBtn = '<span class="smart-search-clear" onclick="clearSmartSearch()">Сбросить</span>';
+
+  resultText.innerHTML = `
+    <strong>${count} компаний</strong> по запросу «${originalQuery}»${clearBtn}<br>
+    <span style="color:var(--text3);font-size:12px">${params.explanation || ''}${parts.length ? ' · ' + parts.join(' · ') : ''}</span>
+  `;
+}
+
+function clearSmartSearch() {
+  document.getElementById('smart-input').value = '';
+  document.getElementById('smart-result').classList.remove('visible');
+  resetFilters();
+}
+
+// Enter в умном поиске
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('smart-input');
+  if(input) input.addEventListener('keydown', e => {
+    if(e.key === 'Enter') runSmartSearch();
+  });
+});
 
 loadData();
 </script>
