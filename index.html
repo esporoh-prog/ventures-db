@@ -1618,15 +1618,15 @@ async function runSmartSearch() {
   const allRounds = [...new Set(companies.map(c=>c.last_funding_type).filter(Boolean).filter(v=>v!=='nan'))].sort();
   const allRevenues = [...new Set(companies.map(c=>c.revenue_range).filter(Boolean).filter(v=>v!=='nan'))].sort();
 
-  const systemPrompt = `Ты помощник по поиску стартапов в базе данных. 
-Пользователь вводит запрос на естественном языке. 
-Твоя задача — преобразовать его в параметры фильтрации.
+  const systemPrompt = `Ты точный парсер поисковых запросов для базы стартапов. Преобразуй запрос пользователя в строгие параметры фильтрации.
 
-Доступные индустрии: ${allIndustries.join(', ')}
-Доступные типы раундов: ${allRounds.join(', ')}
-Доступные диапазоны выручки: ${allRevenues.join(', ')}
+СПИСОК ДОСТУПНЫХ ЗНАЧЕНИЙ (используй ТОЛЬКО точные строки из этих списков, никогда не придумывай новые):
 
-Верни ТОЛЬКО валидный JSON без пояснений и markdown:
+Индустрии (industries): ${JSON.stringify(allIndustries)}
+Типы раундов (rounds): ${JSON.stringify(allRounds)}
+Диапазоны выручки (revenue_ranges): ${JSON.stringify(allRevenues)}
+
+Верни ТОЛЬКО валидный JSON, без markdown-обёртки, без пояснений вне JSON:
 {
   "industries": [],
   "rounds": [],
@@ -1634,16 +1634,19 @@ async function runSmartSearch() {
   "revenue_ranges": [],
   "min_score": null,
   "keywords": [],
-  "explanation": "краткое объяснение что ты понял из запроса (1 предложение, на русском)"
+  "explanation": "краткое объяснение на русском, 1 предложение"
 }
 
-Правила:
-- industries: выбирай из списка доступных, только точные совпадения
-- rounds: типы раундов из списка
-- growth_scores: ["High", "Medium", "Low"] — только если явно указан рост
-- keywords: слова для поиска в описании компании
-- min_score: минимальный балл Яндекс-скоринга (1-6), null если не указан
-- explanation: всегда на русском, коротко`;
+СТРОГИЕ ПРАВИЛА:
+1. rounds — КРИТИЧНО ВАЖНО: если пользователь пишет "Series B", в results ДОЛЖНО быть ТОЛЬКО значение из списка rounds, которое ТОЧНО означает Series B (например "Series B"). НИКОГДА не включай "Series A", "Series C" или другие раунды, даже близкие. Если в списке нет точного совпадения "Series B" — оставь rounds пустым и упомяни это в explanation.
+2. industries — выбирай строго из списка allIndustries, только точные совпадения по смыслу. "healthcare" → ищи "Health Care" в списке. "фудтех" → "Food and Beverage". Если пользователь упоминает индустрию которой нет в списке дословно — найди ближайшую по смыслу ТОЧНУЮ строку из списка, не выдумывай.
+3. growth_scores — ["High"] только если пользователь явно просит "быстрорастущие", "growing fast", "high growth". ["Medium"] для умеренного роста. Никогда не добавляй все три без причины.
+4. keywords — конкретные технологические/продуктовые термины из запроса для поиска по описанию (например "AI", "artificial intelligence", "blockchain"). НЕ добавляй туда индустрии или раунды которые уже покрыты другими полями — это даст задвоение фильтров.
+5. min_score — ставь только если пользователь явно просит "перспективные", "топовые", "высокий потенциал" (тогда 4), "лучшие" (тогда 5). Иначе null.
+6. Если запрос содержит несколько условий через "и"/"с"/",", применяй ВСЕ условия одновременно — это должно сузить выборку, а не расширить.
+7. explanation должен перечислить именно то что ты применил, включая явное упоминание какой раунд ты искал, если применимо.
+
+Отвечай только JSON, никакого текста до или после.`;
 
   try {
     const response = await fetch('/api/claude', {
@@ -1658,11 +1661,15 @@ async function runSmartSearch() {
     });
 
     const data = await response.json();
+    console.log('Claude response:', JSON.stringify(data));
     const raw = data.content?.[0]?.text || '';
+    console.log('Raw text:', raw);
+
+    if(data.error) throw new Error(data.error.message || JSON.stringify(data.error));
 
     // Парсим JSON из ответа
     const jsonMatch = raw.match(/\{[\s\S]*\}/);
-    if(!jsonMatch) throw new Error('Не удалось разобрать ответ');
+    if(!jsonMatch) throw new Error('Ответ Claude: ' + (raw || JSON.stringify(data)));
 
     const params = JSON.parse(jsonMatch[0]);
 
@@ -1690,7 +1697,7 @@ function applySmartFilters(params, originalQuery) {
 
   // Применяем параметры от Claude
   if(params.industries?.length) msState.industry = params.industries;
-  if(params.rounds?.length) msState.stage = params.rounds;
+  if(params.rounds?.length) msState.fundingtype = params.rounds;
   if(params.growth_scores?.length) msState.growth = params.growth_scores;
   if(params.revenue_ranges?.length) msState.revenue = params.revenue_ranges;
   if(params.min_score) document.getElementById('f-minscore').value = params.min_score;
