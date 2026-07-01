@@ -1143,8 +1143,12 @@ function applyFilters() {
   filtered=companies.filter(c=>{
     if(currentVerdict!=='all'&&c.score.verdict!==currentVerdict) return false;
     if(q){
-      const hay=(c.name+' '+c.description+' '+c.full_description+' '+c.industries.join(' ')+' '+(c.lead_investors||'')).toLowerCase();
-      if(!hay.includes(q)) return false;
+      const hay=(c.name+' '+c.full_description+' '+c.industries.join(' ')+' '+(c.lead_investors||'')).toLowerCase();
+      // Разбиваем запрос на отдельные слова — совпадение по ЛЮБОМУ слову (OR),
+      // а не требование точной фразы целиком
+      const terms=q.split(/\s+/).filter(t=>t.length>1);
+      const matches = terms.length ? terms.some(term=>hay.includes(term)) : hay.includes(q);
+      if(!matches) return false;
     }
     if(msState.industry.length&&!c.industries.some(i=>msState.industry.includes(i))) return false;
     if(msState.fundingtype.length&&!msState.fundingtype.includes(c.last_funding_type)) return false;
@@ -1687,30 +1691,54 @@ async function runSmartSearch() {
 function applySmartFilters(params, originalQuery) {
   const resultText = document.getElementById('smart-result-text');
 
-  // Сбрасываем обычные фильтры
-  Object.keys(msState).forEach(k => msState[k] = []);
-  currentVerdict = 'all';
-  document.querySelectorAll('.verdict-chip').forEach((c,i) => c.classList.toggle('active', i===0));
-  document.getElementById('search').value = '';
-  document.getElementById('f-minscore').value = '';
-  document.getElementById('f-manual').value = '';
+  function setFilters(p) {
+    Object.keys(msState).forEach(k => msState[k] = []);
+    currentVerdict = 'all';
+    document.querySelectorAll('.verdict-chip').forEach((c,i) => c.classList.toggle('active', i===0));
+    document.getElementById('search').value = '';
+    document.getElementById('f-minscore').value = '';
+    document.getElementById('f-manual').value = '';
 
-  // Применяем параметры от Claude
-  if(params.industries?.length) msState.industry = params.industries;
-  if(params.rounds?.length) msState.fundingtype = params.rounds;
-  if(params.growth_scores?.length) msState.growth = params.growth_scores;
-  if(params.revenue_ranges?.length) msState.revenue = params.revenue_ranges;
-  if(params.min_score) document.getElementById('f-minscore').value = params.min_score;
-  if(params.keywords?.length) document.getElementById('search').value = params.keywords.join(' ');
+    if(p.industries?.length) msState.industry = p.industries;
+    if(p.rounds?.length) msState.fundingtype = p.rounds;
+    if(p.growth_scores?.length) msState.growth = p.growth_scores;
+    if(p.revenue_ranges?.length) msState.revenue = p.revenue_ranges;
+    if(p.min_score) document.getElementById('f-minscore').value = p.min_score;
+    if(p.keywords?.length) document.getElementById('search').value = p.keywords.join(' ');
 
-  // Обновляем мультиселекты визуально
-  initFilters();
+    initFilters();
+    applyFilters();
+    return filtered.length;
+  }
 
-  // Применяем фильтры
-  applyFilters();
+  // Первая попытка — все условия как есть
+  let count = setFilters(params);
+  let relaxedNote = '';
 
-  // Считаем результат
-  const count = filtered.length;
+  // Если 0 — последовательно ослабляем необязательные условия,
+  // сохраняя главное (индустрии и раунды) как более важные критерии
+  if(count === 0) {
+    const relaxSteps = [
+      { drop: 'min_score', label: 'минимальный балл скоринга' },
+      { drop: 'revenue_ranges', label: 'диапазон выручки' },
+      { drop: 'growth_scores', label: 'уровень роста' },
+      { drop: 'keywords', label: 'ключевые слова' },
+    ];
+    let relaxedParams = { ...params };
+    const dropped = [];
+
+    for(const step of relaxSteps) {
+      if(!relaxedParams[step.drop]) continue;
+      relaxedParams = { ...relaxedParams, [step.drop]: null };
+      dropped.push(step.label);
+      count = setFilters(relaxedParams);
+      if(count > 0) break;
+    }
+
+    if(count > 0 && dropped.length) {
+      relaxedNote = `Критерии «${dropped.join('», «')}» были ослаблены — с ними совпадений не нашлось.`;
+    }
+  }
 
   // Формируем объяснение
   const parts = [];
@@ -1724,6 +1752,8 @@ function applySmartFilters(params, originalQuery) {
   resultText.innerHTML = `
     <strong>${count} компаний</strong> по запросу «${originalQuery}»${clearBtn}<br>
     <span style="color:var(--text3);font-size:12px">${params.explanation || ''}${parts.length ? ' · ' + parts.join(' · ') : ''}</span>
+    ${relaxedNote ? `<br><span style="color:var(--accent);font-size:12px">${relaxedNote}</span>` : ''}
+    ${count === 0 ? `<br><span style="color:var(--text3);font-size:12px">Совпадений не найдено даже после ослабления условий — попробуйте переформулировать запрос проще.</span>` : ''}
   `;
 }
 
