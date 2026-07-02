@@ -484,9 +484,7 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
 .fav-btn:active svg{transform:scale(0.85);}
 
 .card-fav-btn{
-  position:absolute;
-  top:14px; right:14px;
-  width:28px;height:28px;
+  width:26px;height:26px;
   border-radius:7px;
   border:1px solid var(--border);
   background:#fff;
@@ -494,7 +492,7 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
   cursor:pointer;
   display:flex;align-items:center;justify-content:center;
   transition:all 0.15s;
-  z-index:2;
+  flex-shrink:0;
 }
 .card-fav-btn:hover{border-color:var(--accent);color:var(--accent);transform:scale(1.08);}
 .card-fav-btn.active{background:var(--accent);border-color:var(--accent);color:white;}
@@ -1206,6 +1204,7 @@ function applyFilters() {
   const so=document.getElementById('sort').value;
 
   filtered=companies.filter(c=>{
+    if(showFavoritesOnly&&!isFavorite(c)) return false;
     if(currentVerdict!=='all'&&c.score.verdict!==currentVerdict) return false;
     if(q){
       const hay=(c.name+' '+c.full_description+' '+c.industries.join(' ')+' '+(c.lead_investors||'')).toLowerCase();
@@ -1342,8 +1341,8 @@ function renderCards(){
     const growth=clean(c.growth_score);
     const gc=growth==='High'?'var(--green)':growth==='Medium'?'#D97706':'var(--text3)';
     const trendNum=parseFloat(c.trend_score||0);
-    const isHot=growth==='High'&&c.score.total>=5;
-    const isWarm=growth==='High'&&c.score.total>=3&&!isHot;
+    const isHot=c.score.verdict==='В pipeline';
+    const isWarm=c.score.verdict==='Изучить';
 
     // Главный сигнал карточки
     const allInv=(c.lead_investors+' '+c.top_investors);
@@ -1359,18 +1358,20 @@ function renderCards(){
 
     const favActive = isFavorite(c) ? ' active' : '';
     return `<div class="card${isHot?' hot':isWarm?' warm':''}" onclick="openModal(${start+i})">
-      <button class="card-fav-btn${favActive}" onclick="event.stopPropagation();toggleFavorite(filtered[${start+i}],this)" title="В избранное">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="${isFavorite(c)?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-      </button>
       <div class="card-header">
         ${avatarHtml(c)}
         <div class="card-title-wrap">
           <div class="card-name">${c.name}${isHot?'<span style="margin-left:5px;font-size:11px">🔥</span>':''}</div>
           <div class="card-meta">${round||'—'}${funding?' · '+funding:''}${c.last_funding_date?' · '+c.last_funding_date:''}</div>
         </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0">
-          <span class="verdict-badge ${vc(c.score.verdict)}">${vl(c.score.verdict)}</span>
-          ${c.score.isManual?`<span class="manual-badge">${t('manualBadge')}</span>`:''}
+        <div style="display:flex;align-items:flex-start;gap:6px;flex-shrink:0">
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+            <span class="verdict-badge ${vc(c.score.verdict)}">${vl(c.score.verdict)}</span>
+            ${c.score.isManual?`<span class="manual-badge">${t('manualBadge')}</span>`:''}
+          </div>
+          <button class="card-fav-btn${favActive}" onclick="event.stopPropagation();toggleFavorite(filtered[${start+i}],this)" title="В избранное">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="${isFavorite(c)?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          </button>
         </div>
       </div>
       ${signalHtml}
