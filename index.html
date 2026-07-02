@@ -219,7 +219,7 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
 .modal-avatar{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:white;flex-shrink:0;overflow:hidden;}
 .modal-name{font-size:18px;font-weight:700;letter-spacing:-0.4px;color:var(--text);}
 .modal-subtitle{font-size:12px;color:var(--text3);margin-top:4px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
-.modal-close{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text3);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;margin-left:auto;}
+.modal-close{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text3);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
 .modal-close:hover{border-color:var(--text);color:var(--text);}
 .modal-body{padding:20px;display:flex;flex-direction:column;gap:20px;}
 .modal-section-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:10px;display:flex;align-items:center;border-bottom:1px solid var(--border);padding-bottom:8px;}
@@ -464,6 +464,62 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
 .smart-dots span:nth-child(3){animation-delay:0.4s;}
 @keyframes smart-blink{0%,80%,100%{opacity:0.2;}40%{opacity:1;}}
 
+
+/* ИЗБРАННОЕ */
+.fav-btn{
+  width:30px;height:30px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:#fff;
+  color:var(--text3);
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.15s;
+  flex-shrink:0;
+}
+.fav-btn:hover{border-color:var(--accent);color:var(--accent);}
+.fav-btn.active{background:var(--accent-light,#FEF0EB);border-color:var(--accent);color:var(--accent);}
+.fav-btn svg{transition:transform 0.15s;}
+.fav-btn.active svg{fill:var(--accent);}
+.fav-btn:active svg{transform:scale(0.85);}
+
+.card-fav-btn{
+  position:absolute;
+  top:14px; right:14px;
+  width:28px;height:28px;
+  border-radius:7px;
+  border:1px solid var(--border);
+  background:#fff;
+  color:var(--text3);
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.15s;
+  z-index:2;
+}
+.card-fav-btn:hover{border-color:var(--accent);color:var(--accent);transform:scale(1.08);}
+.card-fav-btn.active{background:var(--accent);border-color:var(--accent);color:white;}
+.card-fav-btn.active svg{fill:white;}
+
+.fav-filter-chip{
+  display:flex;align-items:center;gap:8px;
+  padding:7px 11px;
+  border-radius:var(--radius-sm,6px);
+  border:1px solid var(--border);
+  cursor:pointer;
+  transition:all 0.15s;
+  background:var(--bg2,#F8F9FB);
+  font-size:13px;
+  color:var(--text2);
+  margin-bottom:8px;
+}
+.fav-filter-chip:hover{border-color:var(--accent);color:var(--text);}
+.fav-filter-chip.active{border-color:var(--accent);background:var(--accent-light,#FEF0EB);color:var(--text);}
+.fav-filter-count{
+  margin-left:auto;font-size:11px;font-weight:600;
+  color:var(--text3);background:#fff;padding:1px 7px;border-radius:10px;
+  border:1px solid var(--border);
+}
+
 </style>
 </head>
 <body>
@@ -493,6 +549,12 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
 <div class="layout">
   <aside class="sidebar" id="sidebar">
     <button class="sidebar-close-btn" onclick="closeMobileFilters()">✕</button>
+    <div class="fav-filter-chip" id="fav-filter-chip" onclick="toggleFavFilter()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+      <span data-ru="Избранное" data-en="Favorites">Избранное</span>
+      <span class="fav-filter-count" id="fav-filter-count">0</span>
+    </div>
+
     <div class="search-wrap">
       <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <input class="search-input" id="search" placeholder="Поиск компании..." oninput="applyFilters()">
@@ -749,6 +811,9 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
         <div class="modal-name" id="m-name"></div>
         <div class="modal-subtitle" id="m-subtitle"></div>
       </div>
+      <button class="fav-btn" id="modal-fav-btn" onclick="toggleModalFavorite()" title="В избранное" style="margin-left:auto">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+      </button>
       <button class="modal-close" onclick="closeModalDirect()">✕</button>
     </div>
     <div class="modal-body" id="m-body"></div>
@@ -1292,7 +1357,11 @@ function renderCards(){
 
     const signalHtml=signals.length?`<div class="card-signal">${signals.slice(0,2).join('')}</div>`:'';
 
+    const favActive = isFavorite(c) ? ' active' : '';
     return `<div class="card${isHot?' hot':isWarm?' warm':''}" onclick="openModal(${start+i})">
+      <button class="card-fav-btn${favActive}" onclick="event.stopPropagation();toggleFavorite(filtered[${start+i}],this)" title="В избранное">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="${isFavorite(c)?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+      </button>
       <div class="card-header">
         ${avatarHtml(c)}
         <div class="card-title-wrap">
@@ -1352,7 +1421,13 @@ function renderTable(page, start){
         const growth=clean(c.growth_score);
 
         const domain=c.website?c.website.replace('https://','').replace('http://','').replace('www.','').split('/')[0]:'';
+        const tFav = isFavorite(c);
         return `<tr onclick="openModal(${start+i})">
+          <td style="text-align:center;padding:8px 6px">
+            <button class="fav-btn" style="width:24px;height:24px;border:none;background:none" onclick="event.stopPropagation();toggleFavoriteTable(${start+i},this)" title="В избранное">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="${tFav?'currentColor':'none'}" stroke="${tFav?'var(--accent)':'var(--text3)'}" stroke-width="2"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            </button>
+          </td>
           <td><div class="td-name">${c.name}${domain?`<a href="${c.website}" target="_blank" onclick="event.stopPropagation()">↗</a>`:''}</div></td>
           <td>${c.industries.slice(0,2).map(t=>`<span class="td-tag">${t}</span>`).join('')}</td>
           <td style="color:var(--text2)">${round||'—'}</td>
@@ -1390,8 +1465,16 @@ function renderPagination(total){
 function goPage(p){currentPage=p;renderCards();window.scrollTo({top:54,behavior:'smooth'});}
 
 // ---- MODAL ----
+let currentModalCompany = null;
+
 function openModal(idx){
   const c=filtered[idx]; if(!c) return;
+  currentModalCompany = c;
+  const modalFavBtn = document.getElementById('modal-fav-btn');
+  if(modalFavBtn){
+    modalFavBtn.classList.toggle('active', isFavorite(c));
+    modalFavBtn.querySelector('svg').setAttribute('fill', isFavorite(c) ? 'currentColor' : 'none');
+  }
   const mFav=faviconUrl(c.website);
   const mAvatar=document.getElementById('m-avatar');
   mAvatar.style=avatarStyle(c.name);
@@ -1771,6 +1854,94 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+// ============================================================
+// ИЗБРАННОЕ — хранится в localStorage браузера
+// ============================================================
+const FAV_KEY = 'ventures_favorites';
+let favorites = new Set();
+let showFavoritesOnly = false;
+
+function loadFavorites() {
+  try {
+    const raw = localStorage.getItem(FAV_KEY);
+    favorites = new Set(raw ? JSON.parse(raw) : []);
+  } catch(e) {
+    favorites = new Set();
+  }
+}
+
+function saveFavorites() {
+  try {
+    localStorage.setItem(FAV_KEY, JSON.stringify([...favorites]));
+  } catch(e) {
+    console.warn('Не удалось сохранить избранное', e);
+  }
+}
+
+function companyKey(c) {
+  // Уникальный ключ компании — имя + сайт (устойчиво к переупорядочиванию данных)
+  return (c.name + '|' + (c.website||'')).toLowerCase();
+}
+
+function isFavorite(c) {
+  return favorites.has(companyKey(c));
+}
+
+function toggleFavoriteTable(idx, btnEl) {
+  const c = filtered[idx];
+  if(!c) return;
+  const key = companyKey(c);
+  if(favorites.has(key)) favorites.delete(key);
+  else favorites.add(key);
+  saveFavorites();
+  updateFavCount();
+  const active = favorites.has(key);
+  const svg = btnEl.querySelector('svg');
+  svg.setAttribute('fill', active ? 'currentColor' : 'none');
+  svg.setAttribute('stroke', active ? 'var(--accent)' : 'var(--text3)');
+  if(showFavoritesOnly) applyFilters();
+}
+
+function toggleFavorite(c, btnEl) {
+  const key = companyKey(c);
+  if(favorites.has(key)) favorites.delete(key);
+  else favorites.add(key);
+  saveFavorites();
+  updateFavCount();
+  if(btnEl) btnEl.classList.toggle('active', favorites.has(key));
+  // Если активен фильтр "только избранное" — перерисовываем список
+  if(showFavoritesOnly) applyFilters();
+}
+
+function updateFavCount() {
+  const el = document.getElementById('fav-filter-count');
+  if(el) el.textContent = favorites.size;
+}
+
+function toggleFavFilter() {
+  showFavoritesOnly = !showFavoritesOnly;
+  document.getElementById('fav-filter-chip').classList.toggle('active', showFavoritesOnly);
+  currentPage = 1;
+  applyFilters();
+}
+
+
+function toggleModalFavorite(){
+  if(!currentModalCompany) return;
+  const key = companyKey(currentModalCompany);
+  if(favorites.has(key)) favorites.delete(key);
+  else favorites.add(key);
+  saveFavorites();
+  updateFavCount();
+  const btn = document.getElementById('modal-fav-btn');
+  const active = favorites.has(key);
+  btn.classList.toggle('active', active);
+  btn.querySelector('svg').setAttribute('fill', active ? 'currentColor' : 'none');
+  if(showFavoritesOnly) renderCards();
+}
+
+loadFavorites();
+updateFavCount();
 loadData();
 </script>
 </body>
