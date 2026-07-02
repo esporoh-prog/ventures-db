@@ -483,19 +483,6 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
 .fav-btn.active svg{fill:var(--accent);}
 .fav-btn:active svg{transform:scale(0.85);}
 
-.fav-count-badge{
-  position:absolute;
-  top:-5px;right:-5px;
-  width:15px;height:15px;
-  border-radius:50%;
-  background:var(--green,#16A34A);
-  color:white;
-  font-size:9px;
-  font-weight:700;
-  display:flex;align-items:center;justify-content:center;
-  border:1.5px solid #fff;
-}
-.card-fav-btn{position:relative;}
 .card-fav-btn{
   width:26px;height:26px;
   border-radius:7px;
@@ -511,11 +498,7 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
 .card-fav-btn.active{background:var(--accent);border-color:var(--accent);color:white;}
 .card-fav-btn.active svg{fill:white;}
 
-
-
-/* ПОДБОРКИ */
-.collections-list{display:flex;flex-direction:column;gap:5px;}
-.collection-chip{
+.fav-filter-chip{
   display:flex;align-items:center;gap:8px;
   padding:7px 11px;
   border-radius:var(--radius-sm,6px);
@@ -523,84 +506,16 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
   cursor:pointer;
   transition:all 0.15s;
   background:var(--bg2,#F8F9FB);
-  font-size:13px;color:var(--text2);
+  font-size:13px;
+  color:var(--text2);
+  margin-bottom:8px;
 }
-.collection-chip:hover{border-color:var(--accent);color:var(--text);}
-.collection-chip.active{border-color:var(--accent);background:var(--accent-light,#FEF0EB);color:var(--text);}
-.collection-chip-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0;}
-.collection-chip-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.collection-chip-count{
-  font-size:11px;font-weight:600;color:var(--text3);
-  background:#fff;padding:1px 7px;border-radius:10px;border:1px solid var(--border);
-}
-.collection-chip-del{
-  color:var(--text3);opacity:0;transition:opacity 0.15s;
-  width:18px;height:18px;display:flex;align-items:center;justify-content:center;
-  border-radius:4px;flex-shrink:0;
-}
-.collection-chip:hover .collection-chip-del{opacity:1;}
-.collection-chip-del:hover{color:var(--red,#EF4444);background:rgba(239,68,68,0.08);}
-.collection-add-row{
-  display:flex;gap:6px;margin-top:2px;
-}
-.collection-add-input{
-  flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:var(--radius-sm,6px);
-  font-size:12.5px;font-family:inherit;outline:none;background:#fff;
-}
-.collection-add-input:focus{border-color:var(--accent);}
-.collection-add-btn{
-  padding:7px 12px;background:var(--accent);color:white;border:none;
-  border-radius:var(--radius-sm,6px);font-size:12.5px;font-weight:600;cursor:pointer;
-  white-space:nowrap;
-}
-.collection-add-btn:hover{background:var(--accent-dark,#C93D10);}
-
-/* ПОПАП "ДОБАВИТЬ В ПОДБОРКУ" */
-.collection-popover{
-  position:fixed;
-  background:#fff;
+.fav-filter-chip:hover{border-color:var(--accent);color:var(--text);}
+.fav-filter-chip.active{border-color:var(--accent);background:var(--accent-light,#FEF0EB);color:var(--text);}
+.fav-filter-count{
+  margin-left:auto;font-size:11px;font-weight:600;
+  color:var(--text3);background:#fff;padding:1px 7px;border-radius:10px;
   border:1px solid var(--border);
-  border-radius:12px;
-  box-shadow:0 12px 32px rgba(0,0,0,0.16);
-  width:260px;
-  z-index:99999;
-  opacity:0;
-  visibility:hidden;
-  transform:translateY(4px);
-  transition:opacity 0.15s, transform 0.15s, visibility 0.15s;
-  overflow:hidden;
-}
-.collection-popover.open{opacity:1;visibility:visible;transform:translateY(0);}
-.collection-popover-header{
-  padding:10px 14px;font-size:11px;font-weight:700;color:var(--text2);
-  border-bottom:1px solid var(--border);background:var(--bg2,#F8F9FB);
-}
-.collection-popover-list{max-height:220px;overflow-y:auto;padding:6px;}
-.collection-popover-item{
-  display:flex;align-items:center;gap:9px;
-  padding:8px 10px;border-radius:8px;cursor:pointer;
-  font-size:13px;color:var(--text);transition:background 0.12s;
-}
-.collection-popover-item:hover{background:var(--bg2,#F8F9FB);}
-.collection-popover-checkbox{
-  width:16px;height:16px;border:1.5px solid var(--border);border-radius:4px;
-  flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;
-}
-.collection-popover-item.checked .collection-popover-checkbox{background:var(--accent);border-color:var(--accent);}
-.collection-popover-checkmark{color:white;font-size:10px;display:none;}
-.collection-popover-item.checked .collection-popover-checkmark{display:block;}
-.collection-popover-empty{padding:16px 14px;font-size:12.5px;color:var(--text3);text-align:center;}
-.collection-popover-new{
-  padding:8px;border-top:1px solid var(--border);display:flex;gap:6px;
-}
-.collection-popover-new input{
-  flex:1;padding:7px 9px;border:1px solid var(--border);border-radius:7px;
-  font-size:12.5px;font-family:inherit;outline:none;
-}
-.collection-popover-new input:focus{border-color:var(--accent);}
-.collection-popover-new button{
-  padding:7px 11px;background:var(--accent);color:white;border:none;
-  border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;
 }
 
 </style>
@@ -632,18 +547,10 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
 <div class="layout">
   <aside class="sidebar" id="sidebar">
     <button class="sidebar-close-btn" onclick="closeMobileFilters()">✕</button>
-    <div class="filter-group open" id="grp-collections">
-      <div class="filter-group-header" onclick="toggleGroup('grp-collections')">
-        <span class="filter-group-title" data-ru="Мои подборки" data-en="My collections">Мои подборки</span>
-        <span class="filter-group-arrow">▼</span>
-      </div>
-      <div class="filter-group-body">
-        <div class="collections-list" id="collections-list"></div>
-        <div class="collection-add-row">
-          <input class="collection-add-input" id="new-collection-input" placeholder="Название подборки..." onkeydown="if(event.key==='Enter')createCollectionFromInput()">
-          <button class="collection-add-btn" onclick="createCollectionFromInput()">+</button>
-        </div>
-      </div>
+    <div class="fav-filter-chip" id="fav-filter-chip" onclick="toggleFavFilter()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+      <span data-ru="Избранное" data-en="Favorites">Избранное</span>
+      <span class="fav-filter-count" id="fav-filter-count">0</span>
     </div>
 
     <div class="search-wrap">
@@ -893,15 +800,6 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
   </main>
 </div>
 
-<div class="collection-popover" id="collection-popover">
-  <div class="collection-popover-header" id="popover-company-name"></div>
-  <div class="collection-popover-list" id="popover-list"></div>
-  <div class="collection-popover-new">
-    <input type="text" id="popover-new-input" placeholder="Новая подборка..." onkeydown="if(event.key==='Enter')createCollectionFromPopover()">
-    <button onclick="createCollectionFromPopover()">Создать</button>
-  </div>
-</div>
-
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal">
     <div class="modal-stripe"></div>
@@ -911,7 +809,7 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
         <div class="modal-name" id="m-name"></div>
         <div class="modal-subtitle" id="m-subtitle"></div>
       </div>
-      <button class="fav-btn" id="modal-fav-btn" onclick="openCollectionPopover(currentModalCompany,this)" title="Добавить в подборку" style="margin-left:auto;position:relative">
+      <button class="fav-btn" id="modal-fav-btn" onclick="toggleModalFavorite()" title="В избранное" style="margin-left:auto">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
       </button>
       <button class="modal-close" onclick="closeModalDirect()">✕</button>
@@ -1306,7 +1204,7 @@ function applyFilters() {
   const so=document.getElementById('sort').value;
 
   filtered=companies.filter(c=>{
-    if(activeCollectionId&&!isInCollection(activeCollectionId,c)) return false;
+    if(showFavoritesOnly&&!isFavorite(c)) return false;
     if(currentVerdict!=='all'&&c.score.verdict!==currentVerdict) return false;
     if(q){
       const hay=(c.name+' '+c.full_description+' '+c.industries.join(' ')+' '+(c.lead_investors||'')).toLowerCase();
@@ -1458,8 +1356,7 @@ function renderCards(){
 
     const signalHtml=signals.length?`<div class="card-signal">${signals.slice(0,2).join('')}</div>`:'';
 
-    const favCount = companyCollectionsCount(c);
-    const favActive = favCount > 0 ? ' active' : '';
+    const favActive = isFavorite(c) ? ' active' : '';
     return `<div class="card${isHot?' hot':isWarm?' warm':''}" onclick="openModal(${start+i})">
       <div class="card-header">
         ${avatarHtml(c)}
@@ -1472,9 +1369,8 @@ function renderCards(){
             <span class="verdict-badge ${vc(c.score.verdict)}">${vl(c.score.verdict)}</span>
             ${c.score.isManual?`<span class="manual-badge">${t('manualBadge')}</span>`:''}
           </div>
-          <button class="card-fav-btn${favActive}" data-idx="${start+i}" onclick="event.stopPropagation();openCollectionPopover(filtered[${start+i}],this)" title="Добавить в подборку">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="${favCount>0?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-            ${favCount>0?`<span class="fav-count-badge">${favCount}</span>`:''}
+          <button class="card-fav-btn${favActive}" onclick="event.stopPropagation();toggleFavorite(filtered[${start+i}],this)" title="В избранное">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="${isFavorite(c)?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
           </button>
         </div>
       </div>
@@ -1526,12 +1422,11 @@ function renderTable(page, start){
         const growth=clean(c.growth_score);
 
         const domain=c.website?c.website.replace('https://','').replace('http://','').replace('www.','').split('/')[0]:'';
-        const tFavCount = companyCollectionsCount(c);
+        const tFav = isFavorite(c);
         return `<tr onclick="openModal(${start+i})">
           <td style="text-align:center;padding:8px 6px">
-            <button class="fav-btn" style="width:24px;height:24px;border:none;background:none;position:relative" onclick="event.stopPropagation();openCollectionPopover(filtered[${start+i}],this)" title="Добавить в подборку">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="${tFavCount>0?'currentColor':'none'}" stroke="${tFavCount>0?'var(--accent)':'var(--text3)'}" stroke-width="2"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-              ${tFavCount>0?`<span class="fav-count-badge" style="width:13px;height:13px;font-size:8px">${tFavCount}</span>`:''}
+            <button class="fav-btn" style="width:24px;height:24px;border:none;background:none" onclick="event.stopPropagation();toggleFavoriteTable(${start+i},this)" title="В избранное">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="${tFav?'currentColor':'none'}" stroke="${tFav?'var(--accent)':'var(--text3)'}" stroke-width="2"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
             </button>
           </td>
           <td><div class="td-name">${c.name}${domain?`<a href="${c.website}" target="_blank" onclick="event.stopPropagation()">↗</a>`:''}</div></td>
@@ -1578,9 +1473,8 @@ function openModal(idx){
   currentModalCompany = c;
   const modalFavBtn = document.getElementById('modal-fav-btn');
   if(modalFavBtn){
-    const mCount = companyCollectionsCount(c);
-    modalFavBtn.classList.toggle('active', mCount > 0);
-    modalFavBtn.querySelector('svg').setAttribute('fill', mCount > 0 ? 'currentColor' : 'none');
+    modalFavBtn.classList.toggle('active', isFavorite(c));
+    modalFavBtn.querySelector('svg').setAttribute('fill', isFavorite(c) ? 'currentColor' : 'none');
   }
   const mFav=faviconUrl(c.website);
   const mAvatar=document.getElementById('m-avatar');
@@ -1994,255 +1888,61 @@ function isFavorite(c) {
   return favorites.has(companyKey(c));
 }
 
+function toggleFavoriteTable(idx, btnEl) {
+  const c = filtered[idx];
+  if(!c) return;
+  const key = companyKey(c);
+  if(favorites.has(key)) favorites.delete(key);
+  else favorites.add(key);
+  saveFavorites();
+  updateFavCount();
+  const active = favorites.has(key);
+  const svg = btnEl.querySelector('svg');
+  svg.setAttribute('fill', active ? 'currentColor' : 'none');
+  svg.setAttribute('stroke', active ? 'var(--accent)' : 'var(--text3)');
+  if(showFavoritesOnly) applyFilters();
+}
 
+function toggleFavorite(c, btnEl) {
+  const key = companyKey(c);
+  if(favorites.has(key)) favorites.delete(key);
+  else favorites.add(key);
+  saveFavorites();
+  updateFavCount();
+  if(btnEl) btnEl.classList.toggle('active', favorites.has(key));
+  // Если активен фильтр "только избранное" — перерисовываем список
+  if(showFavoritesOnly) applyFilters();
+}
 
 function updateFavCount() {
   const el = document.getElementById('fav-filter-count');
   if(el) el.textContent = favorites.size;
 }
 
-
-
-
-loadFavorites();
-loadCollections();
-renderCollectionsList();
-// ============================================================
-// ИМЕНОВАННЫЕ ПОДБОРКИ — localStorage
-// ============================================================
-const COLLECTIONS_KEY = 'ventures_collections';
-let collections = {};       // {id: {name, companies:[key,...]}}
-let activeCollectionId = null; // фильтр по подборке, null = не фильтруем
-let popoverCompany = null;  // текущая компания для попапа добавления
-
-function loadCollections() {
-  try {
-    const raw = localStorage.getItem(COLLECTIONS_KEY);
-    collections = raw ? JSON.parse(raw) : {};
-  } catch(e) {
-    collections = {};
-  }
-  // Миграция старого простого избранного (если есть и подборок ещё нет)
-  if(Object.keys(collections).length === 0) {
-    try {
-      const oldFav = localStorage.getItem(FAV_KEY);
-      if(oldFav) {
-        const keys = JSON.parse(oldFav);
-        if(keys.length) {
-          const id = 'col_' + Date.now();
-          collections[id] = { name: 'Избранное', companies: keys };
-          saveCollections();
-        }
-      }
-    } catch(e) {}
-  }
-}
-
-function saveCollections() {
-  try {
-    localStorage.setItem(COLLECTIONS_KEY, JSON.stringify(collections));
-  } catch(e) {
-    console.warn('Не удалось сохранить подборки', e);
-  }
-}
-
-function createCollection(name) {
-  name = (name||'').trim();
-  if(!name) return null;
-  const id = 'col_' + Date.now();
-  collections[id] = { name, companies: [] };
-  saveCollections();
-  return id;
-}
-
-function renameCollection(id) {
-  const col = collections[id];
-  if(!col) return;
-  const newName = prompt('Новое название подборки:', col.name);
-  if(newName && newName.trim()) {
-    col.name = newName.trim();
-    saveCollections();
-    renderCollectionsList();
-  }
-}
-
-function deleteCollection(id, e) {
-  if(e) e.stopPropagation();
-  const col = collections[id];
-  if(!col) return;
-  if(!confirm(`Удалить подборку «${col.name}»? Компании из неё не удаляются, удаляется только сама подборка.`)) return;
-  delete collections[id];
-  if(activeCollectionId === id) activeCollectionId = null;
-  saveCollections();
-  renderCollectionsList();
-  applyFilters();
-}
-
-function toggleCompanyInCollection(collectionId, key) {
-  const col = collections[collectionId];
-  if(!col) return;
-  const idx = col.companies.indexOf(key);
-  if(idx >= 0) col.companies.splice(idx, 1);
-  else col.companies.push(key);
-  saveCollections();
-}
-
-function isInCollection(collectionId, c) {
-  const col = collections[collectionId];
-  if(!col) return false;
-  return col.companies.includes(companyKey(c));
-}
-
-function companyCollectionsCount(c) {
-  const key = companyKey(c);
-  return Object.values(collections).filter(col => col.companies.includes(key)).length;
-}
-
-function createCollectionFromInput() {
-  const input = document.getElementById('new-collection-input');
-  const id = createCollection(input.value);
-  if(id) {
-    input.value = '';
-    renderCollectionsList();
-  }
-}
-
-function setActiveCollection(id) {
-  activeCollectionId = (activeCollectionId === id) ? null : id;
-  renderCollectionsList();
+function toggleFavFilter() {
+  showFavoritesOnly = !showFavoritesOnly;
+  document.getElementById('fav-filter-chip').classList.toggle('active', showFavoritesOnly);
   currentPage = 1;
   applyFilters();
 }
 
-function renderCollectionsList() {
-  const list = document.getElementById('collections-list');
-  if(!list) return;
-  const ids = Object.keys(collections);
-  if(!ids.length) {
-    list.innerHTML = `<div style="font-size:12.5px;color:var(--text3);padding:4px 2px">Пока нет подборок. Создайте первую ниже.</div>`;
-    return;
-  }
-  list.innerHTML = ids.map(id => {
-    const col = collections[id];
-    const active = activeCollectionId === id ? ' active' : '';
-    return `<div class="collection-chip${active}" onclick="setActiveCollection('${id}')">
-      <span class="collection-chip-dot"></span>
-      <span class="collection-chip-name" ondblclick="event.stopPropagation();renameCollection('${id}')" title="Двойной клик — переименовать">${col.name}</span>
-      <span class="collection-chip-count">${col.companies.length}</span>
-      <span class="collection-chip-del" onclick="deleteCollection('${id}', event)" title="Удалить подборку">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z"/></svg>
-      </span>
-    </div>`;
-  }).join('');
+
+function toggleModalFavorite(){
+  if(!currentModalCompany) return;
+  const key = companyKey(currentModalCompany);
+  if(favorites.has(key)) favorites.delete(key);
+  else favorites.add(key);
+  saveFavorites();
+  updateFavCount();
+  const btn = document.getElementById('modal-fav-btn');
+  const active = favorites.has(key);
+  btn.classList.toggle('active', active);
+  btn.querySelector('svg').setAttribute('fill', active ? 'currentColor' : 'none');
+  if(showFavoritesOnly) renderCards();
 }
 
-
-// ============================================================
-// ПОПАП "Добавить в подборку" — открывается по клику на звезду
-// ============================================================
-function openCollectionPopover(c, triggerEl) {
-  popoverCompany = c;
-  const popover = document.getElementById('collection-popover');
-  document.getElementById('popover-company-name').textContent = c.name;
-  renderPopoverList();
-
-  // Позиционируем рядом с кнопкой-триггером
-  const rect = triggerEl.getBoundingClientRect();
-  const pw = 260;
-  const margin = 12;
-  let x = rect.right - pw;
-  let y = rect.bottom + 8;
-
-  if(x < margin) x = margin;
-  if(x + pw > window.innerWidth - margin) x = window.innerWidth - pw - margin;
-  if(y + 280 > window.innerHeight) y = rect.top - 288;
-
-  popover.style.left = x + 'px';
-  popover.style.top = y + 'px';
-  popover.classList.add('open');
-
-  document.getElementById('popover-new-input').value = '';
-
-  // Закрытие по клику снаружи — с небольшой задержкой чтобы не поймать текущий клик
-  setTimeout(() => {
-    document.addEventListener('click', closePopoverOnOutsideClick);
-  }, 10);
-}
-
-function closePopoverOnOutsideClick(e) {
-  const popover = document.getElementById('collection-popover');
-  if(popover.contains(e.target)) return;
-  closeCollectionPopover();
-}
-
-function closeCollectionPopover() {
-  document.getElementById('collection-popover').classList.remove('open');
-  document.removeEventListener('click', closePopoverOnOutsideClick);
-  popoverCompany = null;
-}
-
-function renderPopoverList() {
-  const listEl = document.getElementById('popover-list');
-  const ids = Object.keys(collections);
-  if(!ids.length) {
-    listEl.innerHTML = `<div class="collection-popover-empty">Нет подборок — создайте первую ниже</div>`;
-    return;
-  }
-  const key = companyKey(popoverCompany);
-  listEl.innerHTML = ids.map(id => {
-    const col = collections[id];
-    const checked = col.companies.includes(key);
-    return `<div class="collection-popover-item${checked?' checked':''}" onclick="togglePopoverItem('${id}')">
-      <div class="collection-popover-checkbox"><span class="collection-popover-checkmark">✓</span></div>
-      <span style="flex:1">${col.name}</span>
-      <span style="font-size:11px;color:var(--text3)">${col.companies.length}</span>
-    </div>`;
-  }).join('');
-}
-
-function togglePopoverItem(id) {
-  if(!popoverCompany) return;
-  toggleCompanyInCollection(id, companyKey(popoverCompany));
-  renderPopoverList();
-  renderCollectionsList();
-  refreshCardFavIndicators();
-  if(activeCollectionId) applyFilters();
-}
-
-function createCollectionFromPopover() {
-  const input = document.getElementById('popover-new-input');
-  const id = createCollection(input.value);
-  if(id && popoverCompany) {
-    toggleCompanyInCollection(id, companyKey(popoverCompany));
-    input.value = '';
-    renderPopoverList();
-    renderCollectionsList();
-    refreshCardFavIndicators();
-  }
-}
-
-// Обновляем визуальное состояние звёзд после изменений (без полного перерендера списка)
-function refreshCardFavIndicators() {
-  document.querySelectorAll('.card-fav-btn').forEach(btn => {
-    const idx = parseInt(btn.dataset.idx);
-    const c = filtered[idx];
-    if(!c) return;
-    const count = companyCollectionsCount(c);
-    btn.classList.toggle('active', count > 0);
-    const badge = btn.querySelector('.fav-count-badge');
-    if(count > 0) {
-      if(!badge) {
-        btn.insertAdjacentHTML('beforeend', `<span class="fav-count-badge">${count}</span>`);
-      } else {
-        badge.textContent = count;
-      }
-    } else if(badge) {
-      badge.remove();
-    }
-  });
-}
-
-
+loadFavorites();
+updateFavCount();
 loadData();
 </script>
 </body>
