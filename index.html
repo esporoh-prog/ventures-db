@@ -101,28 +101,17 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
 
 /* CARDS */
 .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;}
-.card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:column;gap:11px;position:relative;overflow:hidden;}
-.card-header{display:flex;align-items:flex-start;gap:11px;}
-.company-avatar{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:white;flex-shrink:0;}
-.card-title-wrap{flex:1;min-width:0;}
-.card-name{font-weight:600;font-size:14px;letter-spacing:-0.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);}
-.card-meta{font-size:12px;color:var(--text3);margin-top:2px;}
 .verdict-badge{padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;flex-shrink:0;}
 .verdict-badge.pipeline{background:var(--green-bg);color:var(--green);}
 .verdict-badge.study{background:var(--yellow-bg);color:var(--yellow);}
 .verdict-badge.later{background:var(--bg3);color:var(--text3);}
 .manual-badge{font-size:10px;padding:2px 6px;border-radius:10px;background:rgba(240,83,28,0.1);color:var(--accent);border:1px solid rgba(240,83,28,0.2);}
-.card-desc{font-size:12px;color:var(--text2);line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .card-tags{display:flex;flex-wrap:wrap;gap:5px;}
 .tag{padding:2px 8px;background:var(--bg3);border-radius:20px;font-size:11px;color:var(--text2);border:1px solid var(--border);}
-.card-footer{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding-top:11px;border-top:1px solid var(--border);}
-.card-stat-label{font-size:11px;color:var(--text3);font-weight:500;margin-bottom:3px;}
-.card-stat-value{font-size:12px;font-weight:600;color:var(--text);}
 .score-wrap{display:flex;align-items:center;gap:6px;}
 .score-bar{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
 .score-bar-fill{height:100%;background:var(--accent);border-radius:2px;}
 .score-num{font-size:12px;font-weight:700;color:var(--accent);min-width:16px;}
-.card-score-mini{font-size:13px;font-weight:600;color:var(--text2);}
 
 /* PAGINATION */
 .pagination{display:flex;align-items:center;justify-content:center;gap:6px;padding:22px 0;flex-wrap:wrap;}
@@ -230,13 +219,6 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
 .view-btn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:none;background:#fff;color:var(--text3);cursor:pointer;transition:all 0.15s;}
 .view-btn:hover{background:var(--bg2);color:var(--text);}
 .view-btn.active{background:var(--accent);color:white;}
-
-/* SIGNAL ROW */
-.card-signal{font-size:11px;color:var(--text2);display:flex;align-items:center;gap:5px;margin-top:-4px;flex-wrap:wrap;}
-.signal-item{display:flex;align-items:center;gap:3px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:2px 8px;font-size:11px;color:var(--text2);}
-.signal-item.hot{background:rgba(22,163,74,0.08);border-color:rgba(22,163,74,0.25);color:var(--green);}
-.signal-item.warm{background:rgba(217,119,6,0.08);border-color:rgba(217,119,6,0.25);color:#D97706;}
-.signal-item.accent{background:var(--accent-light);border-color:rgba(240,83,28,0.25);color:var(--accent);}
 
 /* TABLE VIEW */
 .table-wrap{width:100%;overflow-x:auto;}
@@ -362,21 +344,6 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
 .fav-btn.active svg{fill:var(--accent);}
 .fav-btn:active svg{transform:scale(0.85);}
 
-.card-fav-btn{
-  width:26px;height:26px;
-  border-radius:7px;
-  border:1px solid var(--border);
-  background:#fff;
-  color:var(--text3);
-  cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:all 0.15s;
-  flex-shrink:0;
-}
-.card-fav-btn:hover{border-color:var(--accent);color:var(--accent);transform:scale(1.08);}
-.card-fav-btn.active{background:var(--accent);border-color:var(--accent);color:white;}
-.card-fav-btn.active svg{fill:white;}
-
 .fav-filter-chip{
   display:flex;align-items:center;gap:8px;
   padding:7px 11px;
@@ -444,10 +411,6 @@ body:has(dialog[open]) { overflow: hidden; }
 .smart-mode .smart-search-wrap { grid-column: 1/-1; }
 .show-results { position: sticky; bottom: 10px; width: 100%; padding: 12px; border-radius: 9px; border: none; background: var(--text); color: white; cursor: pointer; font-weight: 600; z-index: 2; }
 .show-results span+span { margin-left: 5px; color: #ffc9a8; }
-.card-signals,.card-verdict { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; }
-.card-signals .card-signal { margin: 0; }
-.card-footer { grid-template-columns: minmax(0,1.6fr) 1fr auto; }
-.card-title-wrap a { width: fit-content; max-width: 100%; overflow: hidden; white-space: nowrap; }
 
 .search-tools .search-input, .smart-search-row { height: 49px; }
 .search-tools .search-input { background: white; padding-left: 42px; border-radius: 10px; font-size: 14px; }
@@ -465,22 +428,62 @@ body:has(dialog[open]) { overflow: hidden; }
 .sort-select { min-height: 38px; background-color: white; }
 .view-btn { width: 37px; height: 36px; }
 
-/* Company directory */
-.cards-grid { grid-template-columns: repeat(auto-fit,minmax(min(100%,310px),1fr)); gap: 14px; }
-.card { min-width: 0; padding: 20px; gap: 10px; border-radius: 14px; transition: border-color .15s,box-shadow .15s; }
-.card:hover,.card:focus-within { border-color: #baa996; box-shadow: 0 4px 16px #31220d0b; }
-.card-header { display: grid; grid-template-columns: 40px minmax(0,1fr) 32px; align-items: center; gap: 8px 10px; }
-.company-avatar { width: 40px; height: 40px; border-radius: 10px; }
-.card-status { display: contents; }
-.card-fav-btn { grid-area: 1/3; width: 32px; height: 32px; }
-.card-name,.company-link { display: block; max-width: 100%; border: 0; background: none; text-align: left; cursor: pointer; color: inherit; font-family: inherit; }
-.card-name { font-size: 18px; font-weight: 650; letter-spacing: -.045em; }
-.card-meta { font-size: 11px; }
-.card-signal { margin-top: 0; }
-.card-desc { font-size: 14px; line-height: 1.55; -webkit-line-clamp: 3; }
-.card-footer { margin-top: auto; padding-top: 12px; }
-.card-score-mini { color: var(--text); font-size: 15px; }
-.card-tags { margin-bottom: 3px; }
+/* Company cards */
+.cards-grid { grid-template-columns: repeat(auto-fit,minmax(min(100%,310px),1fr)); gap: 16px; align-items: start; }
+.card {
+  --ink: #425b50; --wash: #edf4ed; --tile: #d3e7d6;
+  min-width: 0; min-height: 100%; display: flex; flex-direction: column; overflow: hidden;
+  background: white; border: 1px solid #dad8d1; border-radius: 16px;
+  box-shadow: 0 2px 5px #39322106; cursor: pointer;
+  transition: border-color .15s, box-shadow .15s;
+}
+.card.tone-peach { --ink: #7b4430; --wash: #fcf1e9; --tile: #f8d7c2; }
+.card.tone-iris { --ink: #5a497b; --wash: #f3f0fa; --tile: #e1d9f2; }
+.card.tone-sky { --ink: #365873; --wash: #edf4f8; --tile: #cfe3f0; }
+.card.tone-sand { --ink: #6b5429; --wash: #faf5e8; --tile: #eddfbb; }
+.card:hover,.card:focus-within { border-color: #b7ac9f; box-shadow: 0 5px 17px #39322110; }
+.card-header { display: grid; grid-template-columns: 48px minmax(0,1fr) 40px; align-items: center; gap: 12px; padding: 18px 18px 17px; background: linear-gradient(105deg,var(--wash) 28%,#fff 120%); border-bottom: 1px solid #2822180c; }
+.company-avatar { position: relative; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; overflow: hidden; color: var(--ink); background: var(--tile); font-size: 21px; font-weight: 650; letter-spacing: -.05em; box-shadow: inset 0 0 0 1px #2420190d; }
+.company-avatar img { position: absolute; width: 100%; height: 100%; inset: 0; object-fit: contain; padding: 8px; background: #fff; border: 1px solid #0000000d; border-radius: inherit; }
+.card-identity { min-width: 0; }
+.card-identity h2 { font-size: 21px; line-height: 1.13; letter-spacing: -.045em; }
+.card-name,.company-link { max-width: 100%; border: 0; background: none; text-align: left; cursor: pointer; color: inherit; font: inherit; letter-spacing: inherit; }
+.card-name { overflow-wrap: anywhere; }
+.card-name:hover,.card-site:hover { text-decoration: underline; text-underline-offset: 3px; }
+.card-site { display: inline-block; vertical-align: top; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; margin-top: 4px; font-size: 12px; color: var(--ink); text-decoration: none; }
+.card-fav-btn { align-self: start; width: 40px; height: 40px; display: grid; place-items: center; background: #ffffffb3; border: 1px solid #00000016; border-radius: 50%; color: #62605a; cursor: pointer; }
+.card-fav-btn:hover,.card-fav-btn.active { background: var(--accent-light); color: var(--accent); border-color: #e3bda8; }
+.card-story { padding: 15px 18px; flex: 1; }
+.card-story:not(:has(> *)) { padding-block: 7px; }
+.industry-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 3px 7px; font-size: 11px; font-weight: 600; line-height: 1.45; color: var(--ink); }
+.industry-line > span+span::before { content: '·'; margin-right: 7px; }
+.industry-more { display: contents; }
+.industry-more summary { display: inline-block; cursor: pointer; border-radius: 5px; padding-inline: 5px; background: var(--wash); color: var(--ink); }
+.industry-more summary::marker { content: ''; }
+.industry-more[open] > div { flex-basis: 100%; }
+.industry-more::details-content { flex-basis: 100%; }
+.card-desc,.investor-line { font-size: 14px; line-height: 1.55; color: #383834; overflow-wrap: anywhere; }
+.industry-line + p { margin-top: 10px; }
+.card-desc { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.card-desc.expanded { display: block; white-space: pre-line; }
+.read-description { border: 0; background: none; color: var(--accent); padding: 4px 0; font-size: 12px; font-weight: 600; cursor: pointer; }
+.read-description:hover { text-decoration: underline; }
+.investor-line b { display: block; margin-bottom: 2px; font-size: 12px; color: var(--text3); }
+.card-facts { display: grid; grid-template-columns: minmax(0,1.5fr) repeat(2,minmax(0,1fr)); gap: 8px; padding: 12px; margin: 0 16px 14px; background: #f7f7f4; border-radius: 10px; }
+.card-facts dt,.rating-text > span { color: #696760; font-size: 11px; line-height: 1.3; }
+.card-facts dd { color: var(--text); font-size: 15px; line-height: 1.35; font-weight: 650; margin-top: 3px; overflow-wrap: anywhere; }
+.card-facts small { display: block; color: var(--text3); font-size: 10px; line-height: 1.45; margin-top: 2px; }
+.card-bottom { padding: 10px 16px; min-height: 55px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.card-rating,.profile-action { display: flex; align-items: center; gap: 8px; }
+.rating-total { font-size: 21px; font-weight: 650; letter-spacing: -.065em; line-height: 1; }
+.rating-total small { font-size: 13px; color: var(--text3); font-weight: 500; letter-spacing: 0; }
+.rating-text { display: grid; gap: 1px; }
+.rating-text strong { font-size: 12px; font-weight: 600; }
+.profile-action { padding: 7px 11px; min-height: 34px; color: #56321e; border: 1px solid #e9d8ca; border-radius: 8px; background: #fff6ee; cursor: pointer; font-size: 12px; font-weight: 650; }
+.profile-action:hover { color: white; border-color: var(--accent); background: var(--accent); }
+.profile-action span { font-size: 16px; line-height: 1; }
+@media (pointer: coarse) { .profile-action,.card-fav-btn { min-height: 44px; } .card-fav-btn { width: 44px; } }
+
 .tag,.td-tag { background: var(--bg2); color: var(--text2); }
 .table-wrap { background: white; border: 1px solid var(--border); border-radius: var(--radius); }
 .companies-table { min-width: 825px; }
@@ -521,7 +524,6 @@ body:has(dialog[open]) { overflow: hidden; }
   .toolbar { gap: 10px; }
   .catalog-display { flex-wrap: wrap; }
   .results-info { font-size: 12px; }
-  .card { padding: 16px; }
   .modal-overlay { padding: 10px; }
   .modal { max-height: 94dvh; }
   .modal-body,.modal-header { padding: 16px; }
@@ -855,6 +857,7 @@ const SHEET_ID = '1FPiPD7Kxd27IwM9OpdDr5dY2xk0B4qezh_2UhhWXCjM';
 
 const T = {
   ru: {
+    card: { profile: 'Профиль', save: 'В избранное', remove: 'Убрать из избранного', read: 'Читать полностью', collapse: 'Свернуть', moreIndustries: 'Другие индустрии', levels: { High: 'Высокий', Medium: 'Средний', Low: 'Низкий' } },
     search: 'Название, индустрия или описание',
     loading: 'Загружаем данные из Google Sheets...',
     showing: (a,b) => `Показано <strong>${a}</strong> из <strong>${b}</strong>`,
@@ -879,6 +882,7 @@ const T = {
     searchIn: 'Поиск...',
   },
   en: {
+    card: { profile: 'Profile', save: 'Save to favorites', remove: 'Remove from favorites', read: 'Read more', collapse: 'Show less', moreIndustries: 'More industries', levels: { High: 'High', Medium: 'Medium', Low: 'Low' } },
     search: 'Name, industry or description',
     loading: 'Loading data from Google Sheets...',
     showing: (a,b) => `Showing <strong>${a}</strong> of <strong>${b}</strong>`,
@@ -1311,20 +1315,105 @@ function faviconUrl(website){
   const domain=getDomain(website);
   return domain?`https://www.google.com/s2/favicons?domain=${domain}&sz=64`:'';
 }
-// Аватар с фавиконом и fallback на инициалы
-function avatarHtml(c, size){
-  const fav=faviconUrl(c.website);
-  const init=initials(c.name);
-  const style=avatarStyle(c.name);
-  if(fav){
-    return `<div class="company-avatar" style="${style};position:relative;overflow:hidden">
-      <img src="${fav}" style="width:100%;height:100%;object-fit:cover"
-        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-      <span style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;font-weight:700;color:white">${init}</span>
-    </div>`;
-  }
-  return `<div class="company-avatar" style="${style}">${init}</div>`;
+function escapeCardText(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[char]);
 }
+
+function cardValue(value) {
+  const text = String(value || '').trim();
+  return /^(?:[-–—\s]+|nan|n\/a|null)$/i.test(text) ? '' : text;
+}
+
+function shortFunding(amount) {
+  const match = amount.match(/^([^\d\s]+)\s*([\d,]+(?:\.\d+)?)$/);
+  if (!match) return amount;
+  const number = Number(match[2].replaceAll(',', ''));
+  if (!Number.isFinite(number) || number < 1000) return amount;
+  const compact = new Intl.NumberFormat(lang, {
+    notation: 'compact', maximumFractionDigits: 1
+  }).format(number);
+  return lang === 'ru' ? compact + ' ' + match[1] : match[1] + compact;
+}
+
+// Keep a sector-specific tag visible alongside broad technology categories.
+const broadIndustries = new Set(['Artificial Intelligence (AI)', 'Data and Analytics', 'Software',
+  'Information Technology', 'Science and Engineering', 'Internet Services', 'Apps', 'Other']);
+
+function companyCard(c, index) {
+  const esc = escapeCardText;
+  const words = T[lang].card;
+  const desc = cardValue(c.full_description);
+  const investors = cardValue(c.lead_investors) || cardValue(c.top_investors);
+  const sector = c.industries.find(tag => !broadIndustries.has(tag));
+  const tags = sector ? [sector, ...c.industries.filter(tag => tag !== sector)] : c.industries;
+  const amount = cardValue(c.last_funding_amount);
+  const round = cardValue(c.last_funding_type);
+  const rawDate = cardValue(c.last_funding_date);
+  const timestamp = /^[A-Za-z]{3} \d{1,2}, \d{4}$/.test(rawDate) ? Date.parse(rawDate + ' UTC') : NaN;
+  const date = Number.isFinite(timestamp) ? new Intl.DateTimeFormat(lang, {
+    day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC'
+  }).format(timestamp) : rawDate;
+  const team = cardValue(c.employees);
+  const growth = cardValue(c.growth_score);
+  const saved = isFavorite(c);
+  const favLabel = saved ? words.remove : words.save;
+  const domain = getDomain(c.website);
+  const palette = ['sage','peach','iris','sky','sand'];
+  const hue = Array.from(c.name).reduce((sum, char) => sum + char.codePointAt(0), 0) % palette.length;
+  const fav = faviconUrl(c.website);
+  const score = c.score;
+  const metric = (label, value, note = '', title = '') => value
+    ? `<div><dt>${esc(label)}</dt><dd title="${esc(title || value)}">${esc(value)}</dd>${note ? `<small>${esc(note)}</small>` : ''}</div>` : '';
+  const facts = [
+    metric(amount ? t('raised') : t('round'), amount ? shortFunding(amount) : round || date,
+      [amount && round, (amount || round) && date].filter(Boolean).join(' · '), amount),
+    metric(t('team'), team.replace(/(\d)-(\d)/g, '$1–$2')),
+    metric(t('growth'), words.levels[growth] || growth)
+  ].join('');
+  const marks = tags.slice(0, 2).map(tag => `<span>${esc(tag)}</span>`).join('');
+  return `<article class="card tone-${palette[hue]}" onclick="if(!event.target.closest('button,a,summary,details') && !window.getSelection()?.toString()) openModal(${index})" aria-labelledby="startup-${index}">
+    <header class="card-header">
+      <div class="company-avatar" aria-hidden="true"><span>${esc(initials(c.name))}</span>${fav ? `<img src="${esc(fav)}" alt="" loading="lazy" onerror="this.remove()">` : ''}</div>
+      <div class="card-identity"><h2 id="startup-${index}"><button class="card-name" onclick="openModal(${index})">${esc(c.name)}</button></h2>
+        ${domain ? `<a class="card-site" href="${esc(c.website)}" target="_blank" rel="noopener noreferrer">${esc(domain)} <span aria-hidden="true">↗</span></a>` : ''}
+      </div>
+      <button class="card-fav-btn${saved ? ' active' : ''}" aria-pressed="${saved}" aria-label="${esc(favLabel + ' · ' + c.name)}" title="${esc(favLabel)}" onclick="toggleFavorite(filtered[${index}],this)">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="${saved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="m12 3 2.7 5.6 6.2.9-4.5 4.4 1.1 6.2L12 17.2l-5.5 2.9 1.1-6.2-4.5-4.4 6.2-.9Z"/></svg>
+      </button>
+    </header>
+    <div class="card-story">
+      ${tags.length ? `<div class="industry-line">${marks}${tags.length > 2 ? `<details class="industry-more"><summary aria-label="${words.moreIndustries}">+${tags.length - 2}</summary><div>${tags.slice(2).map(esc).join(' · ')}</div></details>` : ''}</div>` : ''}
+      ${desc ? `<p class="card-desc" id="description-${index}">${esc(desc)}</p>
+        <button class="read-description" aria-expanded="false" aria-controls="description-${index}" onclick="toggleCardDescription(this)" hidden>${words.read}</button>` :
+        investors ? `<p class="investor-line"><b>${t('investors')}</b> ${esc(investors)}</p>` : ''}
+    </div>
+    ${facts ? `<dl class="card-facts">${facts}</dl>` : ''}
+    <footer class="card-bottom">
+      <div class="card-rating" title="${t('scoring')}${score.isManual ? ' · ' + t('manualBadge') : ''}">
+        <span class="rating-total">${score.total}<small>/6</small></span>
+        <span class="rating-text"><span>${t('scoring')}${score.isManual ? ' ✎' : ''}</span><strong>${vl(score.verdict)}</strong></span>
+      </div>
+      <button class="profile-action" aria-label="${esc(words.profile + ' · ' + c.name)}" onclick="openModal(${index})">${words.profile} <span aria-hidden="true">→</span></button>
+    </footer>
+  </article>`;
+}
+
+// Show the reading control only if the current width actually clips the description.
+function measureCardDescriptions() {
+  document.querySelectorAll('.card-desc:not(.expanded)').forEach(paragraph => {
+    paragraph.nextElementSibling.hidden = paragraph.scrollHeight <= paragraph.clientHeight + 1;
+  });
+}
+
+function toggleCardDescription(button) {
+  const paragraph = document.getElementById(button.getAttribute('aria-controls'));
+  const expanded = paragraph.classList.toggle('expanded');
+  button.setAttribute('aria-expanded', expanded);
+  button.textContent = expanded ? T[lang].card.collapse : T[lang].card.read;
+}
+
 function vc(v){return v==='В pipeline'?'pipeline':v==='Изучить'?'study':'later';}
 function vl(v){
   const map={ru:{'В pipeline':'В pipeline','Изучить':'Изучить','Отложить':'Отложить'},en:{'В pipeline':'Pipeline','Изучить':'Study','Отложить':'Later'}};
@@ -1359,70 +1448,9 @@ function renderCards(){
     return;
   }
 
-  const knownFunds=['Sequoia', 'a16z', 'Andreessen', 'General Catalyst', 'Accel', 'Lightspeed', 'Benchmark', 'Founders Fund', 'Tiger Global', 'Coatue', 'Insight', 'SoftBank', 'GV', 'Google Ventures', 'Kleiner', 'Bessemer', 'Index Ventures', 'Greylock', 'NEA', 'IVP', 'Spark Capital', 'Khosla', 'Menlo', 'Redpoint', 'Battery', 'Thrive', 'DST', 'Lone Pine', 'Silver Lake', 'Vista'];
-
   grid.className='cards-grid';
-  grid.innerHTML=page.map((c,i)=>{
-    const desc=clean(c.full_description);
-
-    const tags=c.industries.slice(0,2);
-    const funding=clean(c.last_funding_amount);
-    const round=clean(c.last_funding_type);
-    const growth=clean(c.growth_score);
-    const gc=growth==='High'?'var(--green)':growth==='Medium'?'#D97706':'var(--text3)';
-    const trendNum=parseFloat(c.trend_score||0);
-
-    // Главный сигнал карточки
-    const allInv=(c.lead_investors+' '+c.top_investors);
-    const topFund=knownFunds.find(f=>allInv.includes(f));
-    const signals=[];
-    if(topFund) signals.push(`<span class="signal-item accent">📍 ${topFund}</span>`);
-    if(growth==='High') signals.push(`<span class="signal-item hot">▲ High Growth</span>`);
-    else if(growth==='Medium') signals.push(`<span class="signal-item warm">~ Medium Growth</span>`);
-    if(trendNum>10) signals.push(`<span class="signal-item hot">🔥 Trend +${trendNum.toFixed(0)}</span>`);
-    if(c.last_funding_amount_m>100) signals.push(`<span class="signal-item accent">💰 ${funding}</span>`);
-
-    const signalHtml=signals.length?`<div class="card-signal">${signals.slice(0,2).join('')}</div>`:'';
-
-    const favActive = isFavorite(c) ? ' active' : '';
-    return `<div class="card" onclick="openModal(${start+i})">
-      <div class="card-header">
-        ${avatarHtml(c)}
-        <div class="card-title-wrap">
-          <button class="card-name" onclick="event.stopPropagation();openModal(${start+i})">${c.name}</button>
-${c.website?`<a href="${c.website}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-size:11px;color:var(--accent);text-decoration:none;display:flex;align-items:center;gap:4px;margin-top:-2px"><svg width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5'><path d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'/><polyline points='15 3 21 3 21 9'/><line x1='10' y1='14' x2='21' y2='3'/></svg>${c.website.replace('https://','').replace('http://','').replace('www.','').split('/')[0]}</a>`:''}
-        </div>
-        <div class="card-status">
-          <button class="card-fav-btn${favActive}" onclick="event.stopPropagation();toggleFavorite(filtered[${start+i}],this)" title="В избранное">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="${isFavorite(c)?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-          </button>
-        </div>
-      </div>
-      ${desc?`<div class="card-desc">${desc}</div>`:''}
-      ${tags.length?`<div class="card-tags">${tags.map(tg=>`<span class="tag">${tg}</span>`).join('')}</div>`:''}
-      <div class="card-signals"><div class="card-verdict">
-            <span class="verdict-badge ${vc(c.score.verdict)}">${vl(c.score.verdict)}</span>
-            ${c.score.isManual?`<span class="manual-badge">${t('manualBadge')}</span>`:''}
-          </div>${signalHtml}</div>
-      <div class="card-footer">
-        <div>
-          <div class="card-stat-label">${t('round')}</div>
-          <div class="card-stat-value" style="font-size:12px">${round||'—'}</div>
-          <div class="card-meta">${[funding,c.last_funding_date].filter(Boolean).join(' · ')}</div>
-        </div>
-        <div>
-          <div class="card-stat-label">${t('growth')}</div>
-          <div class="card-stat-value" style="color:${gc}">${growth||'—'}</div>
-        </div>
-        <div style="text-align:right">
-          <div class="card-stat-label">Score</div>
-          <div class="card-score-mini" title="Яндекс-скоринг">${c.score.total}<span style="color:var(--text3);font-weight:400">/6</span>${c.score.isManual?'<span style="color:var(--accent);margin-left:2px">✎</span>':''}</div>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-
-
+  grid.innerHTML=page.map((company, i) => companyCard(company, start+i)).join('');
+  measureCardDescriptions();
 }
 
 function renderTable(page, start){
@@ -1521,8 +1549,9 @@ function openModal(idx){
      <span class="verdict-badge ${vc(c.score.verdict)}" style="margin-left:4px">${vl(c.score.verdict)}</span>
      ${c.score.isManual?`<span class="manual-badge">${t('manualBadge')}</span>`:''}`;
 
-  const desc=clean(c.full_description)||clean(c.description);
-  const investors=clean(c.top_investors)||clean(c.lead_investors);
+  const desc=cardValue(c.full_description)||cardValue(c.description);
+  const investors=[...new Set([c.lead_investors,c.top_investors].flatMap(value =>
+    cardValue(value).split(',').map(cardValue).filter(Boolean)))].join(', ');
   const sc=c.score.total>=5?'var(--green)':c.score.total>=3?'#D97706':'var(--text3)';
 
   document.getElementById('m-body').innerHTML=`
@@ -1540,6 +1569,7 @@ function openModal(idx){
         <div class="stat-box"><div class="stat-box-label">${t('growth')} ${tip('growth')}</div><div class="stat-box-value ${c.growth_score==='High'?'green':''}">${clean(c.growth_score)||'—'}</div></div>
         <div class="stat-box"><div class="stat-box-label">${t('heat')} ${tip('heat')}</div><div class="stat-box-value">${clean(c.heat_score)||'—'}</div></div>
 
+        ${cardValue(c.trend_score) ? `<div class="stat-box"><div class="stat-box-label">${t('trend')}</div><div class="stat-box-value">${escapeCardText(c.trend_score)}</div></div>` : ''}
         <div class="stat-box"><div class="stat-box-label">${t('cb')} ${tip('cb')}</div><div class="stat-box-value">${c.cb_rank||'—'}</div></div>
         <div class="stat-box"><div class="stat-box-label">${t('visits')}</div><div class="stat-box-value">${c.monthly_visits?c.monthly_visits.toLocaleString():'—'}</div></div>
       </div>
@@ -1940,7 +1970,11 @@ function toggleFavorite(c, btnEl) {
   saveFavorites();
   updateFavCount();
   if(btnEl) {
-    btnEl.classList.toggle('active', favorites.has(key));
+    const saved = favorites.has(key);
+    btnEl.classList.toggle('active', saved);
+    btnEl.title = saved ? T[lang].card.remove : T[lang].card.save;
+    btnEl.setAttribute('aria-pressed', saved);
+    btnEl.setAttribute('aria-label', btnEl.title + ' · ' + c.name);
     btnEl.querySelector('svg').setAttribute('fill', favorites.has(key) ? 'currentColor' : 'none');
   }
   // Если активен фильтр "только избранное" — перерисовываем список
@@ -1974,6 +2008,8 @@ function toggleModalFavorite(){
   if(showFavoritesOnly) applyFilters(); else renderCards();
 }
 
+window.addEventListener('resize', measureCardDescriptions);
+document.fonts.ready.then(measureCardDescriptions);
 loadFavorites();
 updateFavCount();
 loadData();
