@@ -173,47 +173,6 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
 .tooltip b{color:white;font-weight:700;display:block;margin-bottom:5px;font-size:12px;}
 /* hover управляется через JS floating tip */
 
-/* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(15,20,35,0.45);backdrop-filter:blur(3px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.2s;}
-.modal-overlay.open{opacity:1;pointer-events:all;}
-.modal{background:#fff;border:1px solid var(--border);border-radius:14px;width:100%;max-width:640px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.15);transform:translateY(12px);transition:transform 0.2s;}
-.modal-overlay.open .modal{transform:translateY(0);}
-.modal::-webkit-scrollbar{width:3px;}
-.modal::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-.modal-stripe{height:4px;background:var(--accent);border-radius:14px 14px 0 0;}
-.modal-header{padding:18px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:13px;position:sticky;top:0;background:#fff;z-index:1;}
-.modal-avatar{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:white;flex-shrink:0;overflow:hidden;}
-.modal-name{font-size:18px;font-weight:700;letter-spacing:-0.4px;color:var(--text);}
-.modal-subtitle{font-size:12px;color:var(--text3);margin-top:4px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
-.modal-close{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text3);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
-.modal-close:hover{border-color:var(--text);color:var(--text);}
-.modal-body{padding:20px;display:flex;flex-direction:column;gap:20px;}
-.modal-section-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:10px;display:flex;align-items:center;border-bottom:1px solid var(--border);padding-bottom:8px;}
-.modal-desc{font-size:13px;color:var(--text2);line-height:1.65;}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 13px;}
-.stat-box-label{font-size:11px;color:var(--text3);font-weight:500;margin-bottom:4px;display:flex;align-items:center;}
-.stat-box-value{font-size:15px;font-weight:700;color:var(--text);}
-.stat-box-value.accent{color:var(--accent);}
-.stat-box-value.green{color:var(--green);}
-.scoring-wrap{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--radius);padding:16px;}
-.scoring-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
-.scoring-total-num{font-size:32px;font-weight:700;letter-spacing:-1px;color:var(--accent);line-height:1;}
-.scoring-total-sub{font-size:12px;color:var(--text3);margin-top:2px;}
-.scoring-row{margin-bottom:12px;}
-.scoring-row:last-child{margin-bottom:0;}
-.scoring-row-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;}
-.scoring-row-name{font-size:13px;color:var(--text2);display:flex;align-items:center;}
-.scoring-row-val{font-size:13px;font-weight:700;color:var(--accent);}
-.scoring-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
-.scoring-bar-fill{height:100%;border-radius:3px;}
-.bar-market{background:var(--accent);}
-.bar-edge{background:var(--green);}
-.bar-complexity{background:#D97706;}
-.manual-note{font-size:11px;color:var(--accent);background:var(--accent-light);padding:6px 10px;border-radius:var(--radius-sm);margin-top:10px;}
-.auto-note{font-size:11px;color:var(--text3);background:var(--bg3);padding:6px 10px;border-radius:var(--radius-sm);margin-top:10px;}
-.investors-text{font-size:13px;color:var(--text2);line-height:1.7;}
-
 /* VIEW TOGGLE */
 .view-toggle{display:flex;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;}
 .view-btn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:none;background:#fff;color:var(--text3);cursor:pointer;transition:all 0.15s;}
@@ -505,13 +464,82 @@ body:has(dialog[open]) { overflow: hidden; }
 .filter-group-title { font-size: 14px; }
 .multi-select-option { background: white; }
 .filter-select,.multi-select-trigger,.range-input,.reset-btn { min-height: 38px; }
-.modal-overlay { position: fixed; inset: 0; width: 100%; max-width: none; height: 100dvh; max-height: none; margin: 0; border: 0; background: transparent; backdrop-filter: none; color: inherit; display: none; }
-.modal-overlay[open] { display: flex; opacity: 1; pointer-events: auto; }
-.modal { max-width: 720px; border: 0; border-radius: 17px; transform: none; }
-.modal-stripe { background: var(--orange); }
-.modal-body,.modal-header { padding: 22px; }
-.modal-section-title { font-size: 15px; letter-spacing: -.025em; }
-.modal-desc { font-size: 14px; }
+/* Company profile */
+.modal-overlay { position: fixed; inset: 0; width: 100%; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 24px; border: 0; background: transparent; color: var(--text); display: none; }
+.modal-overlay[open] { display: grid; place-items: center; }
+.modal { width: min(850px, 100%); height: min(690px, 88dvh); min-height: 0; display: grid; grid-template-rows: auto auto minmax(0,1fr); overflow: hidden; background: #fff; border-radius: 22px; box-shadow: 0 24px 80px #28201840; }
+.modal-header { position: relative; isolation: isolate; overflow: hidden; display: grid; grid-template-columns: 64px minmax(0,1fr) auto auto; align-items: center; gap: 12px; padding: 30px; background: #f5efe4; }
+.modal-header::after { content: ''; position: absolute; z-index: -1; inset: -250% -4% -160% 65%; pointer-events: none; transform: rotate(19deg); background: repeating-radial-gradient(ellipse at 100% 53%,transparent 0 12px,#98734413 12px 13px,transparent 13px 22px); }
+.modal-avatar { position: relative; height: 64px; display: grid; place-items: center; overflow: hidden; border-radius: 18px; background: #f5c5a6; color: #6a3622; font-weight: 650; letter-spacing: -.045em; font-size: 26px; }
+.modal-avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 9px; background: #fff; }
+.modal-name { font-size: clamp(22px,3vw,36px); line-height: 1.08; overflow-wrap: anywhere; letter-spacing: -.055em; }
+.modal-subtitle a { display: inline-block; max-width: 100%; margin-top: 5px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--accent); text-decoration: none; font-size: 13px; }
+.modal-subtitle a:hover { text-decoration: underline; }
+.modal-header :is(.fav-btn,.modal-close) { width: 42px; height: 42px; border-radius: 50%; background: #ffffffcf; border: 1px solid #dcd3c6; }
+.modal-header .fav-btn.active { color: var(--accent); background: var(--accent-light); }
+.profile-tabs { display: flex; gap: 18px; padding-inline: 30px; border-bottom: 1px solid var(--border); background: white; }
+.profile-tabs button { padding: 12px 2px; border: 0; border-bottom: 3px solid transparent; color: var(--text3); font: inherit; font-weight: 600; background: transparent; cursor: pointer; }
+.profile-tabs [aria-selected="true"] { color: var(--text); border-bottom-color: var(--orange); }
+.profile-tabs button:focus-visible { outline-offset: -4px; }
+.modal-body { overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; padding: 25px 26px 28px 30px; }
+.modal-body [role="tabpanel"] { outline-offset: -3px; }
+.profile-overview { display: grid; grid-template-columns: minmax(0,1fr) minmax(170px,.47fr); gap: clamp(22px,4vw,40px); }
+.profile-group + .profile-group,.score-feature + .profile-group { margin-top: 23px; }
+.profile-group h3,.score-feature h3 { margin: 0 0 10px; font-size: 18px; line-height: 1.25; letter-spacing: -.035em; }
+.profile-description { white-space: pre-line; overflow-wrap: anywhere; color: #3d3934; line-height: 1.64; font-size: 15px; }
+.profile-read summary { padding: 5px 0; font-size: 13px; font-weight: 600; color: var(--accent); cursor: pointer; }
+.profile-read summary span:last-child,.profile-read[open] summary span:first-child { display: none; }
+.profile-read[open] summary span:last-child { display: inline; }
+.profile-tags { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+.profile-tags li { border: 1px solid #dedcd4; border-radius: 7px; background: #faf9f6; padding: 4px 9px; font-size: 12px; overflow-wrap: anywhere; }
+.profile-summary { display: grid; align-content: start; gap: 10px; }
+.summary-item { display: flex; flex-direction: column; align-items: start; gap: 6px; padding: 17px; text-align: left; color: var(--text); background: #f7f5ef; border: 1px solid #dedbd1; border-radius: 14px; cursor: pointer; }
+.summary-item:hover { border-color: #b99e84; }
+.summary-item > span:first-child { align-self: stretch; font-size: 12px; font-weight: 550; }
+.summary-item i { float: right; font-style: normal; }
+.summary-item > b,.profile-grade { font-size: 30px; line-height: 1.15; font-weight: 650; letter-spacing: -.055em; overflow-wrap: anywhere; }
+.summary-item > small { color: var(--text2); }
+.score-summary,.score-feature { background: #2c302a; border-color: #2c302a; color: #fff; }
+.score-summary > span:first-child { color: #dfdfd4; }
+.profile-grade small { font-size: .5em; color: #d3d2c7; letter-spacing: -.025em; }
+.profile-verdict { display: inline-flex; align-items: center; gap: 6px; font-weight: 550; font-size: 13px; }
+.profile-verdict::before { content: ''; display:block; width: 7px; height: 7px; background: #ff9a63; border-radius: 50%; }
+.profile-rows { border-top: 1px solid var(--border); }
+.profile-rows div { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 12px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid #eeece6; }
+.profile-rows dt { color: var(--text2); font-size: 13px; }
+.profile-rows dd { font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.score-feature { padding: 18px 22px; border-radius: 14px; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 6px 12px; }
+.score-feature h3 { margin: 0; }
+.score-feature .profile-grade { grid-column: 2; grid-row: 1/4; font-size: 42px; }
+.score-feature p { color: #d3d2c7; font-size: 12px; }
+.score-criteria { display: grid; gap: 12px; list-style: none; }
+.score-criteria li { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; align-items: center; }
+.score-criteria b { font-size: 13px; }
+.score-criteria meter { width: 100%; grid-column: 1/-1; height: 7px; appearance: none; border-radius: 5px; background: #edeae1; border: none; }
+.score-criteria meter::-webkit-meter-bar { height: 7px; background: #edeae1; border: none; border-radius: 5px; }
+.score-criteria meter::-webkit-meter-optimum-value { background: #d67740; border-radius: 5px; }
+.score-criteria meter::-moz-meter-bar { background: #d67740; border-radius: 5px; }
+.profile-help { margin-top: 20px; padding: 11px 14px; background: #f7f6f2; border-radius: 9px; color: var(--text2); font-size: 13px; }
+.profile-help summary { color: var(--text); font-weight: 600; cursor: pointer; }
+.profile-help p { margin-top: 12px; }
+@media(max-width:620px) {
+  .modal-overlay { padding: 6px; }
+  .modal { height: min(760px,96dvh); border-radius: 16px; }
+  .modal-header { padding: 18px 14px; grid-template-columns: 43px minmax(0,1fr) 36px 36px; gap: 7px; }
+  .modal-avatar { height: 43px; border-radius: 12px; font-size: 18px; }
+  .modal-header :is(.fav-btn,.modal-close) { width: 36px; height: 36px; }
+  .profile-tabs { gap: 0; justify-content: space-between; padding-inline: 13px; }
+  .profile-tabs button { font-size: 13px; min-height: 44px; }
+  .modal-body { padding: 19px 15px 24px; scrollbar-gutter: auto; }
+  .profile-overview { display: flex; flex-direction: column; gap: 18px; }
+  .overview-content { display: contents; }
+  .overview-content > section { order: 2; margin: 0; }
+  .overview-content > section:first-child { order: 0; }
+  .profile-summary { order: 1; }
+  .profile-summary { grid-template-columns: repeat(auto-fit,minmax(115px,1fr)); }
+  .summary-item { padding: 12px; }
+}
+
 @media (min-width: 1100px) { .cards-grid { grid-template-columns: repeat(3,minmax(0,1fr)); } }
 @media (max-width: 760px) {
   .header-top { height: 56px; }
@@ -524,9 +552,6 @@ body:has(dialog[open]) { overflow: hidden; }
   .toolbar { gap: 10px; }
   .catalog-display { flex-wrap: wrap; }
   .results-info { font-size: 12px; }
-  .modal-overlay { padding: 10px; }
-  .modal { max-height: 94dvh; }
-  .modal-body,.modal-header { padding: 16px; }
 }
 @media (max-width: 540px) {
   .paper-stack { width: 105px; height: 85px; right: -40px; }
@@ -836,18 +861,18 @@ body:has(dialog[open]) { overflow: hidden; }
 
 <dialog class="modal-overlay" id="modal-overlay" aria-labelledby="m-name" onclick="closeModal(event)">
   <div class="modal">
-    <div class="modal-stripe"></div>
     <div class="modal-header">
       <div class="modal-avatar" id="m-avatar"></div>
       <div style="flex:1;min-width:0">
-        <div class="modal-name" id="m-name"></div>
+        <h2 class="modal-name" id="m-name"></h2>
         <div class="modal-subtitle" id="m-subtitle"></div>
       </div>
-      <button class="fav-btn" id="modal-fav-btn" onclick="toggleModalFavorite()" title="В избранное" style="margin-left:auto">
+      <button class="fav-btn" id="modal-fav-btn" onclick="toggleModalFavorite()" title="В избранное">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
       </button>
       <button aria-label="Закрыть / Close" class="modal-close" onclick="closeModalDirect()">✕</button>
     </div>
+    <div role="tablist" class="profile-tabs" id="profile-tabs"></div>
     <div class="modal-body" id="m-body"></div>
   </div>
 </dialog>
@@ -1159,6 +1184,7 @@ function processRows(rows) {
         cb_rank: parseNum(r['CB Rank (Company)']),
         global_traffic_rank: parseNum(r['Global Traffic Rank']),
         monthly_visits: parseNum(r['Monthly Visits']),
+        profileVisits: cardValue(r['Monthly Visits']),
         downloads: r['Downloads Last 30 Days']||'',
         lead_investors: r['Lead Investors']||'',
         top_investors: r['Top 5 Investors']||'',
@@ -1303,8 +1329,6 @@ function resetFilters() {
 }
 
 // ---- RENDER ----
-const COLORS=[['#F0531C','#C93D10'],['#2563EB','#1D4ED8'],['#059669','#047857'],['#7C3AED','#6D28D9'],['#D97706','#B45309'],['#0891B2','#0E7490'],['#DB2777','#BE185D'],['#4F46E5','#4338CA']];
-function avatarStyle(name){let h=0;for(let i=0;i<name.length;i++)h=name.charCodeAt(i)+((h<<5)-h);const[c1,c2]=COLORS[Math.abs(h)%COLORS.length];return`background:linear-gradient(135deg,${c1},${c2})`;}
 function initials(name){return name.split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';}
 function getDomain(url){
   if(!url) return '';
@@ -1322,7 +1346,7 @@ function escapeCardText(value) {
 }
 
 function cardValue(value) {
-  const text = String(value || '').trim();
+  const text = String(value ?? '').trim();
   return /^(?:[-–—\s]+|nan|n\/a|null)$/i.test(text) ? '' : text;
 }
 
@@ -1341,6 +1365,14 @@ function shortFunding(amount) {
 const broadIndustries = new Set(['Artificial Intelligence (AI)', 'Data and Analytics', 'Software',
   'Information Technology', 'Science and Engineering', 'Internet Services', 'Apps', 'Other']);
 
+function formatFundingDate(value) {
+  const rawDate = cardValue(value);
+  const timestamp = /^[A-Za-z]{3} \d{1,2}, \d{4}$/.test(rawDate) ? Date.parse(rawDate + ' UTC') : NaN;
+  return Number.isFinite(timestamp) ? new Intl.DateTimeFormat(lang, {
+    day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC'
+  }).format(timestamp) : rawDate;
+}
+
 function companyCard(c, index) {
   const esc = escapeCardText;
   const words = T[lang].card;
@@ -1350,11 +1382,7 @@ function companyCard(c, index) {
   const tags = sector ? [sector, ...c.industries.filter(tag => tag !== sector)] : c.industries;
   const amount = cardValue(c.last_funding_amount);
   const round = cardValue(c.last_funding_type);
-  const rawDate = cardValue(c.last_funding_date);
-  const timestamp = /^[A-Za-z]{3} \d{1,2}, \d{4}$/.test(rawDate) ? Date.parse(rawDate + ' UTC') : NaN;
-  const date = Number.isFinite(timestamp) ? new Intl.DateTimeFormat(lang, {
-    day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC'
-  }).format(timestamp) : rawDate;
+  const date = formatFundingDate(c.last_funding_date);
   const team = cardValue(c.employees);
   const growth = cardValue(c.growth_score);
   const saved = isFavorite(c);
@@ -1418,10 +1446,6 @@ function vc(v){return v==='В pipeline'?'pipeline':v==='Изучить'?'study':
 function vl(v){
   const map={ru:{'В pipeline':'В pipeline','Изучить':'Изучить','Отложить':'Отложить'},en:{'В pipeline':'Pipeline','Изучить':'Study','Отложить':'Later'}};
   return(map[lang]||map.ru)[v]||v;
-}
-
-function tip(key){
-  return `<span class="tooltip-wrap"><span class="info-icon">i</span><span class="tooltip">${SCORE_TIPS[lang][key]}</span></span>`;
 }
 
 function renderCards(){
@@ -1521,99 +1545,158 @@ function renderPagination(total){
 
 function goPage(p){currentPage=p;renderCards();document.querySelector('.toolbar').scrollIntoView({block:'start'});}
 
-// ---- MODAL ----
+// Company profile
 let currentModalCompany = null;
+const profileCopy = {
+  ru: { financials:'Финансовые показатели', overview:'Обзор', finance:'Финансы', signals:'Сигналы', score:'Скоринг', latest:'Последний раунд',
+    date:'Дата раунда', value:'Оценка компании', products:'Продукты', scale:'Масштаб компании',
+    leads:'Ведущие инвесторы', other:'Другие инвесторы', momentum:'Динамика компании', audience:'Аудитория',
+    growth:'Потенциал роста', heat:'Интерес рынка', trend:'Тренд за 90 дней', visits:'Посещения за месяц',
+    traffic:'Место по трафику', downloads:'Загрузки за 30 дней', criteria:'Критерии оценки', methodology:'Как рассчитывается оценка',
+    signalsHelp:'Как читать показатели', missing:'Описание пока не добавлено.', close:'Закрыть', auto:'Автоматическая оценка', manual:'Ручная оценка' },
+  en: { financials:'Financial metrics', overview:'Overview', finance:'Funding', signals:'Signals', score:'Scoring', latest:'Latest round',
+    date:'Round date', value:'Company valuation', products:'Products', scale:'Company size',
+    leads:'Lead investors', other:'Other investors', momentum:'Company momentum', audience:'Audience',
+    growth:'Growth potential', heat:'Market interest', trend:'90-day trend', visits:'Monthly visits',
+    traffic:'Global traffic rank', downloads:'30-day downloads', criteria:'Scoring criteria', methodology:'How scoring works',
+    signalsHelp:'About these metrics', missing:'No description available yet.', close:'Close', auto:'Automatic score', manual:'Manual score' }
+};
 
-function openModal(idx){
-  const c=filtered[idx]; if(!c) return;
-  currentModalCompany = c;
-  const modalFavBtn = document.getElementById('modal-fav-btn');
-  if(modalFavBtn){
-    modalFavBtn.classList.toggle('active', isFavorite(c));
-    modalFavBtn.querySelector('svg').setAttribute('fill', isFavorite(c) ? 'currentColor' : 'none');
+function profileRows(entries) {
+  const rows = entries.filter(([, value]) => cardValue(value) !== '');
+  if (!rows.length) return '';
+  return '<dl class="profile-rows">' + rows.map(([label, value]) =>
+    `<div><dt>${escapeCardText(label)}</dt><dd>${escapeCardText(value)}</dd></div>`).join('') + '</dl>';
+}
+
+function profileGroup(title, content) {
+  return content ? `<section class="profile-group"><h3>${escapeCardText(title)}</h3>${content}</section>` : '';
+}
+
+function profileDescription(text) {
+  const esc=escapeCardText;
+  const paragraph=value=>`<p class="profile-description">${esc(value)}</p>`;
+  const boundary=text.slice(0,340).match(/^.{65,}?[.!?](?=\s|$)/su);
+  if (text.length<440 || !boundary) return paragraph(text);
+  const intro=boundary[0];
+  return paragraph(intro)+`<details class="profile-read"><summary>
+    <span>${T[lang].card.read}</span><span>${T[lang].card.collapse}</span></summary>`+
+    paragraph(text.slice(intro.length).trimStart())+'</details>';
+}
+
+function profileTags(items) {
+  return items.length ? `<ul class="profile-tags">${items.map(value =>
+    `<li>${escapeCardText(value)}</li>`).join('')}</ul>` : '';
+}
+
+function profileHelp(title, keys, note='') {
+  return `<details class="profile-help"><summary>${escapeCardText(title)}</summary>
+    ${keys.map(key => `<p>${SCORE_TIPS[lang][key]}</p>`).join('')}${note ? `<p>${escapeCardText(note)}</p>` : ''}</details>`;
+}
+
+function showProfileTab(id, focus=false) {
+  const nav=document.getElementById('profile-tabs');
+  for (const tab of nav.querySelectorAll('[role="tab"]')) {
+    const active=tab.dataset.panel===id;
+    tab.setAttribute('aria-selected', active);
+    tab.tabIndex=active ? 0 : -1;
+    document.getElementById(tab.getAttribute('aria-controls')).hidden=!active;
+    if (active && focus) tab.focus();
   }
-  const mFav=faviconUrl(c.website);
-  const mAvatar=document.getElementById('m-avatar');
-  mAvatar.style=avatarStyle(c.name);
-  if(mFav){
-    mAvatar.innerHTML=`<img src="${mFav}" style="width:100%;height:100%;object-fit:cover;border-radius:10px" onerror="this.parentElement.textContent='${initials(c.name)}'">`;
-  } else {
-    mAvatar.textContent=initials(c.name);
-  }
-  document.getElementById('m-name').innerHTML=
-    c.name + (c.website?` <a href="${c.website}" target="_blank" style="font-size:13px;font-weight:400;color:var(--accent);text-decoration:none;margin-left:8px" title="${c.website}">↗ ${c.website.replace('https://','').replace('http://','').split('/')[0]}</a>`:'');
+  document.getElementById('m-body').scrollTop=0;
+}
 
-  const round=clean(c.last_funding_type), amount=clean(c.last_funding_amount);
-  document.getElementById('m-subtitle').innerHTML=
-    `${round?`<span>${round}</span>`:''}${amount?`<span>·</span><span>${amount}</span>`:''}
-     <span class="verdict-badge ${vc(c.score.verdict)}" style="margin-left:4px">${vl(c.score.verdict)}</span>
-     ${c.score.isManual?`<span class="manual-badge">${t('manualBadge')}</span>`:''}`;
+const profileNav=document.getElementById('profile-tabs');
+profileNav.addEventListener('click', event => {
+  const tab=event.target.closest('[role="tab"]');
+  if (tab) showProfileTab(tab.dataset.panel);
+});
+profileNav.addEventListener('keydown', event => {
+  const tabs=Array.from(profileNav.children);
+  const n=tabs.indexOf(event.target);
+  if(n<0) return;
+  const next={ArrowRight:(n+1)%tabs.length, ArrowLeft:(n+tabs.length-1)%tabs.length, Home:0, End:tabs.length-1}[event.key];
+  if(next===undefined) return;
+  event.preventDefault();
+  showProfileTab(tabs[next].dataset.panel,true);
+});
 
-  const desc=cardValue(c.full_description)||cardValue(c.description);
-  const investors=[...new Set([c.lead_investors,c.top_investors].flatMap(value =>
-    cardValue(value).split(',').map(cardValue).filter(Boolean)))].join(', ');
-  const sc=c.score.total>=5?'var(--green)':c.score.total>=3?'#D97706':'var(--text3)';
+function updateProfileFavorite() {
+  const button=document.getElementById('modal-fav-btn');
+  const active=isFavorite(currentModalCompany);
+  button.setAttribute('aria-pressed',active);
+  button.classList.toggle('active',active);
+  button.title=active ? T[lang].card.remove : T[lang].card.save;
+  button.setAttribute('aria-label',button.title);
+  button.querySelector('svg').setAttribute('fill',active?'currentColor':'none');
+}
 
-  document.getElementById('m-body').innerHTML=`
-    ${desc?`<div><div class="modal-section-title">${t('about')}</div><div class="modal-desc">${desc}</div></div>`:''}
-    <div>
-      <div class="modal-section-title">${t('metrics')}</div>
-      <div class="stats-grid">
-        ${c.website?`<div class="stat-box" style="grid-column:1/-1"><div class="stat-box-label">${t('website')}</div><a href="${c.website}" target="_blank" rel="noopener" style="font-size:14px;font-weight:600;color:var(--accent);text-decoration:none">${c.website.replace('https://','').replace('http://','')}</a></div>`:''}
-        <div class="stat-box"><div class="stat-box-label">${t('raised')}</div><div class="stat-box-value accent">${clean(c.last_funding_amount)||'—'}</div></div>
-        <div class="stat-box"><div class="stat-box-label">${t('round')}</div><div class="stat-box-value">${clean(c.last_funding_type)||'—'}</div></div>
-        <div class="stat-box"><div class="stat-box-label">${t('team')}</div><div class="stat-box-value">${clean(c.employees)||'—'}</div></div>
-        <div class="stat-box"><div class="stat-box-label">${t('revenue')}</div><div class="stat-box-value">${clean(c.revenue_range)||'—'}</div></div>
-        ${c.valuation?`<div class="stat-box"><div class="stat-box-label">${t('valuation')}</div><div class="stat-box-value">${c.valuation}</div></div>`:''}
-        ${c.total_products?`<div class="stat-box"><div class="stat-box-label">${t('products')}</div><div class="stat-box-value">${c.total_products}</div></div>`:''}
-        <div class="stat-box"><div class="stat-box-label">${t('growth')} ${tip('growth')}</div><div class="stat-box-value ${c.growth_score==='High'?'green':''}">${clean(c.growth_score)||'—'}</div></div>
-        <div class="stat-box"><div class="stat-box-label">${t('heat')} ${tip('heat')}</div><div class="stat-box-value">${clean(c.heat_score)||'—'}</div></div>
+function openModal(idx) {
+  const c=filtered[idx];
+  if(!c) return;
+  currentModalCompany=c;
+  const w=profileCopy[lang], esc=escapeCardText;
+  const score=c.score, desc=cardValue(c.full_description);
+  const amount=cardValue(c.last_funding_amount), round=cardValue(c.last_funding_type);
+  const date=formatFundingDate(c.last_funding_date);
+  const team=cardValue(c.employees).replace(/(\d)-(\d)/g,'$1–$2');
+  const compact=shortFunding(amount);
+  const site=/^https?:\/\//i.test(c.website) ? c.website : '';
+  document.getElementById('m-name').textContent=c.name;
+  const favicon=faviconUrl(site);
+  document.getElementById('m-avatar').innerHTML=esc(initials(c.name))+
+    (favicon ? `<img src="${esc(favicon)}" alt="" onerror="this.remove()">` : '');
+  document.getElementById('m-subtitle').innerHTML=site ?
+    `<a href="${esc(site)}" target="_blank" rel="noopener noreferrer">${esc(getDomain(site))} ↗</a>` : '';
+  const close=document.querySelector('.modal-close');
+  close.setAttribute('aria-label',w.close);
+  updateProfileFavorite();
 
-        ${cardValue(c.trend_score) ? `<div class="stat-box"><div class="stat-box-label">${t('trend')}</div><div class="stat-box-value">${escapeCardText(c.trend_score)}</div></div>` : ''}
-        <div class="stat-box"><div class="stat-box-label">${t('cb')} ${tip('cb')}</div><div class="stat-box-value">${c.cb_rank||'—'}</div></div>
-        <div class="stat-box"><div class="stat-box-label">${t('visits')}</div><div class="stat-box-value">${c.monthly_visits?c.monthly_visits.toLocaleString():'—'}</div></div>
-      </div>
-    </div>
-    <div>
-      <div class="modal-section-title">${t('scoring')}</div>
-      <div class="scoring-wrap">
-        <div class="scoring-header">
-          <div>
-            <div class="scoring-total-num" style="color:${sc}">${c.score.total}<span style="font-size:16px;color:var(--text3);font-weight:400">/6</span></div>
-            <div class="scoring-total-sub">${t('totalScore')}</div>
-          </div>
-          <span class="verdict-badge ${vc(c.score.verdict)}" style="font-size:13px;padding:5px 12px">${vl(c.score.verdict)}</span>
-        </div>
-        <div class="scoring-row">
-          <div class="scoring-row-header">
-            <span class="scoring-row-name">${t('market')}${tip('market')}</span>
-            <span class="scoring-row-val">${c.score.market}/2</span>
-          </div>
-          <div class="scoring-bar"><div class="scoring-bar-fill bar-market" style="width:${c.score.market/2*100}%"></div></div>
-        </div>
-        <div class="scoring-row">
-          <div class="scoring-row-header">
-            <span class="scoring-row-name">${t('edge')}${tip('edge')}</span>
-            <span class="scoring-row-val" style="color:var(--green)">${c.score.edge}/2</span>
-          </div>
-          <div class="scoring-bar"><div class="scoring-bar-fill bar-edge" style="width:${c.score.edge/2*100}%"></div></div>
-        </div>
-        <div class="scoring-row">
-          <div class="scoring-row-header">
-            <span class="scoring-row-name">${t('complexity')}${tip('complexity')}</span>
-            <span class="scoring-row-val" style="color:#D97706">${c.score.complexity}/2</span>
-          </div>
-          <div class="scoring-bar"><div class="scoring-bar-fill bar-complexity" style="width:${c.score.complexity/2*100}%"></div></div>
-        </div>
-        ${c.score.isManual?`<div class="manual-note">${t('manualScoring')}</div>`:`<div class="auto-note">${t('autoScoring')}</div>`}
-      </div>
-    </div>
-    ${investors?`<div><div class="modal-section-title">${t('investors')}</div><div class="investors-text">${investors}</div></div>`:''}
-    ${c.industries.length?`<div><div class="modal-section-title">${t('industries')}</div><div class="card-tags">${c.industries.map(i=>`<span class="tag">${i}</span>`).join('')}</div></div>`:''}
-  `;
+  const roundRows=profileRows([[t('raised'),amount],[t('round'),round],[w.date,date]]);
+  const financials=profileRows([[w.value,c.valuation],[t('revenue'),c.revenue_range]]);
+  const names=value=>[...new Set(cardValue(value).split(',').map(cardValue).filter(Boolean))];
+  const leads=names(c.lead_investors);
+  const others=names(c.top_investors).filter(name=>!leads.includes(name));
+  const finance=profileGroup(w.latest,roundRows)+profileGroup(w.financials,financials)+profileGroup(w.leads,profileTags(leads))+
+    profileGroup(leads.length ? w.other : t('investors'),profileTags(others));
+  const level=value=>T[lang].card.levels[value] || cardValue(value);
+  const fmt=value=>{
+    const raw=cardValue(value);
+    if (!raw) return '';
+    const number=Number(raw.replaceAll(',',''));
+    return Number.isFinite(number) ? number.toLocaleString(lang) : raw;
+  };
+  const momentum=profileRows([[w.growth,level(c.growth_score)],[w.heat,level(c.heat_score)],
+    [w.trend,c.trend_score],['CB Rank',fmt(c.cb_rank||null)]]);
+  const audience=profileRows([[w.visits,fmt(c.profileVisits)],[w.traffic,fmt(c.global_traffic_rank||null)],[w.downloads,c.downloads]]);
+  const signals=profileGroup(w.momentum,momentum)+profileGroup(w.audience,audience);
+  const source=score.isManual ? w.manual : w.auto;
+  const scoreFace=`<span class="profile-grade">${score.total}<small>/6</small></span>
+    <span class="profile-verdict">${esc(vl(score.verdict))}</span>`;
+  const criteria=['market','edge','complexity'];
+  const scoring=`<div class="score-feature"><h3>${t('scoring')}</h3>${scoreFace}<p>${source}</p></div>`+
+    profileGroup(w.criteria, `<ul class="score-criteria">${criteria.map(key=>
+      `<li><span>${t(key)}</span><b>${score[key]} / 2</b><meter aria-label="${t(key)}" min="0" max="2" value="${score[key]}"></meter></li>`).join('')}</ul>`)+
+    profileHelp(w.methodology,criteria,t(score.isManual?'manualScoring':'autoScoring'));
+  const summary=`<aside class="profile-summary">
+    ${amount || round ? `<button class="summary-item" onclick="showProfileTab('finance',true)"><span>${w.latest} <i aria-hidden="true">↗</i></span>
+      <b>${esc(compact || round)}</b>${amount && round ? `<small>${esc(round)}</small>` : ''}</button>` : ''}
+    <button class="summary-item score-summary" onclick="showProfileTab('score',true)"><span>${t('scoring')} <i aria-hidden="true">↗</i></span>
+      ${scoreFace}</button></aside>`;
+  const overview=`<div class="profile-overview"><div class="overview-content">`+
+    profileGroup(t('about'),profileDescription(desc || w.missing))+
+    profileGroup(t('industries'),profileTags(c.industries))+
+    profileGroup(w.scale,profileRows([[t('team'),team],[w.products,c.total_products]]))+
+    `</div>${summary}</div>`;
+  const sections=[['overview',w.overview,overview],['finance',w.finance,finance],
+    ['signals',w.signals,signals && signals+profileHelp(w.signalsHelp,['growth','heat','cb'])],
+    ['score',w.score,scoring]].filter(([, , body])=>body);
+  profileNav.setAttribute('aria-label',lang==='ru'?'Разделы профиля':'Profile sections');
+  profileNav.innerHTML=sections.map(([id,label])=>`<button role="tab" id="pt-${id}" data-panel="${id}" aria-controls="pp-${id}">${label}</button>`).join('');
+  document.getElementById('m-body').innerHTML=sections.map(([id,,body])=>
+    `<div id="pp-${id}" role="tabpanel" aria-labelledby="pt-${id}" tabindex="0" hidden>${body}</div>`).join('');
+  showProfileTab('overview');
   document.getElementById('modal-overlay').showModal();
-  document.querySelector('.modal').scrollTop=0;
-
 }
 
 // Тултипы — глобальный floating элемент вне DOM карточки
@@ -1996,16 +2079,17 @@ function toggleFavFilter() {
 
 function toggleModalFavorite(){
   if(!currentModalCompany) return;
-  const key = companyKey(currentModalCompany);
-  if(favorites.has(key)) favorites.delete(key);
-  else favorites.add(key);
-  saveFavorites();
-  updateFavCount();
-  const btn = document.getElementById('modal-fav-btn');
-  const active = favorites.has(key);
-  btn.classList.toggle('active', active);
-  btn.querySelector('svg').setAttribute('fill', active ? 'currentColor' : 'none');
-  if(showFavoritesOnly) applyFilters(); else renderCards();
+  const index=filtered.indexOf(currentModalCompany);
+  const offset=index-(currentPage-1)*PAGE_SIZE;
+  if (viewMode==='list' && index>=0) {
+    const star=document.querySelectorAll('#cards-grid tbody .fav-btn')[offset];
+    if (star) toggleFavoriteTable(index,star);
+    else toggleFavorite(currentModalCompany);
+  } else {
+    const star=document.querySelectorAll('#cards-grid .card-fav-btn')[offset];
+    toggleFavorite(currentModalCompany,star);
+  }
+  updateProfileFavorite();
 }
 
 window.addEventListener('resize', measureCardDescriptions);
