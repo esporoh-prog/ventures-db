@@ -22,7 +22,6 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
 .header{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid var(--border);}
 .header-top{padding:0 24px;height:54px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--accent);}
 .logo{font-size:17px;font-weight:700;letter-spacing:-0.4px;color:var(--text);display:flex;align-items:center;gap:8px;}
-.logo-dot{color:var(--accent);}
 .logo-sub{font-weight:400;color:var(--text3);font-size:13px;}
 .header-right{display:flex;align-items:center;gap:10px;}
 .refresh-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;background:var(--accent);color:white;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer;transition:background 0.15s;}
@@ -333,7 +332,6 @@ body:has(dialog[open]) { overflow: hidden; }
 .header-top { height: 65px; border: 0; }
 .logo { font-size: 22px; font-weight: 700; letter-spacing: -.065em; gap: 0; }
 .logo::before { content: ''; width: 26px; height: 26px; margin-right: 9px; border-radius: 7px; background: repeating-linear-gradient(120deg, #211e1b 0 3px, transparent 3px 6px) center / 14px 14px no-repeat, var(--orange); }
-.logo-dot { color: var(--orange); }
 .logo-sub { margin-left: 16px; padding-left: 16px; border-left: 1px solid var(--border); letter-spacing: 0; }
 .lang-btn { min-height: 32px; }
 .lang-btn.active, .view-btn.active, .page-btn.active { background: var(--text); color: white; }
@@ -573,7 +571,7 @@ body:has(dialog[open]) { overflow: hidden; }
 <body>
 <header class="header">
   <div class="header-top">
-    <div class="logo">Смотрины<span class="logo-dot">.</span><span class="logo-sub" data-ru="Стартапы" data-en="Startups">Стартапы</span></div>
+    <div class="logo">Смотрины<span class="logo-sub" data-ru="Стартапы" data-en="Startups">Стартапы</span></div>
     <div class="header-right">
       <span class="last-updated" id="last-updated"></span>
       <div class="lang-toggle">
