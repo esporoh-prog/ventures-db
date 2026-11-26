@@ -412,7 +412,7 @@ body:has(dialog[open]) { overflow: hidden; }
 /* Filter rail and catalog results */
 .catalog-layout {
   display: grid;
-  grid-template-columns: clamp(238px,22vw,305px) minmax(0,1fr);
+  grid-template-columns: clamp(200px,17.6vw,244px) minmax(0,1fr);
   grid-template-areas: "filters results";
   gap: clamp(16px,2vw,28px);
   margin-top: 20px;
@@ -422,7 +422,7 @@ body:has(dialog[open]) { overflow: hidden; }
 .catalog-results .toolbar { margin: 0 0 14px; }
 .filter-panel {
   grid-area: filters; position: sticky; top: 78px; max-height: calc(100dvh - 90px);
-  display: grid; align-content: start; gap: 8px; padding: 14px; overflow-y: auto;
+  display: grid; align-content: start; gap: 8px; padding: 14px 9px; overflow-y: auto;
   background: white; border: 1px solid var(--border); border-radius: 14px;
 }
 .filter-heading { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
@@ -443,8 +443,8 @@ body:has(dialog[open]) { overflow: hidden; }
 .modal-overlay::backdrop { background: #211c185e; backdrop-filter: blur(3px); }
 .modal-close { display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid var(--border); background: white; border-radius: 9px; color: var(--text); cursor: pointer; }
 .filter-group-header,.multi-select-option { width: 100%; border: none; text-align: left; }
-.filter-group-header { padding: 13px; }
-.filter-group-title { font-size: 14px; }
+.filter-group-header { padding: 13px 9px; }
+.filter-group-title { font-size: 14px; white-space: nowrap; }
 .multi-select-option { background: white; }
 .filter-select,.multi-select-trigger,.range-input,.reset-btn { min-height: 38px; }
 /* Company profile */
@@ -524,6 +524,7 @@ body:has(dialog[open]) { overflow: hidden; }
 }
 
 @media (min-width: 801px) {
+  .filter-group-body { padding-inline: 7px; }
   .cards-grid { grid-template-columns: repeat(auto-fill,minmax(min(100%,280px),1fr)); }
 }
 @media (max-width: 800px) {
@@ -535,6 +536,9 @@ body:has(dialog[open]) { overflow: hidden; }
   .filter-panel .filter-group-title { font-size: 13px; }
   .filter-panel .reset-btn { margin: 0; align-self: stretch; }
   .results-jump { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; min-height: 38px; gap: 4px; padding: 6px; background: var(--text); color: white; font-size: 12px; border-radius: 8px; text-decoration: none; }
+}
+@media (max-width: 410px) {
+  .filter-panel { grid-template-columns: minmax(0,1fr); }
 }
 @media (max-width: 760px) {
   .header-top { height: 56px; }
@@ -636,7 +640,7 @@ body:has(dialog[open]) { overflow: hidden; }
           <div class="multi-select" id="ms-valuation" data-filter="valuation"></div>
         </div>
         <div class="filter-row">
-          <div class="filter-label" data-ru="Объём раунда, $M (от — до)" data-en="Round size $M (from — to)">Объём раунда, $M (от — до)</div>
+          <div class="filter-label" data-ru="Объём раунда, млн $" data-en="Round size, $M">Объём раунда, млн $</div>
           <div class="range-row">
             <input class="range-input" id="f-fmin" type="number" placeholder="От" oninput="applyFilters()">
             <input class="range-input" id="f-fmax" type="number" placeholder="До" oninput="applyFilters()">
