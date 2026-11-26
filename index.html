@@ -1259,7 +1259,7 @@ function setVerdict(v,el) {
 
 function applyFilters() {
   const ideas=searchMode==='ideas' ? smartFilters : null;
-  const q=(searchMode==='cards' ? searchField.value : (ideas?.keywords || []).join(' ')).toLowerCase().trim();
+  const q=searchMode==='cards' ? searchField.value.toLowerCase().trim() : '';
   const investorQ=(document.getElementById('f-investor')||{}).value?.toLowerCase().trim()||'';
   const manual=document.getElementById('f-manual').value;
   const minscore=parseInt(document.getElementById('f-minscore').value)||0;
@@ -1274,6 +1274,10 @@ function applyFilters() {
 
   filtered=companies.filter(c=>{
     if(ideas?.industries?.length && !c.industries.some(v=>ideas.industries.includes(v))) return false;
+    if(ideas?.keywordGroups.length) {
+      const productText=' '+smartSearchWords(c.name+' '+c.full_description)+' ';
+      if(!ideas.keywordGroups.every(group=>group.some(term=>productText.includes(' '+term+' ')))) return false;
+    }
     if(ideas?.rounds?.length && !ideas.rounds.includes(c.last_funding_type)) return false;
     if(ideas?.growth_scores?.length && !ideas.growth_scores.includes(c.growth_score)) return false;
     if(ideas?.revenue_ranges?.length && !ideas.revenue_ranges.includes(c.revenue_range)) return false;
@@ -1331,6 +1335,7 @@ function applyFilters() {
   });
 
   updateFilterCount();
+  if(ideas) renderSmartSummary(ideas);
   currentPage=1; renderCards();
 }
 
@@ -1933,18 +1938,17 @@ async function runSmartSearch() {
   "growth_scores": [],
   "revenue_ranges": [],
   "min_score": null,
-  "keywords": [],
-  "explanation": "краткое объяснение на русском, 1 предложение"
+  "keyword_groups": []
 }
 
 СТРОГИЕ ПРАВИЛА:
 1. rounds — КРИТИЧНО ВАЖНО: если пользователь пишет "Series B", в results ДОЛЖНО быть ТОЛЬКО значение из списка rounds, которое ТОЧНО означает Series B (например "Series B"). НИКОГДА не включай "Series A", "Series C" или другие раунды, даже близкие. Если в списке нет точного совпадения "Series B" — оставь rounds пустым и упомяни это в explanation.
 2. industries — выбирай строго из списка allIndustries, только точные совпадения по смыслу. "healthcare" → ищи "Health Care" в списке. "фудтех" → "Food and Beverage". Если пользователь упоминает индустрию которой нет в списке дословно — найди ближайшую по смыслу ТОЧНУЮ строку из списка, не выдумывай.
 3. growth_scores — ["High"] только если пользователь явно просит "быстрорастущие", "growing fast", "high growth". ["Medium"] для умеренного роста. Никогда не добавляй все три без причины.
-4. keywords — конкретные технологические/продуктовые термины из запроса для поиска по описанию (например "AI", "artificial intelligence", "blockchain"). НЕ добавляй туда индустрии или раунды которые уже покрыты другими полями — это даст задвоение фильтров.
+4. keyword_groups — массив групп терминов. Разные группы обязательны одновременно; внутри каждой только близкие синонимы одного требования. Сохраняй фразы целиком. Ищи слова, которыми продукт описывают на английском и языке запроса. Не используй родовые понятия как синонимы узкой темы.
 5. min_score — ставь только если пользователь явно просит "перспективные", "топовые", "высокий потенциал" (тогда 4), "лучшие" (тогда 5). Иначе null.
 6. Если запрос содержит несколько условий через "и"/"с"/",", применяй ВСЕ условия одновременно — это должно сузить выборку, а не расширить.
-7. explanation должен перечислить именно то что ты применил, включая явное упоминание какой раунд ты искал, если применимо.
+7. В industries указывай предметную область идеи. Формат (приложение, мобильный сервис, платформа, ПО) не добавляет альтернативную индустрию к предметной области. Apps, Mobile и Software уместны сами по себе, когда спрашивают именно об этой категории. Для «приложение для бегунов» industries=["Sports"], keyword_groups=[["running","runner","runners","jogging","marathon"]]. Не подставляй общий fitness вместо бега. Для «платформа для ресторанов» индустрия Food and Beverage и отдельная группа синонимов ресторанов. Для «спортивные стартапы» достаточно Sports, без дополнительных слов. Если подходящего тега для конкретной темы нет, оставь industries пустым и сохрани предмет запроса в keyword_groups.
 
 Отвечай только JSON, никакого текста до или после.`;
 
@@ -1972,15 +1976,8 @@ async function runSmartSearch() {
     const jsonMatch = raw.match(/\{[\s\S]*\}/);
     if(!jsonMatch) throw new Error('Ответ Claude: ' + (raw || JSON.stringify(data)));
 
-    const params = JSON.parse(jsonMatch[0]);
-    for (const key of ['industries','rounds','growth_scores','revenue_ranges','keywords']) {
-      if (params[key] != null && !(Array.isArray(params[key]) && params[key].every(value=>typeof value==='string'))) {
-        throw new Error('Invalid search filters');
-      }
-    }
-
-    // Применяем фильтры
-    applySmartFilters(params, query);
+    smartFilters=normalizeSmartFilters(JSON.parse(jsonMatch[0]),query);
+    applyFilters();
 
   } catch(err) {
     if(request!==smartRequest) return;
@@ -1990,59 +1987,58 @@ async function runSmartSearch() {
   }
 }
 
-function applySmartFilters(params, originalQuery) {
-  const resultText = document.getElementById('smart-result-text');
+// Industry tags are alternatives. A delivery format must not open an unrelated route into a sector search.
+const productFormatTags=new Set(['Apps','Mobile','Software','Information Technology','Internet Services']);
+function smartSearchWords(value) {
+  return value.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim();
+}
 
-  function setFilters(p) {
-    smartFilters=p;
-    applyFilters();
-    return filtered.length;
+function normalizeSmartFilters(params, query) {
+  const strings=value=>{
+    if(value==null) return [];
+    if(!Array.isArray(value) || !value.every(item=>typeof item==='string')) throw new Error('Invalid search filters');
+    return [...new Set(value.map(item=>item.trim()).filter(Boolean))];
+  };
+  const tags=strings(params.industries);
+  const sectors=tags.filter(tag=>!productFormatTags.has(tag));
+  let industries=sectors.length ? sectors : tags;
+  const rawGroups=params.keyword_groups ?? [params.keywords ?? []];
+  if(!Array.isArray(rawGroups)) throw new Error('Invalid keyword groups');
+  let keywordGroups=rawGroups.map(group=>strings(group).map(smartSearchWords).filter(Boolean)).filter(group=>group.length);
+  // An explicit running audience is more specific than general fitness, regardless of the product format.
+  const words=' '+smartSearchWords(query)+' ';
+  const runningAudience=/ (?:для бега|бегун(?:ы|ам|ов)|for runners|running app(?:s)?|marathon training) /u.test(words);
+  const hasAlternative=/ (?:или|либо|or) /u.test(words);
+  const hasNegation=/ (?:не|кроме|без|not|excluding) /u.test(words);
+  if(/ (?:apps|приложения|software|по) (?:or|или|либо) /u.test(words)) industries=tags;
+  if(runningAudience && !hasAlternative && !hasNegation) {
+    industries=['Sports'];
+    const runningTerms=['running','runner','runners','jogging','marathon','marathons','бег','бега','бегунов'];
+    const audienceTerms=new Set([...runningTerms,'fitness','sports','sport','app','apps','mobile','фитнес']);
+    keywordGroups=keywordGroups.filter(group=>!group.some(term=>runningTerms.includes(term)) && !group.every(term=>audienceTerms.has(term)));
+    keywordGroups.unshift(runningTerms);
   }
+  return {query,industries,keywordGroups,rounds:strings(params.rounds),growth_scores:strings(params.growth_scores),
+    revenue_ranges:strings(params.revenue_ranges),min_score:params.min_score ?? null};
+}
 
-  // Первая попытка — все условия как есть
-  let count = setFilters(params);
-  let relaxedNote = '';
-
-  // Если 0 — последовательно ослабляем необязательные условия,
-  // сохраняя главное (индустрии и раунды) как более важные критерии
-  if(count === 0) {
-    const relaxSteps = [
-      { drop: 'min_score', label: 'минимальный балл скоринга' },
-      { drop: 'revenue_ranges', label: 'диапазон выручки' },
-      { drop: 'growth_scores', label: 'уровень роста' },
-      { drop: 'keywords', label: 'ключевые слова' },
-    ];
-    let relaxedParams = { ...params };
-    const dropped = [];
-
-    for(const step of relaxSteps) {
-      if(!relaxedParams[step.drop]) continue;
-      relaxedParams = { ...relaxedParams, [step.drop]: null };
-      dropped.push(step.label);
-      count = setFilters(relaxedParams);
-      if(count > 0) break;
-    }
-
-    if(count > 0 && dropped.length) {
-      relaxedNote = `Критерии «${dropped.join('», «')}» были ослаблены — с ними совпадений не нашлось.`;
-    }
-  }
-
-  // Формируем объяснение
-  const parts = [];
-  if(params.industries?.length) parts.push(`индустрии: <strong>${params.industries.map(escapeCardText).join(', ')}</strong>`);
-  if(params.rounds?.length) parts.push(`раунды: <strong>${params.rounds.map(escapeCardText).join(', ')}</strong>`);
-  if(params.growth_scores?.length) parts.push(`рост: <strong>${params.growth_scores.map(escapeCardText).join(', ')}</strong>`);
-  if(params.keywords?.length) parts.push(`ключевые слова: <strong>${params.keywords.map(escapeCardText).join(', ')}</strong>`);
-
-  const clearBtn = `<button type="button" class="smart-search-clear" onclick="clearSmartSearch()">${lang==='ru'?'Сбросить':'Clear'}</button>`;
-
-  resultText.innerHTML = `
-    <strong>${count} компаний</strong> по запросу «${escapeCardText(originalQuery)}»${clearBtn}<br>
-    <span style="color:var(--text3);font-size:12px">${escapeCardText(params.explanation || '')}${parts.length ? ' · ' + parts.join(' · ') : ''}</span>
-    ${relaxedNote ? `<br><span style="color:var(--accent);font-size:12px">${relaxedNote}</span>` : ''}
-    ${count === 0 ? `<br><span style="color:var(--text3);font-size:12px">Совпадений не найдено даже после ослабления условий — попробуйте переформулировать запрос проще.</span>` : ''}
-  `;
+function renderSmartSummary(ideas) {
+  const ru=lang==='ru';
+  const conditions=[
+    [ru?'Индустрии':'Industries',ideas.industries.join(', ')],
+    [ru?'Раунды':'Rounds',ideas.rounds.join(', ')],
+    [ru?'Рост':'Growth',ideas.growth_scores.join(', ')],
+    [ru?'Выручка':'Revenue',ideas.revenue_ranges.join(', ')],
+    [ru?'Скоринг от':'Minimum score',ideas.min_score],
+    [ru?'Ключевые слова':'Keywords',ideas.keywordGroups.map(group=>group.join(' / ')).join(' + ')]
+  ];
+  const count=filtered.length.toLocaleString(lang);
+  const detail=conditions.filter(([,value])=>value).map(([label,value])=>
+    `${label}: <strong>${escapeCardText(value)}</strong>`).join(' · ');
+  document.getElementById('smart-result-text').innerHTML=
+    `<strong>${ru?'Найдено':'Matches'}: ${count}</strong> · «${escapeCardText(ideas.query)}»
+    <button type="button" class="smart-search-clear" onclick="clearSmartSearch()">${ru?'Сбросить':'Clear'}</button>
+    <br>${detail}`;
 }
 
 function clearSmartSearch() {
