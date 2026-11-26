@@ -339,7 +339,6 @@ body:has(dialog[open]) { overflow: hidden; }
 #search { width:0; flex:1; min-width:0; min-height:36px; padding:0 3px; border:none; outline:none; background:transparent; color:var(--text); font:inherit; }
 .catalog-search .smart-search-btn { background:var(--text); min-height:36px; }
 .catalog-search .smart-search-btn:disabled { opacity:.6; }
-.catalog-search .smart-search-btn svg { display:none; }
 .smart-search-result.visible { margin-top:6px; border:1px solid var(--border); border-radius:9px; overflow-wrap:anywhere; }
 .show-results { position: sticky; bottom: 10px; width: 100%; padding: 12px; border-radius: 9px; border: none; background: var(--text); color: white; cursor: pointer; font-weight: 600; z-index: 2; }
 .show-results span+span { margin-left: 5px; color: #ffc9a8; }
@@ -524,9 +523,7 @@ body:has(dialog[open]) { overflow: hidden; }
   .catalog-search { gap:4px; }
   .search-modes { display:none; }
   #compact-mode { display:block; width:88px; min-height:36px; padding:0 3px; border:0; border-radius:7px; background:var(--bg3); color:var(--text); font-weight:600; }
-  .catalog-search .smart-search-btn { width:34px; padding:0; }
-  .catalog-search .smart-search-btn span { display:none; }
-  .catalog-search .smart-search-btn svg { display:inline; vertical-align:middle; }
+  .catalog-search .smart-search-btn { padding-inline:9px; }
   .catalog-heading h1 { max-width: calc(100% - 44px); }
   .catalog-display { display: grid; grid-template-columns: 1fr auto auto; width: 100%; gap: 5px; }
   .header-right { gap: 5px; }
@@ -762,8 +759,8 @@ body:has(dialog[open]) { overflow: hidden; }
           <option value="ideas" data-ru="✦ Идеи" data-en="✦ Ideas">✦ Идеи</option>
         </select>
         <input id="search" type="search" autocomplete="off" aria-label="Поиск по карточкам" placeholder="Название, индустрия или описание">
-        <button type="submit" class="smart-search-btn" id="smart-btn" aria-label="Найти / Search" hidden>
-          <span data-ru="Найти" data-en="Search">Найти</span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h15m-6-6 6 6-6 6"/></svg>
+        <button type="submit" class="smart-search-btn" id="smart-btn">
+          <span data-ru="Поиск" data-en="Search">Поиск</span>
         </button>
       </form>
       <div class="smart-search-result" id="smart-result" role="status"><span class="smart-result-icon" aria-hidden="true">✦</span><div class="smart-result-text" id="smart-result-text"></div></div>
@@ -1809,7 +1806,6 @@ function updateSearchControls() {
   searchField.setAttribute('aria-label',ideas ? (lang==='ru'?'Умный поиск по идеям':'Smart idea search') : (lang==='ru'?'Поиск по карточкам':'Search company cards'));
   document.querySelectorAll('.search-modes button').forEach(button=>button.setAttribute('aria-pressed',button.dataset.mode===searchMode));
   document.getElementById('compact-mode').value=searchMode;
-  smartButton.hidden=!ideas;
 }
 
 function clearIdeaState() {
@@ -1846,6 +1842,7 @@ searchField.addEventListener('input',()=>{
 document.getElementById('catalog-search').addEventListener('submit',event=>{
   event.preventDefault();
   if(searchMode==='ideas') runSmartSearch();
+  else applyFilters();
 });
 
 async function runSmartSearch() {
