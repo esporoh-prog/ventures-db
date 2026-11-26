@@ -429,6 +429,13 @@ body:has(dialog[open]) { overflow: hidden; }
 .filter-heading h2 { font-size: 21px; letter-spacing: -.045em; }
 .filter-count { padding: 1px 8px; border-radius: 20px; color: var(--accent); background: var(--accent-light); font-weight: 650; }
 .filter-group { min-width: 0; }
+.unicorn-filter { display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 6px 9px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; cursor: pointer; }
+.unicorn-filter:has(:checked) { background: #ffe8d7; border-color: #e7b797; }
+.unicorn-filter input { accent-color: var(--accent); }
+.unicorn-filter strong,.unicorn-filter .filter-note { display: block; }
+.filter-note,.range-row label { font-size: 12px; color: var(--text2); }
+.range-row label { min-width: 0; }
+.unicorn-filter small { margin-inline-start: auto; color: var(--text2); }
 .filter-group-header { gap: 8px; }
 .filter-group.open { border-color: #e7b797; }
 .filter-group.open .filter-group-header { background: #ffe8d7; }
@@ -623,6 +630,12 @@ body:has(dialog[open]) { overflow: hidden; }
           <h2 id="filter-title" data-ru="Фильтры" data-en="Filters">Фильтры</h2>
           <span class="filter-count" id="filter-count" hidden></span>
         </div>
+        <label class="unicorn-filter">
+          <input type="checkbox" id="f-unicorn" onchange="applyFilters()">
+          <span><strong data-ru="Единороги" data-en="Unicorns">Единороги</strong>
+            <span class="filter-note" data-ru="Включая кандидатов" data-en="Including candidates">Включая кандидатов</span></span>
+          <small id="cnt-unicorn"></small>
+        </label>
     <!-- ФИНАНСЫ -->
     <div class="filter-group" id="grp-finance">
       <button class="filter-group-header" aria-expanded="false" aria-controls="grp-finance-body" onclick="toggleGroup(this)">
@@ -638,6 +651,13 @@ body:has(dialog[open]) { overflow: hidden; }
         <div class="filter-row">
           <div class="filter-label" data-ru="Последняя оценка" data-en="Latest Valuation">Последняя оценка</div>
           <div class="multi-select" id="ms-valuation" data-filter="valuation"></div>
+        </div>
+        <div class="filter-row" role="group" aria-labelledby="post-money-label">
+          <div class="filter-label" id="post-money-label" data-ru="Оценка после инвестиций, млн $" data-en="Post-money valuation, $M">Оценка после инвестиций, млн $</div>
+          <div class="range-row">
+            <label><span data-ru="От" data-en="Min">От</span><input class="range-input" id="f-post-min" type="number" min="0" step="any" oninput="applyFilters()"></label>
+            <label><span data-ru="До" data-en="Max">До</span><input class="range-input" id="f-post-max" type="number" min="0" step="any" oninput="applyFilters()"></label>
+          </div>
         </div>
         <div class="filter-row">
           <div class="filter-label" data-ru="Объём раунда, млн $" data-en="Round size, $M">Объём раунда, млн $</div>
@@ -956,6 +976,8 @@ function updateFilterCount(){
   if(!badge) return;
   // Считаем активные фильтры
   let count=currentVerdict==='all' ? 0 : 1;
+  if(document.getElementById('f-unicorn').checked) count++;
+  if(document.getElementById('f-post-min').value || document.getElementById('f-post-max').value) count++;
   Object.values(msState).forEach(arr=>{if(arr.length) count++;});
   const textFields=['f-manual','f-minscore','f-fmin','f-fmax','f-cbmin','f-cbmax','f-trafficmax','f-visitsmin','f-investor'];
   textFields.forEach(id=>{
@@ -1180,6 +1202,9 @@ function processRows(rows) {
         employees: r['Number of Employees']||'',
         revenue_range: r['Estimated Revenue Range']||'',
         valuation: r['Most Recent Valuation']||'',
+        unicornStatus: cardValue(r['Unicorn']),
+        postMoney: cardValue(r['Post Money Value']),
+        postMoneyM: cardValue(r['Post Money Value']) ? parseFundingM(r['Post Money Value']) : null,
         total_products: r['Total Products Active']||'',
         growth_score: r['Growth Score Tier']||'',
         heat_score: r['Heat Score Tier']||'',
@@ -1245,6 +1270,7 @@ function updateCounts() {
     else c.later++;
   });
   document.getElementById('cnt-all').textContent=c.all;
+  document.getElementById('cnt-unicorn').textContent=companies.filter(isUnicornOrCandidate).length.toLocaleString(lang);
   document.getElementById('cnt-pipeline').textContent=c.pipeline;
   document.getElementById('cnt-study').textContent=c.study;
   document.getElementById('cnt-later').textContent=c.later;
@@ -1255,6 +1281,10 @@ function setVerdict(v,el) {
   currentVerdict=v;
   document.querySelectorAll('.verdict-chip').forEach(c=>c.classList.remove('active'));
   el.classList.add('active'); currentPage=1; applyFilters();
+}
+
+function isUnicornOrCandidate(company) {
+  return /^(?:emerging unicorn|unicorn)$/i.test(company.unicornStatus);
 }
 
 function applyFilters() {
@@ -1271,8 +1301,14 @@ function applyFilters() {
   const trafficmax=parseFloat(document.getElementById('f-trafficmax').value)||Infinity;
   const visitsmin=parseFloat(document.getElementById('f-visitsmin').value)||0;
   const so=document.getElementById('sort').value;
+  const unicornOnly=document.getElementById('f-unicorn').checked;
+  const postMin=document.getElementById('f-post-min').valueAsNumber;
+  const postMax=document.getElementById('f-post-max').valueAsNumber;
 
   filtered=companies.filter(c=>{
+    if(unicornOnly && !isUnicornOrCandidate(c)) return false;
+    if(Number.isFinite(postMin) && !(Number.isFinite(c.postMoneyM) && c.postMoneyM >= postMin)) return false;
+    if(Number.isFinite(postMax) && !(Number.isFinite(c.postMoneyM) && c.postMoneyM <= postMax)) return false;
     if(ideas?.industries?.length && !c.industries.some(v=>ideas.industries.includes(v))) return false;
     if(ideas?.keywordGroups.length) {
       const productText=' '+smartSearchWords(c.name+' '+c.full_description)+' ';
@@ -1344,6 +1380,9 @@ function resetFilters() {
   searchDrafts.cards='';
   searchDrafts.ideas='';
   searchField.value='';
+  document.getElementById('f-unicorn').checked=false;
+  document.getElementById('f-post-min').value='';
+  document.getElementById('f-post-max').value='';
   ['f-manual','f-minscore'].forEach(id=>document.getElementById(id).value='');
   const finv=document.getElementById('f-investor'); if(finv) finv.value='';
   ['f-fmin','f-fmax','f-cbmin','f-cbmax','f-trafficmax','f-visitsmin'].forEach(id=>document.getElementById(id).value='');
@@ -1679,7 +1718,8 @@ function openModal(idx) {
   updateProfileFavorite();
 
   const roundRows=profileRows([[t('raised'),amount],[t('round'),round],[w.date,date]]);
-  const financials=profileRows([[w.value,c.valuation],[t('revenue'),c.revenue_range]]);
+  const financials=profileRows([[w.value,c.valuation],[lang==='ru'?'Оценка после инвестиций':'Post-money valuation',c.postMoney],
+    [lang==='ru'?'Статус единорога':'Unicorn status',c.unicornStatus],[t('revenue'),c.revenue_range]]);
   const names=value=>[...new Set(cardValue(value).split(',').map(cardValue).filter(Boolean))];
   const leads=names(c.lead_investors);
   const others=names(c.top_investors).filter(name=>!leads.includes(name));
