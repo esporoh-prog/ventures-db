@@ -336,14 +336,10 @@ body:has(dialog[open]) { overflow: hidden; }
 .catalog-search .smart-search-btn { background:var(--text); min-height:36px; }
 .catalog-search .smart-search-btn:disabled { opacity:.6; }
 .smart-search-result.visible { margin-top:6px; border:1px solid var(--border); border-radius:9px; overflow-wrap:anywhere; }
-.show-results { position: sticky; bottom: 10px; width: 100%; padding: 12px; border-radius: 9px; border: none; background: var(--text); color: white; cursor: pointer; font-weight: 600; z-index: 2; }
-.show-results span+span { margin-left: 5px; color: #ffc9a8; }
 
 .toolbar { flex-wrap: wrap; margin: 16px 0; scroll-margin-top: 80px; }
 .catalog-actions,.catalog-display { display: flex; align-items: center; gap: 8px; }
-.mobile-filter-btn,.fav-filter-chip { display: inline-flex; align-items: center; gap: 7px; background: white; border: 1px solid var(--border); border-radius: 8px; min-height: 38px; margin: 0; padding: 6px 12px; color: var(--text); font: inherit; font-size: 13px; cursor: pointer; }
-.mobile-filter-badge { display: none; padding: 1px 6px; color: white; border-radius: 8px; background: var(--accent); }
-.mobile-filter-badge.visible { display: inline; }
+.fav-filter-chip { display: inline-flex; align-items: center; gap: 7px; background: white; border: 1px solid var(--border); border-radius: 8px; min-height: 38px; margin: 0; padding: 6px 12px; color: var(--text); font: inherit; font-size: 13px; cursor: pointer; }
 .results-info { margin-right: 7px; }
 .sort-select { min-height: 38px; background-color: white; }
 .view-btn { width: 37px; height: 36px; }
@@ -413,13 +409,39 @@ body:has(dialog[open]) { overflow: hidden; }
 .company-link { display: inline; font-size: 14px; font-weight: 650; }
 .empty-state,.error-state,.loading-state { width: 100%; background: white; border-radius: var(--radius); border: 1px solid var(--border); }
 
-/* Native dialogs provide focus containment, Escape and focus restoration. */
-.sidebar { position: fixed; inset: 0 0 0 auto; margin: 0; width: min(425px,100vw); max-width: 100%; height: 100dvh; max-height: none; padding: 0; border: none; background: white; color: var(--text); }
-.sidebar::backdrop,.modal-overlay::backdrop { background: #211c185e; backdrop-filter: blur(3px); }
-.filter-panel { padding: 0 22px 25px; display: grid; align-content: start; gap: 10px; min-height: 100%; }
-.drawer-heading { display: flex; justify-content: space-between; align-items: center; padding: 19px 0 14px; position: sticky; top: 0; background: white; z-index: 5; }
-.drawer-heading h2,.modal-name { font-size: 23px; letter-spacing: -.045em; }
-.sidebar-close-btn,.modal-close { display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid var(--border); background: white; border-radius: 9px; color: var(--text); cursor: pointer; }
+/* Filter rail and catalog results */
+.catalog-layout {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) clamp(238px,22vw,305px);
+  grid-template-areas: "results filters";
+  gap: clamp(16px,2vw,28px);
+  margin-top: 20px;
+  align-items: start;
+}
+.catalog-results { grid-area: results; min-width: 0; scroll-margin-top: 80px; }
+.catalog-results .toolbar { margin: 0 0 14px; }
+.filter-panel {
+  grid-area: filters; position: sticky; top: 78px; max-height: calc(100dvh - 90px);
+  display: grid; align-content: start; gap: 8px; padding: 14px; overflow-y: auto;
+  background: white; border: 1px solid var(--border); border-radius: 14px;
+}
+.filter-heading { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.filter-heading h2 { font-size: 21px; letter-spacing: -.045em; }
+.filter-count { padding: 1px 8px; border-radius: 20px; color: var(--accent); background: var(--accent-light); font-weight: 650; }
+.filter-group { min-width: 0; }
+.filter-group-header { gap: 8px; }
+.filter-group.open { border-color: #e7b797; }
+.filter-group.open .filter-group-header { background: #ffe8d7; }
+.filter-group.open .filter-group-title,.filter-group.open .filter-group-arrow { color: #78320e; }
+.filter-group.open .filter-group-body { border-top-color: #e7b797; }
+.filter-group-arrow { width: 8px; height: 8px; border-right: 1.6px solid currentColor; border-bottom: 1.6px solid currentColor; transform: rotate(45deg); margin: -3px 2px 0 0; }
+.filter-group.open .filter-group-arrow { transform: rotate(225deg); margin-top: 3px; }
+.filter-panel .multi-select-dropdown { position: static; margin-top: 4px; box-shadow: none; }
+.filter-panel .multi-select-trigger { text-align: left; padding-right: 10px; }
+.filter-panel .multi-select-trigger-text { min-width: 0; }
+.results-jump { display: none; }
+.modal-overlay::backdrop { background: #211c185e; backdrop-filter: blur(3px); }
+.modal-close { display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid var(--border); background: white; border-radius: 9px; color: var(--text); cursor: pointer; }
 .filter-group-header,.multi-select-option { width: 100%; border: none; text-align: left; }
 .filter-group-header { padding: 13px; }
 .filter-group-title { font-size: 14px; }
@@ -501,7 +523,19 @@ body:has(dialog[open]) { overflow: hidden; }
   .summary-item { padding: 12px; }
 }
 
-@media (min-width: 1100px) { .cards-grid { grid-template-columns: repeat(3,minmax(0,1fr)); } }
+@media (min-width: 801px) {
+  .cards-grid { grid-template-columns: repeat(auto-fill,minmax(min(100%,280px),1fr)); }
+}
+@media (max-width: 800px) {
+  .catalog-layout { grid-template-columns: minmax(0,1fr); grid-template-areas: "filters" "results"; gap: 16px; margin-top: 12px; }
+  .filter-panel { position: static; max-height: none; overflow: visible; grid-template-columns: repeat(2,minmax(0,1fr)); padding: 12px; align-items: start; }
+  .filter-heading,.filter-group.open { grid-column: 1/-1; }
+  .filter-group-header { min-height: 44px; }
+  .filter-panel .filter-group-header { padding: 9px 10px; }
+  .filter-panel .filter-group-title { font-size: 13px; }
+  .filter-panel .reset-btn { margin: 0; align-self: stretch; }
+  .results-jump { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; min-height: 38px; gap: 4px; padding: 6px; background: var(--text); color: white; font-size: 12px; border-radius: 8px; text-decoration: none; }
+}
 @media (max-width: 760px) {
   .header-top { height: 56px; }
   .last-updated,.logo-sub { display: none; }
@@ -557,18 +591,82 @@ body:has(dialog[open]) { overflow: hidden; }
 </header>
 
 
-<div class="layout">
-  <dialog class="sidebar" id="sidebar" aria-labelledby="filter-title" onclick="if(event.target===this) closeMobileFilters()">
-    <div class="filter-panel">
-    <div class="drawer-heading"><h2 id="filter-title" data-ru="Фильтры" data-en="Filters">Фильтры</h2>
-    <button class="sidebar-close-btn" aria-label="Закрыть / Close" onclick="closeMobileFilters()">✕</button></div>
-    <!-- СКОРИНГ -->
-    <div class="filter-group open" id="grp-scoring">
-      <button class="filter-group-header" onclick="toggleGroup('grp-scoring')">
-        <span class="filter-group-title" data-ru="Скоринг Яндекса" data-en="Yandex Scoring">Скоринг Яндекса</span>
-        <span class="filter-group-arrow">▼</span>
+  <main class="main">
+    <header class="catalog-heading">
+      <h1 data-ru="База стартапов" data-en="Startup database">База стартапов</h1>
+      <img class="paper-stack" src="/catalog-cards.svg" width="254" height="166" alt="">
+    <div class="search-tools">
+      <form class="catalog-search" id="catalog-search" role="search">
+        <div class="search-modes" role="group" aria-label="Режим поиска / Search mode">
+          <button type="button" data-mode="cards" aria-pressed="true" data-ru="По карточкам" data-en="Cards">По карточкам</button>
+          <button type="button" data-mode="ideas" aria-pressed="false" data-ru="✦ По идеям" data-en="✦ Ideas" title="Умный поиск по идеям / Smart idea search">✦ По идеям</button>
+        </div>
+        <select id="compact-mode" aria-label="Режим поиска / Search mode">
+          <option value="cards" data-ru="Карточки" data-en="Cards">Карточки</option>
+          <option value="ideas" data-ru="✦ Идеи" data-en="✦ Ideas">✦ Идеи</option>
+        </select>
+        <input id="search" type="search" autocomplete="off" aria-label="Поиск по карточкам" placeholder="Название, индустрия или описание">
+        <button type="submit" class="smart-search-btn" id="smart-btn">
+          <span data-ru="Поиск" data-en="Search">Поиск</span>
+        </button>
+      </form>
+      <div class="smart-search-result" id="smart-result" role="status"><span class="smart-result-icon" aria-hidden="true">✦</span><div class="smart-result-text" id="smart-result-text"></div></div>
+    </div>
+    </header>
+    <div class="catalog-layout">
+      <aside class="filter-panel" aria-labelledby="filter-title">
+        <div class="filter-heading">
+          <h2 id="filter-title" data-ru="Фильтры" data-en="Filters">Фильтры</h2>
+          <span class="filter-count" id="filter-count" hidden></span>
+        </div>
+    <!-- ФИНАНСЫ -->
+    <div class="filter-group" id="grp-finance">
+      <button class="filter-group-header" aria-expanded="false" aria-controls="grp-finance-body" onclick="toggleGroup(this)">
+        <span class="filter-group-title" data-ru="Финансирование" data-en="Funding">Финансирование</span>
+        <span class="filter-group-arrow" aria-hidden="true"></span>
       </button>
-      <div class="filter-group-body">
+      <div class="filter-group-body" id="grp-finance-body">
+        <div class="filter-row">
+          <div class="filter-label" data-ru="Тип раунда" data-en="Funding Type">Тип раунда</div>
+          <div class="multi-select" id="ms-fundingtype" data-filter="fundingtype"></div>
+        </div>
+
+        <div class="filter-row">
+          <div class="filter-label" data-ru="Последняя оценка" data-en="Latest Valuation">Последняя оценка</div>
+          <div class="multi-select" id="ms-valuation" data-filter="valuation"></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-label" data-ru="Объём раунда, $M (от — до)" data-en="Round size $M (from — to)">Объём раунда, $M (от — до)</div>
+          <div class="range-row">
+            <input class="range-input" id="f-fmin" type="number" placeholder="От" oninput="applyFilters()">
+            <input class="range-input" id="f-fmax" type="number" placeholder="До" oninput="applyFilters()">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- РЫНОК -->
+    <div class="filter-group" id="grp-market">
+      <button class="filter-group-header" aria-expanded="false" aria-controls="grp-market-body" onclick="toggleGroup(this)">
+        <span class="filter-group-title" data-ru="Рынок и индустрия" data-en="Market & Industry">Рынок и индустрия</span>
+        <span class="filter-group-arrow" aria-hidden="true"></span>
+      </button>
+      <div class="filter-group-body" id="grp-market-body">
+        <div class="filter-row">
+          <div class="filter-label" data-ru="Индустрия" data-en="Industry">Индустрия</div>
+          <div class="multi-select" id="ms-industry" data-filter="industry"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- СКОРИНГ -->
+    <div class="filter-group" id="grp-scoring">
+      <button class="filter-group-header" aria-expanded="false" aria-controls="grp-scoring-body" onclick="toggleGroup(this)">
+        <span class="filter-group-title" data-ru="Скоринг Яндекса" data-en="Yandex Scoring">Скоринг Яндекса</span>
+        <span class="filter-group-arrow" aria-hidden="true"></span>
+      </button>
+      <div class="filter-group-body" id="grp-scoring-body">
     <div class="verdict-filters">
           <button class="verdict-chip active" data-verdict="all" onclick="setVerdict('all',this)">
             <span class="verdict-dot all"></span>
@@ -614,54 +712,13 @@ body:has(dialog[open]) { overflow: hidden; }
       </div>
     </div>
 
-    <!-- РЫНОК -->
-    <div class="filter-group open" id="grp-market">
-      <button class="filter-group-header" onclick="toggleGroup('grp-market')">
-        <span class="filter-group-title" data-ru="Рынок и индустрия" data-en="Market & Industry">Рынок и индустрия</span>
-        <span class="filter-group-arrow">▼</span>
-      </button>
-      <div class="filter-group-body">
-        <div class="filter-row">
-          <div class="filter-label" data-ru="Индустрия" data-en="Industry">Индустрия</div>
-          <div class="multi-select" id="ms-industry" data-filter="industry"></div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- ФИНАНСЫ -->
-    <div class="filter-group" id="grp-finance">
-      <button class="filter-group-header" onclick="toggleGroup('grp-finance')">
-        <span class="filter-group-title" data-ru="Финансирование" data-en="Funding">Финансирование</span>
-        <span class="filter-group-arrow">▼</span>
-      </button>
-      <div class="filter-group-body">
-        <div class="filter-row">
-          <div class="filter-label" data-ru="Тип раунда" data-en="Funding Type">Тип раунда</div>
-          <div class="multi-select" id="ms-fundingtype" data-filter="fundingtype"></div>
-        </div>
-
-        <div class="filter-row">
-          <div class="filter-label" data-ru="Последняя оценка" data-en="Latest Valuation">Последняя оценка</div>
-          <div class="multi-select" id="ms-valuation" data-filter="valuation"></div>
-        </div>
-        <div class="filter-row">
-          <div class="filter-label" data-ru="Объём раунда, $M (от — до)" data-en="Round size $M (from — to)">Объём раунда, $M (от — до)</div>
-          <div class="range-row">
-            <input class="range-input" id="f-fmin" type="number" placeholder="От" oninput="applyFilters()">
-            <input class="range-input" id="f-fmax" type="number" placeholder="До" oninput="applyFilters()">
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- КОМПАНИЯ -->
     <div class="filter-group" id="grp-company">
-      <button class="filter-group-header" onclick="toggleGroup('grp-company')">
+      <button class="filter-group-header" aria-expanded="false" aria-controls="grp-company-body" onclick="toggleGroup(this)">
         <span class="filter-group-title" data-ru="Компания" data-en="Company">Компания</span>
-        <span class="filter-group-arrow">▼</span>
+        <span class="filter-group-arrow" aria-hidden="true"></span>
       </button>
-      <div class="filter-group-body">
+      <div class="filter-group-body" id="grp-company-body">
         <div class="filter-row">
           <div class="filter-label" data-ru="Размер команды" data-en="Team size">Размер команды</div>
           <div class="multi-select" id="ms-employees" data-filter="employees"></div>
@@ -685,11 +742,11 @@ body:has(dialog[open]) { overflow: hidden; }
 
     <!-- СИГНАЛЫ -->
     <div class="filter-group" id="grp-signals">
-      <button class="filter-group-header" onclick="toggleGroup('grp-signals')">
+      <button class="filter-group-header" aria-expanded="false" aria-controls="grp-signals-body" onclick="toggleGroup(this)">
         <span class="filter-group-title" data-ru="Сигналы роста" data-en="Growth Signals">Сигналы роста</span>
-        <span class="filter-group-arrow">▼</span>
+        <span class="filter-group-arrow" aria-hidden="true"></span>
       </button>
-      <div class="filter-group-body">
+      <div class="filter-group-body" id="grp-signals-body">
         <div class="filter-row">
           <div class="filter-label">Growth Score
             <span class="tooltip-wrap"><span class="info-icon">i</span><span class="tooltip" id="tip-growth-filter"><b>Growth Score</b><br>Оценка потенциала роста от Crunchbase: найм, раунды, трафик, упоминания. High = компания активно растёт прямо сейчас.</span></span>
@@ -716,11 +773,11 @@ body:has(dialog[open]) { overflow: hidden; }
 
     <!-- ИНВЕСТОРЫ -->
     <div class="filter-group" id="grp-investors">
-      <button class="filter-group-header" onclick="toggleGroup('grp-investors')">
+      <button class="filter-group-header" aria-expanded="false" aria-controls="grp-investors-body" onclick="toggleGroup(this)">
         <span class="filter-group-title" data-ru="Инвесторы" data-en="Investors">Инвесторы</span>
-        <span class="filter-group-arrow">▼</span>
+        <span class="filter-group-arrow" aria-hidden="true"></span>
       </button>
-      <div class="filter-group-body">
+      <div class="filter-group-body" id="grp-investors-body">
         <div class="filter-row">
           <div class="filter-label" data-ru="Поиск по инвестору" data-en="Search by investor">Поиск по инвестору</div>
           <div class="search-wrap" style="margin:0">
@@ -735,33 +792,10 @@ body:has(dialog[open]) { overflow: hidden; }
       </div>
     </div>
 
-    <button class="reset-btn" onclick="resetFilters()" data-ru="Сбросить все фильтры" data-en="Reset all filters">Сбросить все фильтры</button>
-    <button class="show-results" onclick="closeMobileFilters()"><span data-ru="Показать результаты" data-en="Show results">Показать результаты</span> <span id="drawer-count"></span></button>
-    </div>
-  </dialog>
-
-  <main class="main">
-    <header class="catalog-heading">
-      <h1 data-ru="База стартапов" data-en="Startup database">База стартапов</h1>
-      <img class="paper-stack" src="/catalog-cards.svg" width="254" height="166" alt="">
-    <div class="search-tools">
-      <form class="catalog-search" id="catalog-search" role="search">
-        <div class="search-modes" role="group" aria-label="Режим поиска / Search mode">
-          <button type="button" data-mode="cards" aria-pressed="true" data-ru="По карточкам" data-en="Cards">По карточкам</button>
-          <button type="button" data-mode="ideas" aria-pressed="false" data-ru="✦ По идеям" data-en="✦ Ideas" title="Умный поиск по идеям / Smart idea search">✦ По идеям</button>
-        </div>
-        <select id="compact-mode" aria-label="Режим поиска / Search mode">
-          <option value="cards" data-ru="Карточки" data-en="Cards">Карточки</option>
-          <option value="ideas" data-ru="✦ Идеи" data-en="✦ Ideas">✦ Идеи</option>
-        </select>
-        <input id="search" type="search" autocomplete="off" aria-label="Поиск по карточкам" placeholder="Название, индустрия или описание">
-        <button type="submit" class="smart-search-btn" id="smart-btn">
-          <span data-ru="Поиск" data-en="Search">Поиск</span>
-        </button>
-      </form>
-      <div class="smart-search-result" id="smart-result" role="status"><span class="smart-result-icon" aria-hidden="true">✦</span><div class="smart-result-text" id="smart-result-text"></div></div>
-    </div>
-    </header>
+        <button class="reset-btn" onclick="resetFilters()" data-ru="Сбросить все фильтры" data-en="Reset all filters">Сбросить все фильтры</button>
+        <a class="results-jump" href="#catalog-results"><span data-ru="К результатам" data-en="View results">К результатам</span> <span id="filter-results-count"></span> ↓</a>
+      </aside>
+      <div class="catalog-results" id="catalog-results" tabindex="-1">
     <div class="toolbar">
       <div class="catalog-actions">
           <button class="fav-filter-chip" id="fav-filter-chip" onclick="toggleFavFilter()">
@@ -769,14 +803,6 @@ body:has(dialog[open]) { overflow: hidden; }
       <span data-ru="Избранное" data-en="Favorites">Избранное</span>
       <span class="fav-filter-count" id="fav-filter-count">0</span>
     </button>
-          <button class="mobile-filter-btn" onclick="openMobileFilters()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/>
-              <line x1="11" y1="18" x2="13" y2="18"/>
-            </svg>
-            <span data-ru="Фильтры" data-en="Filters">Фильтры</span>
-            <span class="mobile-filter-badge" id="mobile-filter-badge">0</span>
-          </button>
         </div>
       <div class="catalog-display">
         <div class="results-info" id="results-info" role="status"></div>
@@ -807,8 +833,9 @@ body:has(dialog[open]) { overflow: hidden; }
       <div class="loading-state"><div class="spinner"></div><span id="loading-text">Загружаем данные из Google Sheets...</span></div>
     </div>
     <div class="pagination" id="pagination"></div>
+      </div>
+    </div>
   </main>
-</div>
 
 <dialog class="modal-overlay" id="modal-overlay" aria-labelledby="m-name" onclick="closeModal(event)">
   <div class="modal">
@@ -920,15 +947,8 @@ let companies = [], filtered = [];
 let currentVerdict = 'all', lang = 'ru', currentPage = 1, viewMode = 'grid';
 const PAGE_SIZE = 24;
 
-function openMobileFilters(){
-  document.getElementById('sidebar').showModal();
-}
-function closeMobileFilters(){
-  document.getElementById('sidebar').close();
-}
-
-function updateMobileFilterBadge(){
-  const badge=document.getElementById('mobile-filter-badge');
+function updateFilterCount(){
+  const badge=document.getElementById('filter-count');
   if(!badge) return;
   // Считаем активные фильтры
   let count=currentVerdict==='all' ? 0 : 1;
@@ -939,7 +959,7 @@ function updateMobileFilterBadge(){
     if(el&&el.value) count++;
   });
   badge.textContent=count;
-  badge.classList.toggle('visible', count>0);
+  badge.hidden=count===0;
 }
 
 function setView(mode){
@@ -963,7 +983,7 @@ function buildMultiSelect(containerId, options, filterKey) {
   wrap.className = 'multi-select';
   wrap.id = 'mswrap-' + filterKey;
 
-  const label = selected.length === 0
+  const label = selected.length === 1 ? selected[0] : selected.length === 0
     ? t('all')
     : selected.length === options.length
       ? t('selectAll')
@@ -971,7 +991,7 @@ function buildMultiSelect(containerId, options, filterKey) {
 
   wrap.innerHTML = `
     <button class="multi-select-trigger ${selected.length>0?'active':''}" onclick="toggleMS('${filterKey}')">
-      <span class="multi-select-trigger-text">${label}</span>
+      <span class="multi-select-trigger-text">${escapeCardText(label)}</span>
       <span class="multi-select-arrow">▼</span>
     </button>
     <div class="multi-select-dropdown">
@@ -1020,7 +1040,7 @@ function toggleMSOption(filterKey, value, el) {
     const trigger = wrap.querySelector('.multi-select-trigger');
     const total = wrap.querySelectorAll('.multi-select-option').length;
     trigger.querySelector('.multi-select-trigger-text').textContent =
-      arr.length === 0 ? t('all') : arr.length === total ? t('selectAll') : t('nSelected')(arr.length);
+      arr.length === 0 ? t('all') : arr.length === 1 ? arr[0] : arr.length === total ? t('selectAll') : t('nSelected')(arr.length);
     trigger.classList.toggle('active', arr.length > 0);
   }
   applyFilters();
@@ -1035,7 +1055,13 @@ document.addEventListener('click', e => {
 
 // ---- UTILS ----
 function t(key) { return T[lang][key] || T.ru[key] || key; }
-function toggleGroup(id) { document.getElementById(id).classList.toggle('open'); }
+function toggleGroup(button) {
+  const expanded=button.closest('.filter-group').classList.toggle('open');
+  button.setAttribute('aria-expanded',expanded);
+}
+if (window.matchMedia('(min-width: 801px)').matches) {
+  toggleGroup(document.querySelector('#grp-finance .filter-group-header'));
+}
 function clean(v) { return (!v || v==='nan') ? '' : v; }
 function parseFundingM(val) {
   if(!val||val==='nan') return 0;
@@ -1300,7 +1326,7 @@ function applyFilters() {
     return 0;
   });
 
-  updateMobileFilterBadge();
+  updateFilterCount();
   currentPage=1; renderCards();
 }
 
@@ -1443,7 +1469,7 @@ function renderCards(){
   const grid=document.getElementById('cards-grid');
   const info=document.getElementById('results-info');
   const total=filtered.length;
-  document.getElementById('drawer-count').textContent=total.toLocaleString(lang);
+  document.getElementById('filter-results-count').textContent=total.toLocaleString(lang);
   document.querySelectorAll('.verdict-chip,.view-btn,.fav-filter-chip').forEach(button => {
     button.setAttribute('aria-pressed',button.classList.contains('active'));
   });
