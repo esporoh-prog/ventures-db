@@ -200,37 +200,6 @@ body{background:var(--bg2);color:var(--text);font-family:'Inter',sans-serif;font
 
 
 /* УМНЫЙ ПОИСК */
-.smart-search-wrap{
-  margin-bottom:20px;
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  overflow:hidden;
-  box-shadow:0 1px 4px rgba(0,0,0,0.05);
-  transition:box-shadow 0.2s;
-}
-.smart-search-wrap:focus-within{
-  border-color:var(--accent);
-  box-shadow:0 0 0 3px rgba(240,83,28,0.08);
-}
-.smart-search-row{
-  display:flex;
-  align-items:center;
-  padding:4px 4px 4px 16px;
-  gap:8px;
-}
-.smart-search-icon{color:var(--accent);flex-shrink:0;}
-.smart-search-input{
-  flex:1;
-  border:none;
-  outline:none;
-  font-size:14px;
-  font-family:var(--font-body, 'Inter', sans-serif);
-  color:var(--text);
-  padding:10px 0;
-  background:transparent;
-}
-.smart-search-input::placeholder{color:var(--text3);}
 .smart-search-btn{
   padding:8px 16px;
   background:var(--accent);
@@ -358,24 +327,21 @@ body:has(dialog[open]) { overflow: hidden; }
 .verdict-dot.study { background: #d98a15; }
 .verdict-count { margin-left: auto; font-size: 12px; font-variant-numeric: tabular-nums; }
 /* Search and controls */
-.search-tools { position: relative; width: min(730px, 70%); display: grid; grid-template-columns: 1fr auto; align-items: start; gap: 8px; }
-.smart-mode { display: contents; }
-.smart-mode > summary { list-style: none; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; min-height: 49px; padding: 0 14px; border: 1px solid #c8c4ba; border-radius: 10px; background: #faf9f6; color: var(--text); font-size: 13px; font-weight: 600; }
-.smart-mode > summary::-webkit-details-marker { display: none; }
-.smart-mode > summary > span:first-child { color: var(--accent); }
-.smart-mode[open] > summary { border-color: var(--accent); background: var(--accent-light); }
-.smart-mode::details-content { grid-column: 1/-1; }
-.smart-mode .smart-search-wrap { grid-column: 1/-1; }
+.search-tools { position: relative; width: min(830px,76%); min-width: 0; }
+.catalog-search { display:flex; align-items:center; gap:8px; min-width:0; padding:5px; background:white; border:1px solid #cecac1; border-radius:12px; }
+.catalog-search:focus-within { border-color:var(--accent); box-shadow:0 0 0 2px #ff6b2b1a; }
+.search-modes { display:flex; flex:none; padding:3px; border-radius:8px; background:#f2f1ed; }
+.search-modes button { min-height:32px; border:0; background:transparent; border-radius:6px; padding:0 10px; font-size:13px; color:var(--text2); cursor:pointer; }
+.search-modes button[aria-pressed="true"] { background:var(--text); color:white; }
+#compact-mode { display:none; }
+#search { width:0; flex:1; min-width:0; min-height:36px; padding:0 3px; border:none; outline:none; background:transparent; color:var(--text); font:inherit; }
+.catalog-search .smart-search-btn { background:var(--text); min-height:36px; }
+.catalog-search .smart-search-btn:disabled { opacity:.6; }
+.catalog-search .smart-search-btn svg { display:none; }
+.smart-search-result.visible { margin-top:6px; border:1px solid var(--border); border-radius:9px; overflow-wrap:anywhere; }
 .show-results { position: sticky; bottom: 10px; width: 100%; padding: 12px; border-radius: 9px; border: none; background: var(--text); color: white; cursor: pointer; font-weight: 600; z-index: 2; }
 .show-results span+span { margin-left: 5px; color: #ffc9a8; }
 
-.search-tools .search-input, .smart-search-row { height: 49px; }
-.search-tools .search-input { background: white; padding-left: 42px; border-radius: 10px; font-size: 14px; }
-.search-tools .search-icon { left: 15px; width: 17px; height: 17px; }
-.smart-search-wrap { margin: 0; box-shadow: none; border-radius: 10px; }
-.smart-search-row { height: 47px; padding: 5px 6px 5px 14px; }
-.smart-search-input { width: 0; min-width: 0; }
-.smart-search-btn { background: var(--text); min-height: 35px; }
 .toolbar { flex-wrap: wrap; margin: 16px 0; scroll-margin-top: 80px; }
 .catalog-actions,.catalog-display { display: flex; align-items: center; gap: 8px; }
 .mobile-filter-btn,.fav-filter-chip { display: inline-flex; align-items: center; gap: 7px; background: white; border: 1px solid var(--border); border-radius: 8px; min-height: 38px; margin: 0; padding: 6px 12px; color: var(--text); font: inherit; font-size: 13px; cursor: pointer; }
@@ -553,8 +519,12 @@ body:has(dialog[open]) { overflow: hidden; }
 }
 @media (max-width: 540px) {
   .paper-stack { width: 105px; height: 85px; right: -40px; }
-  .search-tools { grid-template-columns: 1fr; }
-  .smart-mode > summary { justify-self: start; min-height: 30px; padding: 2px 8px; font-size: 12px; }
+  .catalog-search { gap:4px; }
+  .search-modes { display:none; }
+  #compact-mode { display:block; width:88px; min-height:36px; padding:0 3px; border:0; border-radius:7px; background:var(--bg3); color:var(--text); font-weight:600; }
+  .catalog-search .smart-search-btn { width:34px; padding:0; }
+  .catalog-search .smart-search-btn span { display:none; }
+  .catalog-search .smart-search-btn svg { display:inline; vertical-align:middle; }
   .catalog-heading h1 { max-width: calc(100% - 44px); }
   .catalog-display { display: grid; grid-template-columns: 1fr auto auto; width: 100%; gap: 5px; }
   .header-right { gap: 5px; }
@@ -780,33 +750,21 @@ body:has(dialog[open]) { overflow: hidden; }
       <h1 data-ru="База стартапов" data-en="Startup database">База стартапов</h1>
       <div class="paper-stack" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
     <div class="search-tools">
-      <div class="search-wrap">
-      <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input class="search-input" id="search" type="search" aria-label="Поиск компании / Search companies" placeholder="Название, индустрия или описание" oninput="applyFilters()">
-    </div>
-
-      <details class="smart-mode">
-        <summary><span aria-hidden="true">✦</span> <span data-ru="Умный поиск" data-en="Smart search">Умный поиск</span></summary>
-        <div class="smart-search-wrap" id="smart-search-wrap">
-      <div class="smart-search-row">
-        <svg class="smart-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="m10 3 2.2 6.6L19 12l-6.8 2.4L10 21l-2.3-6.6L1 12l6.7-2.4Z"/><path d="m19 2 .9 2.4L22 5.2l-2.1.8L19 8.4 18.1 6 16 5.2l2.1-.8Z"/>
-        </svg>
-        <input
-          class="smart-search-input"
-          id="smart-input"
-          placeholder="Спроси умный поиск: &quot;быстрорастущие стартапы в healthcare с Series B, использующие AI&quot;"
-          aria-label="Умный поиск / Smart search"
-        >
-        <button class="smart-search-btn" id="smart-btn" data-ru="Найти" data-en="Search" onclick="runSmartSearch()">Найти</button>
-      </div>
-      <div class="smart-search-result" id="smart-result">
-        <span class="smart-result-icon">✦</span>
-        <div class="smart-result-text" id="smart-result-text"></div>
-      </div>
-    </div>
-
-      </details>
+      <form class="catalog-search" id="catalog-search" role="search">
+        <div class="search-modes" role="group" aria-label="Режим поиска / Search mode">
+          <button type="button" data-mode="cards" aria-pressed="true" data-ru="По карточкам" data-en="Cards">По карточкам</button>
+          <button type="button" data-mode="ideas" aria-pressed="false" data-ru="✦ По идеям" data-en="✦ Ideas" title="Умный поиск по идеям / Smart idea search">✦ По идеям</button>
+        </div>
+        <select id="compact-mode" aria-label="Режим поиска / Search mode">
+          <option value="cards" data-ru="Карточки" data-en="Cards">Карточки</option>
+          <option value="ideas" data-ru="✦ Идеи" data-en="✦ Ideas">✦ Идеи</option>
+        </select>
+        <input id="search" type="search" autocomplete="off" aria-label="Поиск по карточкам" placeholder="Название, индустрия или описание">
+        <button type="submit" class="smart-search-btn" id="smart-btn" aria-label="Найти / Search" hidden>
+          <span data-ru="Найти" data-en="Search">Найти</span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h15m-6-6 6 6-6 6"/></svg>
+        </button>
+      </form>
+      <div class="smart-search-result" id="smart-result" role="status"><span class="smart-result-icon" aria-hidden="true">✦</span><div class="smart-result-text" id="smart-result-text"></div></div>
     </div>
     </header>
     <div class="toolbar">
@@ -1244,7 +1202,8 @@ function setVerdict(v,el) {
 }
 
 function applyFilters() {
-  const q=document.getElementById('search').value.toLowerCase().trim();
+  const ideas=searchMode==='ideas' ? smartFilters : null;
+  const q=(searchMode==='cards' ? searchField.value : (ideas?.keywords || []).join(' ')).toLowerCase().trim();
   const investorQ=(document.getElementById('f-investor')||{}).value?.toLowerCase().trim()||'';
   const manual=document.getElementById('f-manual').value;
   const minscore=parseInt(document.getElementById('f-minscore').value)||0;
@@ -1258,6 +1217,11 @@ function applyFilters() {
   const so=document.getElementById('sort').value;
 
   filtered=companies.filter(c=>{
+    if(ideas?.industries?.length && !c.industries.some(v=>ideas.industries.includes(v))) return false;
+    if(ideas?.rounds?.length && !ideas.rounds.includes(c.last_funding_type)) return false;
+    if(ideas?.growth_scores?.length && !ideas.growth_scores.includes(c.growth_score)) return false;
+    if(ideas?.revenue_ranges?.length && !ideas.revenue_ranges.includes(c.revenue_range)) return false;
+    if(ideas?.min_score && c.score.total<ideas.min_score) return false;
     if(showFavoritesOnly&&!isFavorite(c)) return false;
     if(currentVerdict!=='all'&&c.score.verdict!==currentVerdict) return false;
     if(q){
@@ -1315,7 +1279,10 @@ function applyFilters() {
 }
 
 function resetFilters() {
-  document.getElementById('search').value='';
+  clearIdeaState();
+  searchDrafts.cards='';
+  searchDrafts.ideas='';
+  searchField.value='';
   ['f-manual','f-minscore'].forEach(id=>document.getElementById(id).value='');
   const finv=document.getElementById('f-investor'); if(finv) finv.value='';
   ['f-fmin','f-fmax','f-cbmin','f-cbmax','f-trafficmax','f-visitsmin'].forEach(id=>document.getElementById(id).value='');
@@ -1780,7 +1747,7 @@ function setLang(newLang){
   document.querySelectorAll('[data-ru]').forEach(el=>{
     if(el.tagName!=='OPTION') el.textContent=lang==='ru'?el.dataset.ru:el.dataset.en;
   });
-  document.getElementById('search').placeholder=t('search');
+  updateSearchControls();
   // Переводим options в select
   document.querySelectorAll('select option[data-ru]').forEach(opt=>{
     opt.textContent=lang==='ru'?opt.dataset.ru:opt.dataset.en;
@@ -1826,21 +1793,69 @@ async function loadData(manual=false) {
 // ============================================================
 // УМНЫЙ ПОИСК — Claude API
 // ============================================================
+const searchField=document.getElementById('search');
+const smartButton=document.getElementById('smart-btn');
+const smartResult=document.getElementById('smart-result');
+const searchDrafts={cards:'',ideas:''};
+let searchMode='cards';
+let smartFilters=null;
+let smartRequest=null;
+
+function updateSearchControls() {
+  const ideas=searchMode==='ideas';
+  searchField.placeholder=ideas ? (lang==='ru'?'Опишите идею или задачу':'Describe an idea or a problem') : t('search');
+  searchField.setAttribute('aria-label',ideas ? (lang==='ru'?'Умный поиск по идеям':'Smart idea search') : (lang==='ru'?'Поиск по карточкам':'Search company cards'));
+  document.querySelectorAll('.search-modes button').forEach(button=>button.setAttribute('aria-pressed',button.dataset.mode===searchMode));
+  document.getElementById('compact-mode').value=searchMode;
+  smartButton.hidden=!ideas;
+}
+
+function clearIdeaState() {
+  smartRequest?.abort();
+  smartRequest=null;
+  smartFilters=null;
+  smartButton.disabled=false;
+  smartResult.classList.remove('visible');
+  document.getElementById('smart-result-text').textContent='';
+}
+
+function setSearchMode(mode) {
+  if(mode===searchMode) return;
+  if(smartRequest) clearIdeaState();
+  searchMode=mode;
+  searchField.value=searchDrafts[mode];
+  smartResult.classList.toggle('visible',mode==='ideas' && !!document.getElementById('smart-result-text').textContent);
+  updateSearchControls();
+  applyFilters();
+  searchField.focus();
+}
+
+document.querySelectorAll('.search-modes button').forEach(button=>button.addEventListener('click',()=>setSearchMode(button.dataset.mode)));
+document.getElementById('compact-mode').addEventListener('change',event=>setSearchMode(event.target.value));
+searchField.addEventListener('input',()=>{
+  searchDrafts[searchMode]=searchField.value;
+  if(searchMode==='ideas') {
+    const hadResults=!!smartFilters;
+    clearIdeaState();
+    if(!hadResults) return;
+  }
+  applyFilters();
+});
+document.getElementById('catalog-search').addEventListener('submit',event=>{
+  event.preventDefault();
+  if(searchMode==='ideas') runSmartSearch();
+});
+
 async function runSmartSearch() {
-  const input = document.getElementById('smart-input');
-  const btn = document.getElementById('smart-btn');
-  const resultBox = document.getElementById('smart-search-result') || document.getElementById('smart-result')?.parentElement;
-  const resultText = document.getElementById('smart-result-text');
-  const query = input.value.trim();
-
-  if(!query || btn.disabled) { input.focus(); return; }
-
-  // Показываем загрузку
-  btn.disabled = true;
-  btn.textContent = '...';
-  const resultEl = document.getElementById('smart-result');
-  resultEl.classList.add('visible');
-  resultText.innerHTML = '<span class="smart-loading">Анализирую запрос<span class="smart-dots"><span>.</span><span>.</span><span>.</span></span></span>';
+  const query=searchField.value.trim();
+  if(!query || smartRequest) { searchField.focus(); return; }
+  clearIdeaState();
+  const request=new AbortController();
+  smartRequest=request;
+  smartButton.disabled=true;
+  const resultText=document.getElementById('smart-result-text');
+  smartResult.classList.add('visible');
+  resultText.textContent=lang==='ru'?'Анализирую запрос…':'Searching…';
 
   // Собираем контекст из базы
   const allIndustries = [...new Set(companies.flatMap(c=>c.industries))].sort();
@@ -1879,6 +1894,7 @@ async function runSmartSearch() {
 
   try {
     const response = await fetch('/api/claude', {
+      signal:request.signal,
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1890,9 +1906,9 @@ async function runSmartSearch() {
     });
 
     const data = await response.json();
-    console.log('Claude response:', JSON.stringify(data));
+    if(request!==smartRequest) return;
     const raw = data.content?.[0]?.text || '';
-    console.log('Raw text:', raw);
+
 
     if(data.error) throw new Error(data.error.message || JSON.stringify(data.error));
 
@@ -1901,37 +1917,28 @@ async function runSmartSearch() {
     if(!jsonMatch) throw new Error('Ответ Claude: ' + (raw || JSON.stringify(data)));
 
     const params = JSON.parse(jsonMatch[0]);
+    for (const key of ['industries','rounds','growth_scores','revenue_ranges','keywords']) {
+      if (params[key] != null && !(Array.isArray(params[key]) && params[key].every(value=>typeof value==='string'))) {
+        throw new Error('Invalid search filters');
+      }
+    }
 
     // Применяем фильтры
     applySmartFilters(params, query);
 
   } catch(err) {
-    resultText.innerHTML = `<strong>Ошибка:</strong> ${err.message}. Попробуйте переформулировать запрос.`;
+    if(request!==smartRequest) return;
+    resultText.textContent=lang==='ru'?'Не удалось выполнить поиск. Попробуйте ещё раз.':'Search failed. Please try again.';
+  } finally {
+    if(request===smartRequest) { smartRequest=null; smartButton.disabled=false; }
   }
-
-  btn.disabled = false;
-  btn.textContent = lang==='ru' ? 'Найти' : 'Search';
 }
 
 function applySmartFilters(params, originalQuery) {
   const resultText = document.getElementById('smart-result-text');
 
   function setFilters(p) {
-    Object.keys(msState).forEach(k => msState[k] = []);
-    currentVerdict = 'all';
-    document.querySelectorAll('.verdict-chip').forEach((c,i) => c.classList.toggle('active', i===0));
-    document.getElementById('search').value = '';
-    document.getElementById('f-minscore').value = '';
-    document.getElementById('f-manual').value = '';
-
-    if(p.industries?.length) msState.industry = p.industries;
-    if(p.rounds?.length) msState.fundingtype = p.rounds;
-    if(p.growth_scores?.length) msState.growth = p.growth_scores;
-    if(p.revenue_ranges?.length) msState.revenue = p.revenue_ranges;
-    if(p.min_score) document.getElementById('f-minscore').value = p.min_score;
-    if(p.keywords?.length) document.getElementById('search').value = p.keywords.join(' ');
-
-    initFilters();
+    smartFilters=p;
     applyFilters();
     return filtered.length;
   }
@@ -1967,34 +1974,28 @@ function applySmartFilters(params, originalQuery) {
 
   // Формируем объяснение
   const parts = [];
-  if(params.industries?.length) parts.push(`индустрии: <strong>${params.industries.join(', ')}</strong>`);
-  if(params.rounds?.length) parts.push(`раунды: <strong>${params.rounds.join(', ')}</strong>`);
-  if(params.growth_scores?.length) parts.push(`рост: <strong>${params.growth_scores.join(', ')}</strong>`);
-  if(params.keywords?.length) parts.push(`ключевые слова: <strong>${params.keywords.join(', ')}</strong>`);
+  if(params.industries?.length) parts.push(`индустрии: <strong>${params.industries.map(escapeCardText).join(', ')}</strong>`);
+  if(params.rounds?.length) parts.push(`раунды: <strong>${params.rounds.map(escapeCardText).join(', ')}</strong>`);
+  if(params.growth_scores?.length) parts.push(`рост: <strong>${params.growth_scores.map(escapeCardText).join(', ')}</strong>`);
+  if(params.keywords?.length) parts.push(`ключевые слова: <strong>${params.keywords.map(escapeCardText).join(', ')}</strong>`);
 
-  const clearBtn = '<span class="smart-search-clear" onclick="clearSmartSearch()">Сбросить</span>';
+  const clearBtn = `<button type="button" class="smart-search-clear" onclick="clearSmartSearch()">${lang==='ru'?'Сбросить':'Clear'}</button>`;
 
   resultText.innerHTML = `
-    <strong>${count} компаний</strong> по запросу «${originalQuery}»${clearBtn}<br>
-    <span style="color:var(--text3);font-size:12px">${params.explanation || ''}${parts.length ? ' · ' + parts.join(' · ') : ''}</span>
+    <strong>${count} компаний</strong> по запросу «${escapeCardText(originalQuery)}»${clearBtn}<br>
+    <span style="color:var(--text3);font-size:12px">${escapeCardText(params.explanation || '')}${parts.length ? ' · ' + parts.join(' · ') : ''}</span>
     ${relaxedNote ? `<br><span style="color:var(--accent);font-size:12px">${relaxedNote}</span>` : ''}
     ${count === 0 ? `<br><span style="color:var(--text3);font-size:12px">Совпадений не найдено даже после ослабления условий — попробуйте переформулировать запрос проще.</span>` : ''}
   `;
 }
 
 function clearSmartSearch() {
-  document.getElementById('smart-input').value = '';
-  document.getElementById('smart-result').classList.remove('visible');
-  resetFilters();
+  clearIdeaState();
+  searchDrafts.ideas='';
+  searchField.value='';
+  applyFilters();
+  searchField.focus();
 }
-
-// Enter в умном поиске
-document.addEventListener('DOMContentLoaded', () => {
-  const input = document.getElementById('smart-input');
-  if(input) input.addEventListener('keydown', e => {
-    if(e.key === 'Enter') runSmartSearch();
-  });
-});
 
 // ============================================================
 // ИЗБРАННОЕ — хранится в localStorage браузера
