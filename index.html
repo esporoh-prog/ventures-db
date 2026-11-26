@@ -977,9 +977,9 @@ function buildMultiSelect(containerId, options, filterKey) {
     <div class="multi-select-dropdown">
       <div class="multi-select-search"><input placeholder="${t('searchIn')}" oninput="filterMSOptions(this,'${filterKey}')"></div>
       ${options.map(o => `
-        <button class="multi-select-option ${selected.includes(o)?'selected':''}" data-value="${o}" onclick="toggleMSOption('${filterKey}','${o.replace(/'/g,"\\'")}',this)">
+        <button class="multi-select-option ${selected.includes(o)?'selected':''}" data-value="${escapeCardText(o)}" onclick="toggleMSOption('${filterKey}',this.dataset.value,this)">
           <span class="multi-select-checkbox"><span class="multi-select-checkmark">✓</span></span>
-          <span>${o}</span>
+          <span>${escapeCardText(o)}</span>
           ${selected.includes(o)?`<span class="multi-select-count">✓</span>`:''}
         </button>`).join('')}
     </div>`;
@@ -1054,23 +1054,45 @@ function parseManualScore(v) {
 
 // ---- CSV ----
 function parseCSV(text) {
-  const lines=text.split('\n'); const headers=parseCSVLine(lines[0]); const rows=[];
-  for(let i=1;i<lines.length;i++){
-    if(!lines[i].trim()) continue;
-    const vals=parseCSVLine(lines[i]); const obj={};
-    headers.forEach((h,idx)=>{obj[h.trim()]=(vals[idx]||'').trim();}); rows.push(obj);
+  const rows = [];
+  let headers;
+  let fields = [];
+  let field = '';
+  let quoted = false;
+
+  function finishRow() {
+    fields.push(field.trim());
+    if (!headers) {
+      headers = fields;
+    } else if (fields.some(Boolean)) {
+      rows.push(Object.fromEntries(headers.map((name, index) => [name, fields[index] ?? ''])));
+    }
+    fields = [];
+    field = '';
   }
+
+  for (let i = text.startsWith('\uFEFF') ? 1 : 0; i < text.length; i++) {
+    const ch = text[i];
+    if (ch === '"') {
+      if (quoted && text[i + 1] === '"') {
+        field += '"';
+        i++;
+      } else {
+        quoted = !quoted;
+      }
+    } else if (!quoted && ch === ',') {
+      fields.push(field.trim());
+      field = '';
+    } else if (!quoted && (ch === '\n' || ch === '\r')) {
+      finishRow();
+      if (ch === '\r' && text[i + 1] === '\n') i++;
+    } else {
+      field += ch;
+    }
+  }
+  if (quoted) throw new Error('CSV: незакрытая кавычка');
+  if (field || fields.length) finishRow();
   return rows;
-}
-function parseCSVLine(line) {
-  const res=[]; let cur=''; let q=false;
-  for(let i=0;i<line.length;i++){
-    const ch=line[i];
-    if(ch==='"'){if(q&&line[i+1]==='"'){cur+='"';i++;}else q=!q;}
-    else if(ch===','&&!q){res.push(cur);cur='';}
-    else cur+=ch;
-  }
-  res.push(cur); return res;
 }
 
 // ---- SCORING ----
@@ -1146,12 +1168,21 @@ function processRows(rows) {
     .filter(c=>c.name);
 }
 
+function fundingRoundOrder(value) {
+  if (value === 'Pre-Seed') return 0;
+  if (value === 'Seed') return 1;
+  const series = /^Series ([A-Z])$/.exec(value);
+  return series ? 2 + series[1].charCodeAt(0) - 65 : 28;
+}
+
 function initFilters() {
   const getUniq=(fn)=>[...new Set(companies.map(fn).filter(Boolean).filter(v=>v!=='nan'))].sort();
 
   const allIndustries=[...new Set(companies.flatMap(c=>c.industries))].sort();
   buildMultiSelect('ms-industry', allIndustries, 'industry');
-  buildMultiSelect('ms-fundingtype', getUniq(c=>c.last_funding_type), 'fundingtype');
+  const rounds = getUniq(c=>c.last_funding_type)
+    .sort((a,b) => fundingRoundOrder(a) - fundingRoundOrder(b) || a.localeCompare(b));
+  buildMultiSelect('ms-fundingtype', rounds, 'fundingtype');
   buildMultiSelect('ms-revenue', getUniq(c=>c.revenue_range), 'revenue');
   buildMultiSelect('ms-valuation', getUniq(c=>c.valuation), 'valuation');
   buildMultiSelect('ms-employees', getUniq(c=>c.employees), 'employees');
