@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Смотрины — База стартапов</title>
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 :root {
@@ -300,7 +302,7 @@ body:has(dialog[open]) { overflow: hidden; }
 .header-top, .main { width: var(--page); margin-inline: auto; padding-inline: var(--gutter); }
 .header-top { height: 65px; border: 0; }
 .logo { font-size: 22px; font-weight: 700; letter-spacing: -.065em; gap: 0; }
-.logo::before { content: ''; width: 26px; height: 26px; margin-right: 9px; border-radius: 7px; background: repeating-linear-gradient(120deg, #211e1b 0 3px, transparent 3px 6px) center / 14px 14px no-repeat, var(--orange); }
+.brand-mark { display: block; flex: none; margin-right: 9px; }
 .logo-sub { margin-left: 16px; padding-left: 16px; border-left: 1px solid var(--border); letter-spacing: 0; }
 .lang-btn { min-height: 32px; }
 .lang-btn.active, .view-btn.active, .page-btn.active { background: var(--text); color: white; }
@@ -541,7 +543,7 @@ body:has(dialog[open]) { overflow: hidden; }
 <body>
 <header class="header">
   <div class="header-top">
-    <div class="logo">Смотрины<span class="logo-sub" data-ru="Стартапы" data-en="Startups">Стартапы</span></div>
+    <div class="logo"><img class="brand-mark" src="/favicon.svg" width="32" height="32" alt="">Смотрины<span class="logo-sub" data-ru="Стартапы" data-en="Startups">Стартапы</span></div>
     <div class="header-right">
       <span class="last-updated" id="last-updated"></span>
       <div class="lang-toggle">
