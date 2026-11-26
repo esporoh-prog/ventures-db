@@ -310,14 +310,10 @@ body:has(dialog[open]) { overflow: hidden; }
 .refresh-btn:hover { background: var(--bg3); }
 .refresh-btn:disabled { background: var(--bg2); color: var(--text3); }
 .main { padding-block: 26px 44px; }
-.catalog-heading { display: flex; flex-direction: column; gap: 22px; justify-content: center; position: relative; isolation: isolate; align-items: start; overflow: hidden; min-height: 170px; padding: 24px clamp(18px, 3vw, 46px); background: #f0ede6; border-radius: 18px; }
-.catalog-heading h1 { position: relative; z-index: 1; font-size: clamp(34px, 4.5vw, 67px); font-weight: 600; line-height: 1; letter-spacing: -.065em; }
-/* An abstract stack of index cards built from four printed sheets. */
-.paper-stack { position: absolute; top: 50%; right: 3%; width: clamp(150px, 24vw, 355px); height: 110%; transform: translateY(-50%) rotate(-16deg) skewX(12deg); }
-.paper-stack i { position: absolute; inset: 8% 18%; border-radius: 9%; border: 1px solid #25211c; background: #282420; transform: translate(21%,32%); }
-.paper-stack i:nth-child(2) { background: #fff8ea; transform: translate(14%,21%); }
-.paper-stack i:nth-child(3) { background: #ffab78; transform: translate(7%,10%); }
-.paper-stack i:last-child { transform: none; background: repeating-radial-gradient(ellipse at 72% 120%, transparent 0 11px, #a63d10 12px 13px, transparent 14px 19px), var(--orange); }
+.catalog-heading { display: grid; grid-template-columns: minmax(0,1fr) clamp(160px,22vw,290px); align-items: center; gap: 20px clamp(12px,3vw,42px); min-height: 170px; padding: 24px clamp(18px,3vw,46px); background: #f0ede6; border-radius: 18px; }
+.catalog-heading h1 { margin: 0; font-size: clamp(34px,4.5vw,67px); font-weight: 600; line-height: 1; letter-spacing: -.065em; }
+.paper-stack { grid-column: 2; grid-row: 1 / span 2; display: block; justify-self: center; width: 100%; max-width: 248px; height: auto; }
+.catalog-heading .search-tools { grid-column: 1; }
 /* Scoring lives alongside the other detailed filters. */
 .verdict-filters { display: flex; flex-direction: column; gap: 3px; }
 .verdict-chip { display: flex; align-items: center; gap: 8px; padding: 7px 10px; font: inherit; color: var(--text2); background: #fff; border: 1px solid transparent; border-radius: 6px; cursor: pointer; }
@@ -329,7 +325,7 @@ body:has(dialog[open]) { overflow: hidden; }
 .verdict-dot.study { background: #d98a15; }
 .verdict-count { margin-left: auto; font-size: 12px; font-variant-numeric: tabular-nums; }
 /* Search and controls */
-.search-tools { position: relative; width: min(830px,76%); min-width: 0; }
+.search-tools { position: relative; width: min(830px,100%); min-width: 0; }
 .catalog-search { display:flex; align-items:center; gap:8px; min-width:0; padding:5px; background:white; border:1px solid #cecac1; border-radius:12px; }
 .catalog-search:focus-within { border-color:var(--accent); box-shadow:0 0 0 2px #ff6b2b1a; }
 .search-modes { display:flex; flex:none; padding:3px; border-radius:8px; background:#f2f1ed; }
@@ -511,20 +507,20 @@ body:has(dialog[open]) { overflow: hidden; }
   .last-updated,.logo-sub { display: none; }
   .logo { font-size: 20px; }
   .main { padding-block: 16px 32px; }
-  .catalog-heading { min-height: 100px; }
+  .catalog-heading { grid-template-columns: minmax(0,1fr) clamp(48px,12vw,90px); min-height: 100px; gap: 14px 8px; }
   .search-tools { width: 100%; gap: 7px; }
-  .paper-stack { top: 12%; right: -7%; height: 90px; width: 160px; }
+  .paper-stack { grid-row: 1; }
+  .catalog-heading .search-tools { grid-column: 1/-1; }
   .toolbar { gap: 10px; }
   .catalog-display { flex-wrap: wrap; }
   .results-info { font-size: 12px; }
 }
 @media (max-width: 540px) {
-  .paper-stack { width: 105px; height: 85px; right: -40px; }
   .catalog-search { gap:4px; }
   .search-modes { display:none; }
   #compact-mode { display:block; width:88px; min-height:36px; padding:0 3px; border:0; border-radius:7px; background:var(--bg3); color:var(--text); font-weight:600; }
   .catalog-search .smart-search-btn { padding-inline:9px; }
-  .catalog-heading h1 { max-width: calc(100% - 44px); }
+  .catalog-heading h1 { font-size: clamp(27px,7.6vw,34px); }
   .catalog-display { display: grid; grid-template-columns: 1fr auto auto; width: 100%; gap: 5px; }
   .header-right { gap: 5px; }
   .lang-btn { padding-inline: 7px; }
@@ -747,7 +743,7 @@ body:has(dialog[open]) { overflow: hidden; }
   <main class="main">
     <header class="catalog-heading">
       <h1 data-ru="База стартапов" data-en="Startup database">База стартапов</h1>
-      <div class="paper-stack" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <img class="paper-stack" src="/catalog-cards.svg" width="254" height="166" alt="">
     <div class="search-tools">
       <form class="catalog-search" id="catalog-search" role="search">
         <div class="search-modes" role="group" aria-label="Режим поиска / Search mode">
