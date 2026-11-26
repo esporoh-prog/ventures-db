@@ -412,8 +412,8 @@ body:has(dialog[open]) { overflow: hidden; }
 /* Filter rail and catalog results */
 .catalog-layout {
   display: grid;
-  grid-template-columns: minmax(0,1fr) clamp(238px,22vw,305px);
-  grid-template-areas: "results filters";
+  grid-template-columns: clamp(238px,22vw,305px) minmax(0,1fr);
+  grid-template-areas: "filters results";
   gap: clamp(16px,2vw,28px);
   margin-top: 20px;
   align-items: start;
