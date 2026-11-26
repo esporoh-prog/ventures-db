@@ -602,14 +602,14 @@ body:has(dialog[open]) { overflow: hidden; }
     <div class="search-tools">
       <form class="catalog-search" id="catalog-search" role="search">
         <div class="search-modes" role="group" aria-label="Режим поиска / Search mode">
-          <button type="button" data-mode="cards" aria-pressed="true" data-ru="По карточкам" data-en="Cards">По карточкам</button>
-          <button type="button" data-mode="ideas" aria-pressed="false" data-ru="✦ По идеям" data-en="✦ Ideas" title="Умный поиск по идеям / Smart idea search">✦ По идеям</button>
+          <button type="button" data-mode="ideas" aria-pressed="true" data-ru="✦ По идеям" data-en="✦ Ideas" title="Умный поиск по идеям / Smart idea search">✦ По идеям</button>
+          <button type="button" data-mode="cards" aria-pressed="false" data-ru="По карточкам" data-en="Cards">По карточкам</button>
         </div>
         <select id="compact-mode" aria-label="Режим поиска / Search mode">
-          <option value="cards" data-ru="Карточки" data-en="Cards">Карточки</option>
           <option value="ideas" data-ru="✦ Идеи" data-en="✦ Ideas">✦ Идеи</option>
+          <option value="cards" data-ru="Карточки" data-en="Cards">Карточки</option>
         </select>
-        <input id="search" type="search" autocomplete="off" aria-label="Поиск по карточкам" placeholder="Название, индустрия или описание">
+        <input id="search" type="search" autocomplete="off" aria-label="Умный поиск по идеям" placeholder="Опишите идею или задачу">
         <button type="submit" class="smart-search-btn" id="smart-btn">
           <span data-ru="Поиск" data-en="Search">Поиск</span>
         </button>
@@ -1858,7 +1858,7 @@ const searchField=document.getElementById('search');
 const smartButton=document.getElementById('smart-btn');
 const smartResult=document.getElementById('smart-result');
 const searchDrafts={cards:'',ideas:''};
-let searchMode='cards';
+let searchMode='ideas';
 let smartFilters=null;
 let smartRequest=null;
 
