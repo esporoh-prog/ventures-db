@@ -462,8 +462,8 @@ body:has(dialog[open]) { overflow: hidden; }
 .modal-subtitle a:hover { text-decoration: underline; }
 .modal-header :is(.fav-btn,.modal-close) { width: 42px; height: 42px; border-radius: 50%; background: #ffffffcf; border: 1px solid #dcd3c6; }
 .modal-header .fav-btn.active { color: var(--accent); background: var(--accent-light); }
-.profile-tabs { display: flex; gap: 18px; padding-inline: 30px; border-bottom: 1px solid var(--border); background: white; }
-.profile-tabs button { padding: 12px 2px; border: 0; border-bottom: 3px solid transparent; color: var(--text3); font: inherit; font-weight: 600; background: transparent; cursor: pointer; }
+.profile-tabs { display: flex; overflow-x: auto; gap: 18px; padding-inline: 30px; border-bottom: 1px solid var(--border); background: white; }
+.profile-tabs button { flex: none; white-space: nowrap; padding: 12px 2px; border: 0; border-bottom: 3px solid transparent; color: var(--text3); font: inherit; font-weight: 600; background: transparent; cursor: pointer; }
 .profile-tabs [aria-selected="true"] { color: var(--text); border-bottom-color: var(--orange); }
 .profile-tabs button:focus-visible { outline-offset: -4px; }
 .modal-body { overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; padding: 25px 26px 28px 30px; }
@@ -513,7 +513,7 @@ body:has(dialog[open]) { overflow: hidden; }
   .modal-header { padding: 18px 14px; grid-template-columns: 43px minmax(0,1fr) 36px 36px; gap: 7px; }
   .modal-avatar { height: 43px; border-radius: 12px; font-size: 18px; }
   .modal-header :is(.fav-btn,.modal-close) { width: 36px; height: 36px; }
-  .profile-tabs { gap: 0; justify-content: space-between; padding-inline: 13px; }
+  .profile-tabs { gap: 14px; padding-inline: 13px; }
   .profile-tabs button { font-size: 13px; min-height: 44px; }
   .modal-body { padding: 19px 15px 24px; scrollbar-gutter: auto; }
   .profile-overview { display: flex; flex-direction: column; gap: 18px; }
@@ -1758,13 +1758,15 @@ function openCompany(c) {
       ${scoreFace}</button></aside>`;
   const overview=`<div class="profile-overview"><div class="overview-content">`+
     profileGroup(t('about'),profileDescription(desc || w.missing))+
-    '<section id="linked-ideas" class="profile-group" hidden></section>'+
     profileGroup(t('industries'),profileTags(c.industries))+
     profileGroup(w.scale,profileRows([[t('team'),team],[w.products,c.total_products]]))+
     `</div>${summary}</div>`;
   const sections=[['overview',w.overview,overview],['finance',w.finance,finance],
     ['signals',w.signals,signals && signals+profileHelp(w.signalsHelp,['growth','heat','cb'])],
-    ['score',w.score,scoring]].filter(([, , body])=>body);
+    ['score',w.score,scoring],
+    ['ideas',lang==='ru'?'Идеи команды':'Team ideas',
+      '<section id="linked-ideas" class="profile-group"><p role="status">'+(lang==='ru'?'Загрузка идей…':'Loading ideas…')+'</p></section>']
+  ].filter(([, , body])=>body);
   profileNav.setAttribute('aria-label',lang==='ru'?'Разделы профиля':'Profile sections');
   profileNav.innerHTML=sections.map(([id,label])=>`<button role="tab" id="pt-${id}" data-panel="${id}" aria-controls="pp-${id}">${label}</button>`).join('');
   document.getElementById('m-body').innerHTML=sections.map(([id,,body])=>

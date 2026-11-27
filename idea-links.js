@@ -18,7 +18,14 @@ window.loadIdeaLinks = async function (section, key, language) {
     const response = await fetch(base + '/api/startup-links?' + new URLSearchParams({startup: key}), {signal: AbortSignal.timeout(25000)});
     if (!response.ok) throw new Error('unavailable');
     const data = await response.json();
-    if (!data.enabled || !section.isConnected) return;
+    if (!section.isConnected) return;
+    if (!data.enabled) {
+      const tab = document.getElementById('pt-ideas');
+      if (tab.getAttribute('aria-selected') === 'true') showProfileTab('overview', true);
+      tab.remove();
+      section.closest('[role="tabpanel"]').remove();
+      return;
+    }
     section.replaceChildren(element('h3', ru ? 'Идеи команды' : 'Team ideas'));
     function renderList(links) {
       const ul = element('ul');
