@@ -571,6 +571,11 @@ body:has(dialog[open]) { overflow: hidden; }
   *,*::before,*::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
 
+#linked-ideas ul { margin: 8px 0; padding-left: 18px; }
+#linked-ideas li { margin-bottom: 8px; }
+#linked-ideas small { display: block; color: var(--text2); }
+#linked-ideas a { color: var(--accent); }
+#linked-ideas summary { cursor: pointer; }
 </style>
 </head>
 <body>
@@ -872,6 +877,7 @@ body:has(dialog[open]) { overflow: hidden; }
   </div>
 </dialog>
 
+<script src="/idea-links.js"></script>
 <script>
 const SHEET_ID = '1FPiPD7Kxd27IwM9OpdDr5dY2xk0B4qezh_2UhhWXCjM';
 
@@ -1695,7 +1701,10 @@ function updateProfileFavorite() {
 }
 
 function openModal(idx) {
-  const c=filtered[idx];
+  openCompany(filtered[idx]);
+}
+
+function openCompany(c) {
   if(!c) return;
   currentModalCompany=c;
   const w=profileCopy[lang], esc=escapeCardText;
@@ -1749,6 +1758,7 @@ function openModal(idx) {
       ${scoreFace}</button></aside>`;
   const overview=`<div class="profile-overview"><div class="overview-content">`+
     profileGroup(t('about'),profileDescription(desc || w.missing))+
+    '<section id="linked-ideas" class="profile-group" hidden></section>'+
     profileGroup(t('industries'),profileTags(c.industries))+
     profileGroup(w.scale,profileRows([[t('team'),team],[w.products,c.total_products]]))+
     `</div>${summary}</div>`;
@@ -1760,6 +1770,7 @@ function openModal(idx) {
   document.getElementById('m-body').innerHTML=sections.map(([id,,body])=>
     `<div id="pp-${id}" role="tabpanel" aria-labelledby="pt-${id}" tabindex="0" hidden>${body}</div>`).join('');
   showProfileTab('overview');
+  window.loadIdeaLinks?.(document.getElementById('linked-ideas'), companyKey(c), lang);
   document.getElementById('modal-overlay').showModal();
 }
 
@@ -1832,6 +1843,13 @@ document.addEventListener('mouseout', e => {
   }, 100);
 });
 
+document.getElementById('modal-overlay').addEventListener('close', () => {
+  const url = new URL(location.href);
+  if (url.searchParams.has('startup')) {
+    url.searchParams.delete('startup');
+    history.replaceState(history.state, '', url);
+  }
+});
 function closeModal(e){if(e.target===document.getElementById('modal-overlay'))closeModalDirect();}
 function closeModalDirect(){document.getElementById('modal-overlay').close();}
 
@@ -1875,6 +1893,12 @@ async function loadData(manual=false) {
     document.getElementById('last-updated').textContent=
       t('updated')(now.toLocaleTimeString(lang==='ru'?'ru-RU':'en-US',{hour:'2-digit',minute:'2-digit'}));
     initFilters(); applyFilters();
+    const key = new URLSearchParams(location.search).get('startup');
+    if (key && !manual) {
+      const requested = companies.find(company => companyKey(company) === key);
+      if (requested) openCompany(requested);
+      else document.getElementById('last-updated').textContent = lang === 'ru' ? 'Этот профиль недоступен' : 'Profile unavailable';
+    }
   }catch(e){
     document.getElementById('cards-grid').innerHTML=`
       <div class="error-state">
