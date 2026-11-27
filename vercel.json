@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "https://smotrini-idea-base-main.vercel.app/startups",
+      "permanent": false
+    }
+  ]
+}
